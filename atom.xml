@@ -267,9 +267,9 @@
     
     
     
-    <category term="Github" scheme="https://zepoch.github.io/tags/Github/"/>
-    
     <category term="Hexo" scheme="https://zepoch.github.io/tags/Hexo/"/>
+    
+    <category term="Github" scheme="https://zepoch.github.io/tags/Github/"/>
     
   </entry>
   

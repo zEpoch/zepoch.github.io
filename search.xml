@@ -33,18 +33,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2021/1243066710.html</url>
-    <content><![CDATA[<p>终于呢，又是开通了我的博客，之所以是说终于，是因为之前也是开通过，但是呢，因为各种各样原因逐渐搁置，所以便是逐渐落下了博客的更新。</p>
-<p>现在突然就想记录点什么了，希望能够记录下去吧。</p>
-<p>Hexo&amp;Next.Pisces 重启，采用的 <a href="https://hexo.io/">Hexo</a> 开通的博客，<a href="https://theme-next.js.org/">NexT - Theme for Hexo</a> 作为主题。</p>
-<p>以后呢，会记录一下我的工作、学习与生活，会分享生活亦或是学习的点点滴滴，也不要再将这个站点落下了。</p>
-]]></content>
-      <tags>
-        <tag>生活</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>5815. 扣分后的最大得分</title>
     <url>/2021/864291102.html</url>
     <content><![CDATA[<p>今天呢，上午还算是比较有空的，便是参加了<a href="https://leetcode-cn.com/contest/weekly-contest-250/">一场 LeetCode 的周赛</a>，而且还是第一次的周赛，体验还是挺不错的。</p>
@@ -95,6 +83,18 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
+    <title>Hello World</title>
+    <url>/2021/1243066710.html</url>
+    <content><![CDATA[<p>终于呢，又是开通了我的博客，之所以是说终于，是因为之前也是开通过，但是呢，因为各种各样原因逐渐搁置，所以便是逐渐落下了博客的更新。</p>
+<p>现在突然就想记录点什么了，希望能够记录下去吧。</p>
+<p>Hexo&amp;Next.Pisces 重启，采用的 <a href="https://hexo.io/">Hexo</a> 开通的博客，<a href="https://theme-next.js.org/">NexT - Theme for Hexo</a> 作为主题。</p>
+<p>以后呢，会记录一下我的工作、学习与生活，会分享生活亦或是学习的点点滴滴，也不要再将这个站点落下了。</p>
+]]></content>
+      <tags>
+        <tag>生活</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hexo Next 友链配置</title>
     <url>/2021/851229289.html</url>
     <content><![CDATA[<p>在进行配置 Hexo Next 的友情链接的时候遇到了一些麻烦，特此进行记录如何进行 Hexo Next 友链的配置。</p>
@@ -113,60 +113,6 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
 ]]></content>
       <tags>
         <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>sqlzoo练习规划</title>
-    <url>/2021/387524820.html</url>
-    <content><![CDATA[<p>推荐一个SQL查询语句在线练习网站——<a href="https://sqlzoo.net/wiki/SQL_Tutorial/zh">SQLZOO</a>，这个网站上的题目由易到难，把整个网站上的题目都做完的话你可以自主的写出接近100条SQL查询语句，从简单的单表条件查询到多表联结查询，自联结查询等等。</p>
-<p>官网：https://sqlzoo.net/wiki/SQL_Tutorial/zh</p>
-<span id="more"></span>
-<h5 id="sql基础">sql基础</h5>
-<ul>
-<li><p>sql基础：https://sqlzoo.net/wiki/SELECT_basics/zh</p></li>
-<li><p>文字样式匹配查询：https://sqlzoo.net/wiki/SELECT_names/zh</p></li>
-<li><p>select测试：https://sqlzoo.net/wiki/SELECT_Quiz/zh</p></li>
-</ul>
-<h5 id="一般查询">一般查询</h5>
-<ul>
-<li><p>World表查询：https://sqlzoo.net/wiki/SQLZOO:SELECT_from_WORLD_Tutorial/zh</p></li>
-<li><p>World表测试：https://sqlzoo.net/wiki/BBC_QUIZ/zh</p></li>
-<li><p>Nobel表查询：https://sqlzoo.net/wiki/SELECT_from_Nobel_Tutorial/zh</p></li>
-<li><p>Nobel表测试：https://sqlzoo.net/wiki/Nobel_Quiz/zh</p></li>
-</ul>
-<h5 id="子查询">子查询</h5>
-<ul>
-<li><p>子查询原理：https://sqlzoo.net/wiki/Using_nested_SELECT/zh</p></li>
-<li><p>子查询练习：https://sqlzoo.net/wiki/SELECT_within_SELECT_Tutorial/zh</p></li>
-<li><p>Nobel子查询：https://sqlzoo.net/wiki/The_nobel_table_can_be_used_to_practice_more_subquery./zh</p></li>
-<li><p>子查询测试：https://sqlzoo.net/wiki/Nested_SELECT_Quiz/zh</p></li>
-</ul>
-<h5 id="聚合函数和null">聚合函数和Null</h5>
-<ul>
-<li><p>聚合函数练习1：https://sqlzoo.net/wiki/SUM_and_COUNT/zh</p></li>
-<li><p>聚合函数练习2：https://sqlzoo.net/wiki/The_nobel_table_can_be_used_to_practice_more_SUM_and_COUNT_functions./zh</p></li>
-<li><p>聚合函数测试：https://sqlzoo.net/wiki/SUM_and_COUNT_Quiz</p></li>
-<li><p>Null值练习1：https://sqlzoo.net/wiki/Using_Null/zh</p></li>
-<li><p>Null值练习2：https://sqlzoo.net/wiki/Scottish_Parliament/zh</p></li>
-<li><p>Null值测试：https://sqlzoo.net/wiki/Using_Null_Quiz</p></li>
-</ul>
-<h5 id="表连接">表连接</h5>
-<ul>
-<li><p>表连接练习1：https://sqlzoo.net/wiki/The_JOIN_operation/zh</p></li>
-<li><p>表连接练习2：https://sqlzoo.net/wiki/Music_Tutorial/zh</p></li>
-<li><p>表连接测试1：https://sqlzoo.net/wiki/JOIN_Quiz</p></li>
-<li><p>表连接练习3：https://sqlzoo.net/wiki/More_JOIN_operations/zh</p></li>
-<li><p>表连接测试2：https://sqlzoo.net/wiki/JOIN_Quiz_2</p></li>
-</ul>
-<h5 id="自连接及函数">自连接及函数</h5>
-<ul>
-<li><p>自连接练习：https://sqlzoo.net/wiki/Self_join/zh</p></li>
-<li><p>自连接测试：https://sqlzoo.net/wiki/Self_join_Quiz</p></li>
-<li><p>常用函数：https://sqlzoo.net/wiki/Functions_Reference</p></li>
-</ul>
-]]></content>
-      <tags>
-        <tag>SQL</tag>
       </tags>
   </entry>
   <entry>
@@ -238,13 +184,57 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
-    <title>我们把你们想得太好了</title>
-    <url>/2021/1333461694.html</url>
-    <content><![CDATA[<p>“我们把你们想的太好了，我们认为你们会遵守基本的外交礼节”，有些话，原封不动，换个国家名，他居然还能用</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/%E6%88%91%E4%BB%AC%E6%8A%8A%E4%BD%A0%E4%BB%AC%E6%83%B3%E5%BE%97%E5%A4%AA%E5%A5%BD%E4%BA%86/%E6%88%91%E4%BB%AC%E6%8A%8A%E4%BD%A0%E4%BB%AC%E6%83%B3%E7%9A%84%E5%A4%AA%E5%A5%BD%E4%BA%86.png" alt="我们把你们想的太好了" /></p>
+    <title>sqlzoo练习规划</title>
+    <url>/2021/387524820.html</url>
+    <content><![CDATA[<p>推荐一个SQL查询语句在线练习网站——<a href="https://sqlzoo.net/wiki/SQL_Tutorial/zh">SQLZOO</a>，这个网站上的题目由易到难，把整个网站上的题目都做完的话你可以自主的写出接近100条SQL查询语句，从简单的单表条件查询到多表联结查询，自联结查询等等。</p>
+<p>官网：https://sqlzoo.net/wiki/SQL_Tutorial/zh</p>
+<span id="more"></span>
+<h5 id="sql基础">sql基础</h5>
+<ul>
+<li><p>sql基础：https://sqlzoo.net/wiki/SELECT_basics/zh</p></li>
+<li><p>文字样式匹配查询：https://sqlzoo.net/wiki/SELECT_names/zh</p></li>
+<li><p>select测试：https://sqlzoo.net/wiki/SELECT_Quiz/zh</p></li>
+</ul>
+<h5 id="一般查询">一般查询</h5>
+<ul>
+<li><p>World表查询：https://sqlzoo.net/wiki/SQLZOO:SELECT_from_WORLD_Tutorial/zh</p></li>
+<li><p>World表测试：https://sqlzoo.net/wiki/BBC_QUIZ/zh</p></li>
+<li><p>Nobel表查询：https://sqlzoo.net/wiki/SELECT_from_Nobel_Tutorial/zh</p></li>
+<li><p>Nobel表测试：https://sqlzoo.net/wiki/Nobel_Quiz/zh</p></li>
+</ul>
+<h5 id="子查询">子查询</h5>
+<ul>
+<li><p>子查询原理：https://sqlzoo.net/wiki/Using_nested_SELECT/zh</p></li>
+<li><p>子查询练习：https://sqlzoo.net/wiki/SELECT_within_SELECT_Tutorial/zh</p></li>
+<li><p>Nobel子查询：https://sqlzoo.net/wiki/The_nobel_table_can_be_used_to_practice_more_subquery./zh</p></li>
+<li><p>子查询测试：https://sqlzoo.net/wiki/Nested_SELECT_Quiz/zh</p></li>
+</ul>
+<h5 id="聚合函数和null">聚合函数和Null</h5>
+<ul>
+<li><p>聚合函数练习1：https://sqlzoo.net/wiki/SUM_and_COUNT/zh</p></li>
+<li><p>聚合函数练习2：https://sqlzoo.net/wiki/The_nobel_table_can_be_used_to_practice_more_SUM_and_COUNT_functions./zh</p></li>
+<li><p>聚合函数测试：https://sqlzoo.net/wiki/SUM_and_COUNT_Quiz</p></li>
+<li><p>Null值练习1：https://sqlzoo.net/wiki/Using_Null/zh</p></li>
+<li><p>Null值练习2：https://sqlzoo.net/wiki/Scottish_Parliament/zh</p></li>
+<li><p>Null值测试：https://sqlzoo.net/wiki/Using_Null_Quiz</p></li>
+</ul>
+<h5 id="表连接">表连接</h5>
+<ul>
+<li><p>表连接练习1：https://sqlzoo.net/wiki/The_JOIN_operation/zh</p></li>
+<li><p>表连接练习2：https://sqlzoo.net/wiki/Music_Tutorial/zh</p></li>
+<li><p>表连接测试1：https://sqlzoo.net/wiki/JOIN_Quiz</p></li>
+<li><p>表连接练习3：https://sqlzoo.net/wiki/More_JOIN_operations/zh</p></li>
+<li><p>表连接测试2：https://sqlzoo.net/wiki/JOIN_Quiz_2</p></li>
+</ul>
+<h5 id="自连接及函数">自连接及函数</h5>
+<ul>
+<li><p>自连接练习：https://sqlzoo.net/wiki/Self_join/zh</p></li>
+<li><p>自连接测试：https://sqlzoo.net/wiki/Self_join_Quiz</p></li>
+<li><p>常用函数：https://sqlzoo.net/wiki/Functions_Reference</p></li>
+</ul>
 ]]></content>
       <tags>
-        <tag>东京奥运会</tag>
+        <tag>SQL</tag>
       </tags>
   </entry>
   <entry>
@@ -279,6 +269,24 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
 ]]></content>
       <tags>
         <tag>影评</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>好玩的 Github</title>
+    <url>/2021/246677465.html</url>
+    <content><![CDATA[<p>前年的时候，做过一些 <a href="https://github.com/zEpoch/next-beautify">Hexo Next 主题的美化</a>，后来再上传的时候，就一股脑全部上传上去了，当然也没那么傻，倒是还是删掉了 node_modules 后再上传的，但是却是没有删掉 package.json，后来呢，Github 就经常提醒我有安全问题。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142124146.png" alt="image-20210719142124146" /></p>
+<p>打开一看，好家伙，全都是依赖警报</p>
+<span id="more"></span>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142440142.png" alt="image-20210719142440142" /></p>
+<p>然后细看一下会发现大都是依赖要进行升级了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142707537.png" alt="image-20210719142707537" style="zoom:100%;" /></p>
+<p>好在 Github 还是很舒服的，可以直接在线更改升级，还有个小机器人帮你升级。美滋滋</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142825189.png" alt="image-20210719142825189" /></p>
+]]></content>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Github</tag>
       </tags>
   </entry>
   <entry>
@@ -317,21 +325,13 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
-    <title>好玩的 Github</title>
-    <url>/2021/246677465.html</url>
-    <content><![CDATA[<p>前年的时候，做过一些 <a href="https://github.com/zEpoch/next-beautify">Hexo Next 主题的美化</a>，后来再上传的时候，就一股脑全部上传上去了，当然也没那么傻，倒是还是删掉了 node_modules 后再上传的，但是却是没有删掉 package.json，后来呢，Github 就经常提醒我有安全问题。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142124146.png" alt="image-20210719142124146" /></p>
-<p>打开一看，好家伙，全都是依赖警报</p>
-<span id="more"></span>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142440142.png" alt="image-20210719142440142" /></p>
-<p>然后细看一下会发现大都是依赖要进行升级了。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142707537.png" alt="image-20210719142707537" style="zoom:100%;" /></p>
-<p>好在 Github 还是很舒服的，可以直接在线更改升级，还有个小机器人帮你升级。美滋滋</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142825189.png" alt="image-20210719142825189" /></p>
+    <title>我们把你们想得太好了</title>
+    <url>/2021/1333461694.html</url>
+    <content><![CDATA[<p>“我们把你们想的太好了，我们认为你们会遵守基本的外交礼节”，有些话，原封不动，换个国家名，他居然还能用</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/%E6%88%91%E4%BB%AC%E6%8A%8A%E4%BD%A0%E4%BB%AC%E6%83%B3%E5%BE%97%E5%A4%AA%E5%A5%BD%E4%BA%86/%E6%88%91%E4%BB%AC%E6%8A%8A%E4%BD%A0%E4%BB%AC%E6%83%B3%E7%9A%84%E5%A4%AA%E5%A5%BD%E4%BA%86.png" alt="我们把你们想的太好了" /></p>
 ]]></content>
       <tags>
-        <tag>Hexo</tag>
-        <tag>Github</tag>
+        <tag>东京奥运会</tag>
       </tags>
   </entry>
   <entry>
@@ -381,22 +381,6 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
-    <title>摸鱼日记（3）</title>
-    <url>/2021/4026992349.html</url>
-    <content><![CDATA[<p>本来呢，暑假的计划是要读习的，奈何之前的毛选一还没读完，便是摸摸索索地读了毛选一，但也读的并不是很多，最重要地实践论和矛盾论倒是还没有看。</p>
-<p>这毛选读起来是真的有意思，很多东西，修修改改，放到现在，依旧是可以用的，对于中国社会各阶层地分析，将近一百年过去了，中国的阶层中，也就是文中的“地主阶级和买办阶级”换了一种形式存在了下来，有人称其为“人民富豪”之类的。</p>
-<span id="more"></span>
-<p>这两年，天下并不太平，工薪阶层声讨“人民富豪”之类的呼声越来越高，<code>其势如暴风骤雨，迅猛异常，无论什么大的力量都将压抑不住。他们将冲决一切束缚他们的罗网，朝着解放生产力的路上迅跑。一切帝国主义、军阀、贪官污吏、土豪劣绅，都将被他们葬入坟墓。</code>很大一部分原因出在某些人屁股背离了无产阶级的穷人，凡是反抗最力、乱子闹得最大的地方，都是那些“人民富豪”为恶最甚的地方。农民、工人的眼睛，全然没有错的。谁个劣，谁个不劣，谁个最甚，谁个稍次，谁个惩办要严，谁个处罚从轻，农民、工人都有极明白的计算，罚不当罪的极少。</p>
-<p>没有调查就没有发言权，这一点也是很重要的一件事情，尤其是在目前的互联网浪潮中。大多数人上网发表观点其实是所谓的情绪的宣泄，<code>看到一点表面，一个枝节，就指手画脚地说这也不对，那也错误</code>，而非通过调查查明某些事情，得到一手真实有效的证据，然后经过深思熟虑的分析，得到某些结论，这显然是不对的。离开实际调查就要产生唯心的阶级估量和唯心的工作指导， 那么，它的结果，不是机会主义，便是盲动主义。</p>
-<p>关心群众的生活问题，我觉得这一点，现在做的十分好，我是国家级贫困县出身的人，我能看到的是当地的政府工作人员对于当地的很多事情都是十分负责、尽心的。去年是扶贫大年，好多乡政府都想办法带动当地的村民去创业实现长久致富，这都是让当地人感到很开心的事情。前些日子家里发了大水，同志们都是和群众打成一片齐心抗洪的，没有一个人说不理会群众之类的，一个都没有。</p>
-<p>关于毛对战争的理解，除了战争本身外，我最敬佩的便是其中对未来的指导：<code>人类社会进步到消灭了阶级，消灭了国家，到了那时，什么战争也没有了，反革命战争没有了，革命战争也没有了，非正义战争没有了，正义战争也没有了，这就是人类的永久和平的时代。我们研究革命战争的规律，出发于我们要求消灭一切战争的志愿，这是区别我们共产党人和一切剥削阶级的界线。</code>这个便是我们无产阶级要为之奋斗一生的目标。</p>
-]]></content>
-      <tags>
-        <tag>毛选</tag>
-        <tag>摸鱼日记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>摸鱼日记（2）</title>
     <url>/2021/1220239800.html</url>
     <content><![CDATA[<p>早上八点，起床，下了床墨迹了一会儿，醒醒了脑子，再一看时间，已经八点四十了，呕吼，穿上袜子穿上鞋，刷个牙，洗把脸，再抹一曾润肤乳，完事。</p>
@@ -420,6 +404,22 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       <tags>
         <tag>生活</tag>
         <tag>考研日记</tag>
+        <tag>摸鱼日记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>摸鱼日记（3）</title>
+    <url>/2021/4026992349.html</url>
+    <content><![CDATA[<p>本来呢，暑假的计划是要读习的，奈何之前的毛选一还没读完，便是摸摸索索地读了毛选一，但也读的并不是很多，最重要地实践论和矛盾论倒是还没有看。</p>
+<p>这毛选读起来是真的有意思，很多东西，修修改改，放到现在，依旧是可以用的，对于中国社会各阶层地分析，将近一百年过去了，中国的阶层中，也就是文中的“地主阶级和买办阶级”换了一种形式存在了下来，有人称其为“人民富豪”之类的。</p>
+<span id="more"></span>
+<p>这两年，天下并不太平，工薪阶层声讨“人民富豪”之类的呼声越来越高，<code>其势如暴风骤雨，迅猛异常，无论什么大的力量都将压抑不住。他们将冲决一切束缚他们的罗网，朝着解放生产力的路上迅跑。一切帝国主义、军阀、贪官污吏、土豪劣绅，都将被他们葬入坟墓。</code>很大一部分原因出在某些人屁股背离了无产阶级的穷人，凡是反抗最力、乱子闹得最大的地方，都是那些“人民富豪”为恶最甚的地方。农民、工人的眼睛，全然没有错的。谁个劣，谁个不劣，谁个最甚，谁个稍次，谁个惩办要严，谁个处罚从轻，农民、工人都有极明白的计算，罚不当罪的极少。</p>
+<p>没有调查就没有发言权，这一点也是很重要的一件事情，尤其是在目前的互联网浪潮中。大多数人上网发表观点其实是所谓的情绪的宣泄，<code>看到一点表面，一个枝节，就指手画脚地说这也不对，那也错误</code>，而非通过调查查明某些事情，得到一手真实有效的证据，然后经过深思熟虑的分析，得到某些结论，这显然是不对的。离开实际调查就要产生唯心的阶级估量和唯心的工作指导， 那么，它的结果，不是机会主义，便是盲动主义。</p>
+<p>关心群众的生活问题，我觉得这一点，现在做的十分好，我是国家级贫困县出身的人，我能看到的是当地的政府工作人员对于当地的很多事情都是十分负责、尽心的。去年是扶贫大年，好多乡政府都想办法带动当地的村民去创业实现长久致富，这都是让当地人感到很开心的事情。前些日子家里发了大水，同志们都是和群众打成一片齐心抗洪的，没有一个人说不理会群众之类的，一个都没有。</p>
+<p>关于毛对战争的理解，除了战争本身外，我最敬佩的便是其中对未来的指导：<code>人类社会进步到消灭了阶级，消灭了国家，到了那时，什么战争也没有了，反革命战争没有了，革命战争也没有了，非正义战争没有了，正义战争也没有了，这就是人类的永久和平的时代。我们研究革命战争的规律，出发于我们要求消灭一切战争的志愿，这是区别我们共产党人和一切剥削阶级的界线。</code>这个便是我们无产阶级要为之奋斗一生的目标。</p>
+]]></content>
+      <tags>
+        <tag>毛选</tag>
         <tag>摸鱼日记</tag>
       </tags>
   </entry>

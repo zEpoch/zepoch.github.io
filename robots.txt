@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /2021/
+Allow: /tags/ 
+Allow: /resources/ 
+Allow: /page/
+Allow: /about/
+Disallow: /js/
+Disallow: /css/
+
+Sitemap: https://zepoch.github.io/sitemap.xml
+Sitemap: https://zepoch.github.io/baidusitemap.xml

@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>138. 复制带随机指针的链表</title>
-    <url>/2021/3186910758.html</url>
-    <content><![CDATA[<p><a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/">今天的力扣题目</a>的难度是中等，但是实际上做起来却感到稍微有些难。好吧，其实是因为俺太菜了嘤嘤嘤。题干如下：</p>
-<span id="more"></span>
-<blockquote>
-<p>给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random ，该指针可以指向链表中的任何节点或空节点。</p>
-<p>构造这个链表的 深拷贝。 深拷贝应该正好由 n 个 全新 节点组成，其中每个新节点的值都设为其对应的原节点的值。新节点的 next 指针和 random 指针也都应指向复制链表中的新节点，并使原链表和复制链表中的这些指针能够表示相同的链表状态。复制链表中的指针都不应指向原链表中的节点 。</p>
-<p>例如，如果原链表中有 X 和 Y 两个节点，其中 X.random --&gt; Y 。那么在复制链表中对应的两个节点 x 和 y ，同样有 x.random --&gt; y 。</p>
-<p>返回复制链表的头节点。</p>
-<p>用一个由 n 个节点组成的链表来表示输入/输出中的链表。每个节点用一个 [val, random_index] 表示：</p>
-<p>val：一个表示 Node.val 的整数。 random_index：随机指针指向的节点索引（范围从 0 到 n-1）；如果不指向任何节点，则为 null 。 你的代码 只 接受原链表的头节点 head 作为传入参数。</p>
-</blockquote>
-<p>示例：</p>
-<blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/e1.png" alt="e1" /></p>
-<p>输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]] 输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]</p>
-</blockquote>
-<p>对于链表 <span class="math inline">\(A-&gt;B-&gt;C\)</span>，我们可以将其拆分为 <span class="math inline">\(A-&gt;A&#39;-&gt;B-&gt;B&#39;-&gt;C-&gt;C&#39;\)</span>。对于任意一个节点 <span class="math inline">\(S\)</span>，其拷贝节点 <span class="math inline">\(S&#39;\)</span> 即为其后继节点，那么现在就可以将 <span class="math inline">\(S&#39;\)</span> 的随机节点指向 <span class="math inline">\(S.random.next\)</span>，即 <span class="math inline">\(p.next.random = p.random.next\)</span>，之后将拷贝链与原链分离开来。图示如下（<a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/solution/fu-zhi-dai-sui-ji-zhi-zhen-de-lian-biao-rblsf/">图源</a>）：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/1.png" alt="1" /></p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/2.png" alt="2" /></p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/3.png" alt="3" /></p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/4.png" alt="4" /></p>
-<p>代码如下</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, x: <span class="built_in">int</span>, <span class="built_in">next</span>: <span class="string">&#x27;Node&#x27;</span> = <span class="literal">None</span>, random: <span class="string">&#x27;Node&#x27;</span> = <span class="literal">None</span></span>):</span></span><br><span class="line">        self.val = <span class="built_in">int</span>(x)</span><br><span class="line">        self.<span class="built_in">next</span> = <span class="built_in">next</span></span><br><span class="line">        self.random = random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">copyRandomList</span>(<span class="params">self, head: <span class="string">&#x27;Node&#x27;</span></span>) -&gt; &#x27;Node&#x27;:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> head:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        p = head</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            new_node = Node(p.val,<span class="literal">None</span>,<span class="literal">None</span>)</span><br><span class="line">            new_node.<span class="built_in">next</span> = p.<span class="built_in">next</span></span><br><span class="line">            p.<span class="built_in">next</span> = new_node</span><br><span class="line">            p = new_node.<span class="built_in">next</span></span><br><span class="line">        p = head</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            <span class="keyword">if</span> p.random:</span><br><span class="line">                p.<span class="built_in">next</span>.random = p.random.<span class="built_in">next</span></span><br><span class="line">            p = p.<span class="built_in">next</span>.<span class="built_in">next</span></span><br><span class="line">        </span><br><span class="line">        p = head</span><br><span class="line">        dummy = Node(-<span class="number">1</span>,<span class="literal">None</span>,<span class="literal">None</span>)</span><br><span class="line">        cur = dummy</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            cur.<span class="built_in">next</span> = p.<span class="built_in">next</span></span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">            p.<span class="built_in">next</span> = cur.<span class="built_in">next</span></span><br><span class="line">            p = p.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> dummy.<span class="built_in">next</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>LeetCode</tag>
-        <tag>搜索</tag>
-        <tag>哈希表</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>5815. 扣分后的最大得分</title>
     <url>/2021/864291102.html</url>
     <content><![CDATA[<p>今天呢，上午还算是比较有空的，便是参加了<a href="https://leetcode-cn.com/contest/weekly-contest-250/">一场 LeetCode 的周赛</a>，而且还是第一次的周赛，体验还是挺不错的。</p>
@@ -80,6 +48,38 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       <tags>
         <tag>LeetCode</tag>
         <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>138. 复制带随机指针的链表</title>
+    <url>/2021/3186910758.html</url>
+    <content><![CDATA[<p><a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/">今天的力扣题目</a>的难度是中等，但是实际上做起来却感到稍微有些难。好吧，其实是因为俺太菜了嘤嘤嘤。题干如下：</p>
+<span id="more"></span>
+<blockquote>
+<p>给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random ，该指针可以指向链表中的任何节点或空节点。</p>
+<p>构造这个链表的 深拷贝。 深拷贝应该正好由 n 个 全新 节点组成，其中每个新节点的值都设为其对应的原节点的值。新节点的 next 指针和 random 指针也都应指向复制链表中的新节点，并使原链表和复制链表中的这些指针能够表示相同的链表状态。复制链表中的指针都不应指向原链表中的节点 。</p>
+<p>例如，如果原链表中有 X 和 Y 两个节点，其中 X.random --&gt; Y 。那么在复制链表中对应的两个节点 x 和 y ，同样有 x.random --&gt; y 。</p>
+<p>返回复制链表的头节点。</p>
+<p>用一个由 n 个节点组成的链表来表示输入/输出中的链表。每个节点用一个 [val, random_index] 表示：</p>
+<p>val：一个表示 Node.val 的整数。 random_index：随机指针指向的节点索引（范围从 0 到 n-1）；如果不指向任何节点，则为 null 。 你的代码 只 接受原链表的头节点 head 作为传入参数。</p>
+</blockquote>
+<p>示例：</p>
+<blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/e1.png" alt="e1" /></p>
+<p>输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]] 输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]</p>
+</blockquote>
+<p>对于链表 <span class="math inline">\(A-&gt;B-&gt;C\)</span>，我们可以将其拆分为 <span class="math inline">\(A-&gt;A&#39;-&gt;B-&gt;B&#39;-&gt;C-&gt;C&#39;\)</span>。对于任意一个节点 <span class="math inline">\(S\)</span>，其拷贝节点 <span class="math inline">\(S&#39;\)</span> 即为其后继节点，那么现在就可以将 <span class="math inline">\(S&#39;\)</span> 的随机节点指向 <span class="math inline">\(S.random.next\)</span>，即 <span class="math inline">\(p.next.random = p.random.next\)</span>，之后将拷贝链与原链分离开来。图示如下（<a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/solution/fu-zhi-dai-sui-ji-zhi-zhen-de-lian-biao-rblsf/">图源</a>）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/1.png" alt="1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/2.png" alt="2" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/3.png" alt="3" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/4.png" alt="4" /></p>
+<p>代码如下</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, x: <span class="built_in">int</span>, <span class="built_in">next</span>: <span class="string">&#x27;Node&#x27;</span> = <span class="literal">None</span>, random: <span class="string">&#x27;Node&#x27;</span> = <span class="literal">None</span></span>):</span></span><br><span class="line">        self.val = <span class="built_in">int</span>(x)</span><br><span class="line">        self.<span class="built_in">next</span> = <span class="built_in">next</span></span><br><span class="line">        self.random = random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">copyRandomList</span>(<span class="params">self, head: <span class="string">&#x27;Node&#x27;</span></span>) -&gt; &#x27;Node&#x27;:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> head:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        p = head</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            new_node = Node(p.val,<span class="literal">None</span>,<span class="literal">None</span>)</span><br><span class="line">            new_node.<span class="built_in">next</span> = p.<span class="built_in">next</span></span><br><span class="line">            p.<span class="built_in">next</span> = new_node</span><br><span class="line">            p = new_node.<span class="built_in">next</span></span><br><span class="line">        p = head</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            <span class="keyword">if</span> p.random:</span><br><span class="line">                p.<span class="built_in">next</span>.random = p.random.<span class="built_in">next</span></span><br><span class="line">            p = p.<span class="built_in">next</span>.<span class="built_in">next</span></span><br><span class="line">        </span><br><span class="line">        p = head</span><br><span class="line">        dummy = Node(-<span class="number">1</span>,<span class="literal">None</span>,<span class="literal">None</span>)</span><br><span class="line">        cur = dummy</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            cur.<span class="built_in">next</span> = p.<span class="built_in">next</span></span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">            p.<span class="built_in">next</span> = cur.<span class="built_in">next</span></span><br><span class="line">            p = p.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> dummy.<span class="built_in">next</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>LeetCode</tag>
+        <tag>搜索</tag>
+        <tag>哈希表</tag>
       </tags>
   </entry>
   <entry>
@@ -184,100 +184,13 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
-    <title>sqlzoo练习规划</title>
-    <url>/2021/387524820.html</url>
-    <content><![CDATA[<p>推荐一个SQL查询语句在线练习网站——<a href="https://sqlzoo.net/wiki/SQL_Tutorial/zh">SQLZOO</a>，这个网站上的题目由易到难，把整个网站上的题目都做完的话你可以自主的写出接近100条SQL查询语句，从简单的单表条件查询到多表联结查询，自联结查询等等。</p>
-<p>官网：https://sqlzoo.net/wiki/SQL_Tutorial/zh</p>
-<span id="more"></span>
-<h5 id="sql基础">sql基础</h5>
-<ul>
-<li><p>sql基础：https://sqlzoo.net/wiki/SELECT_basics/zh</p></li>
-<li><p>文字样式匹配查询：https://sqlzoo.net/wiki/SELECT_names/zh</p></li>
-<li><p>select测试：https://sqlzoo.net/wiki/SELECT_Quiz/zh</p></li>
-</ul>
-<h5 id="一般查询">一般查询</h5>
-<ul>
-<li><p>World表查询：https://sqlzoo.net/wiki/SQLZOO:SELECT_from_WORLD_Tutorial/zh</p></li>
-<li><p>World表测试：https://sqlzoo.net/wiki/BBC_QUIZ/zh</p></li>
-<li><p>Nobel表查询：https://sqlzoo.net/wiki/SELECT_from_Nobel_Tutorial/zh</p></li>
-<li><p>Nobel表测试：https://sqlzoo.net/wiki/Nobel_Quiz/zh</p></li>
-</ul>
-<h5 id="子查询">子查询</h5>
-<ul>
-<li><p>子查询原理：https://sqlzoo.net/wiki/Using_nested_SELECT/zh</p></li>
-<li><p>子查询练习：https://sqlzoo.net/wiki/SELECT_within_SELECT_Tutorial/zh</p></li>
-<li><p>Nobel子查询：https://sqlzoo.net/wiki/The_nobel_table_can_be_used_to_practice_more_subquery./zh</p></li>
-<li><p>子查询测试：https://sqlzoo.net/wiki/Nested_SELECT_Quiz/zh</p></li>
-</ul>
-<h5 id="聚合函数和null">聚合函数和Null</h5>
-<ul>
-<li><p>聚合函数练习1：https://sqlzoo.net/wiki/SUM_and_COUNT/zh</p></li>
-<li><p>聚合函数练习2：https://sqlzoo.net/wiki/The_nobel_table_can_be_used_to_practice_more_SUM_and_COUNT_functions./zh</p></li>
-<li><p>聚合函数测试：https://sqlzoo.net/wiki/SUM_and_COUNT_Quiz</p></li>
-<li><p>Null值练习1：https://sqlzoo.net/wiki/Using_Null/zh</p></li>
-<li><p>Null值练习2：https://sqlzoo.net/wiki/Scottish_Parliament/zh</p></li>
-<li><p>Null值测试：https://sqlzoo.net/wiki/Using_Null_Quiz</p></li>
-</ul>
-<h5 id="表连接">表连接</h5>
-<ul>
-<li><p>表连接练习1：https://sqlzoo.net/wiki/The_JOIN_operation/zh</p></li>
-<li><p>表连接练习2：https://sqlzoo.net/wiki/Music_Tutorial/zh</p></li>
-<li><p>表连接测试1：https://sqlzoo.net/wiki/JOIN_Quiz</p></li>
-<li><p>表连接练习3：https://sqlzoo.net/wiki/More_JOIN_operations/zh</p></li>
-<li><p>表连接测试2：https://sqlzoo.net/wiki/JOIN_Quiz_2</p></li>
-</ul>
-<h5 id="自连接及函数">自连接及函数</h5>
-<ul>
-<li><p>自连接练习：https://sqlzoo.net/wiki/Self_join/zh</p></li>
-<li><p>自连接测试：https://sqlzoo.net/wiki/Self_join_Quiz</p></li>
-<li><p>常用函数：https://sqlzoo.net/wiki/Functions_Reference</p></li>
-</ul>
-]]></content>
-      <tags>
-        <tag>SQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>不要死，也不要孤独的生活</title>
-    <url>/2021/3084145281.html</url>
-    <content><![CDATA[<p>打开新闻首页，密密麻麻的标题，独唱团大卖了，北京公交自燃了，贾宏声跳楼了。</p>
-<p>贾宏声是谁？这名字似乎听过，然而完全没印象了。点开新闻，说是周迅前男友，一博客说他从楼下跳下，砸坏了一辆车，口气好象很心痛那车。另一博客开始呼吁社会关心明星心理健康……</p>
-<p>还是不知道贾宏声是谁，也不想知道。每天死的人太多了，我关心不过来。</p>
-<span id="more"></span>
-<p>又在网上乱逛，打开另一个门户，又看到这新闻，看来他终于红了。点开，突然看到了一张照片和一段话。</p>
-<p>我又一次梦见了那条龙，他盘在屋顶上，两只眼睛死死的盯着我，他问我你是谁？我说我是贾宏声，他说贾宏声又是谁?我说贾宏声毕业于中央戏剧学院，是个演员，热爱摇滚乐，爱列侬和罗伯特普兰特，曾经想成为个名伟大的演员，也想组建一支伟大的乐队。他说你什么都不是，就是一个人，你爱吃面条，鸡蛋，爱穿时髦的衣服，可以哭也可以笑，受不了的时候还可以求人。我问他我为什么在这呢?他说这是对你的惩罚，因为你身上恶的东西太多了，必须把这些恶的东西清理出去，你才能彻底干净。我问他我干净了吗？他没有回答，两只眼睛还是死死的盯着我，然后就飞走了，你就是一个人你就是一个人一个人你就是一个人你就是一个人。</p>
-<p>看到这双死死瞪着的眼睛，我突然想起这个人是谁了。</p>
-<p>很早的时候，听过这段话，是中央六台放的电影《昨天》。那是一个关于……我不知道应该怎么介绍这主题……关于一个精神病人的故事？我只知道那里面贾宏声就叫贾宏声，他电影中的父母也是他真正的父母，他演得是他的昨天，是他自己，是真实的故事。</p>
-<p>那是一部让人看完心里很难平静的电影，因为这电影和其他电影不一样，完全不娱乐，而且看着很窝心。你看到了某种真实，在荒诞下的真实，一个不正常的人，做着不正常的事，有着完全不正常的心理。他活的与世界格格不入，他想追求一些东西，但他自己也不知道那是什么，结果自己和自己较劲，自己痛苦，而且搞得周围的人都痛苦，越爱他的人越痛苦。</p>
-<p>这种人当然不是主流，他们就是典型的极少数一小撮。这种人中有极少数一小撮在死后会被称为伟大的艺术家，作品被无数富商追捧，卖到上千万上亿，被奉为经典。而在他们活着的时候，会被送进精神病院，一部分被改造好后和常人无异，另一部分没有被改造好死在某个角落里。</p>
-<p>他们走到哪里都是病人。中国容不了他们，世界也容不了。也许他们唯一的价值就是去死，然后让人想起原来还有这么一个人，拍过这么一部电影。</p>
-<p>当然，贾宏声还拍过很多正常的片子，比如《银蛇谋杀案》之类，在他还正常的时候，在一部正常的娱乐片中演了一个正常的变态杀手。这是网上能找到的仅有剧照。导演居然是李少红。</p>
-<p>如果后来他没病，也许现在他会很有名，像当年他们那一代影视圈里的人，很多都成名成家了。他会继续演很多正常的片子，然后他再跳楼时，会比现在更惊哗——当然，他也不会再跳楼了。</p>
-<p>《昨天》是我唯一看过的贾宏声的作品。他还拍过《苏州河》，我也看过，但我不认为那是他的作品。</p>
-<p>《昨天》其实是张杨导演的，但我还是坚持认为，那是一部贾宏声的电影。</p>
-<p>对张杨来说，那只是部电影，可以冠个《中国病人》的名字拿去参加国际电影节得奖，但对于贾宏声来说，那不是电影，他就是那个病人。有人能给他拍记录片去拿奖，却没有人能治好他。</p>
-<p>张杨从来不下地狱，他拐个弯就上天堂了，他对我说，你下地狱就够了。</p>
-<p>——贾宏声</p>
-<p>贾宏声死了，大部分人都不知道他是谁。当天的新闻热点不是它，是韩寒的杂志，被无数人寄与“文学复兴”厚望而畅销的独唱团。看着贾宏声的照片，突然觉得他们其实有点像，同样带着和一切死磕的反社会姿态、同样被不齿者斥为装逼犯，但不同的是一个跳下去了，一个正走向声名与事业的顶峰。</p>
-<p>韩寒很幸运，早生二十年，以他的叛逆，很可能也被父母强制改造，或因为考不上大学，而沦落在某个角落，到他四十岁的时候，大概也会长成这个样子，无人问津，被当成另类，瞪着双眼，要和这个社会死磕。</p>
-<p>但他生活在一个商业的时代，他成为了一群人的代言人，并且这群人愿意为了他的代言而买他的书，让他致富。</p>
-<p>同一时刻，觉得表演都是骗人的，耻于谈钱，不愿拍商业电影，于是被人遗忘的上一代愤青贾宏声孤独死去，在死后媒体介绍的也不是他的电影，而是和某些女星的绯闻。在网上搜索《昨天》，搜不到这部电影。如果不是他死去，人们也不会再想起这部电影。</p>
-<p>四十三岁时的韩寒会是什么样，希望他那时不会孤独。</p>
-<p>《独唱团》上市了，贾宏声死了。将来不会再有人迷恋列农，也很少再有人知道他和列宁的区别。那些迷着摇滚、写着诗歌，喝着啤酒，谈论着后现代主义，活在八十年代的人，有的上了天堂，有的下了地狱，他们的时代，已经消亡。</p>
-<p>原文链接：<a href="https://movie.douban.com/review/3425047/">不要死 也不要孤独的生活（昨天）影评 (douban.com)</a></p>
-<p>作者：今何在</p>
-]]></content>
-      <tags>
-        <tag>影评</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>前端代码规范(1)</title>
     <url>/2021/4204481673.html</url>
     <content><![CDATA[<h1 id="代码规范">代码规范</h1>
 <h2 id="概述">1. 概述</h2>
 <p>欢迎使用品优购代码规范， 这个是我借鉴京东前端代码规范，组织的品优购内部规范。旨在增强团队开发协作、提高代码质量和打造开发基石的编码规范，</p>
 <p>以下规范是团队基本约定的内容，必须严格遵循。</p>
+<span id="more"></span>
 <h4 id="html规范">HTML规范</h4>
 <p>基于 <a href="http://www.w3.org/">W3C</a>、<a href="https://developer.apple.com/">苹果开发者</a> 等官方文档，并结合团队业务和开发过程中总结的规范约定，让页面HTML代码更具语义性。</p>
 <h4 id="图片规范">图片规范</h4>
@@ -877,6 +790,94 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
+    <title>sqlzoo练习规划</title>
+    <url>/2021/387524820.html</url>
+    <content><![CDATA[<p>推荐一个SQL查询语句在线练习网站——<a href="https://sqlzoo.net/wiki/SQL_Tutorial/zh">SQLZOO</a>，这个网站上的题目由易到难，把整个网站上的题目都做完的话你可以自主的写出接近100条SQL查询语句，从简单的单表条件查询到多表联结查询，自联结查询等等。</p>
+<p>官网：https://sqlzoo.net/wiki/SQL_Tutorial/zh</p>
+<span id="more"></span>
+<h5 id="sql基础">sql基础</h5>
+<ul>
+<li><p>sql基础：https://sqlzoo.net/wiki/SELECT_basics/zh</p></li>
+<li><p>文字样式匹配查询：https://sqlzoo.net/wiki/SELECT_names/zh</p></li>
+<li><p>select测试：https://sqlzoo.net/wiki/SELECT_Quiz/zh</p></li>
+</ul>
+<h5 id="一般查询">一般查询</h5>
+<ul>
+<li><p>World表查询：https://sqlzoo.net/wiki/SQLZOO:SELECT_from_WORLD_Tutorial/zh</p></li>
+<li><p>World表测试：https://sqlzoo.net/wiki/BBC_QUIZ/zh</p></li>
+<li><p>Nobel表查询：https://sqlzoo.net/wiki/SELECT_from_Nobel_Tutorial/zh</p></li>
+<li><p>Nobel表测试：https://sqlzoo.net/wiki/Nobel_Quiz/zh</p></li>
+</ul>
+<h5 id="子查询">子查询</h5>
+<ul>
+<li><p>子查询原理：https://sqlzoo.net/wiki/Using_nested_SELECT/zh</p></li>
+<li><p>子查询练习：https://sqlzoo.net/wiki/SELECT_within_SELECT_Tutorial/zh</p></li>
+<li><p>Nobel子查询：https://sqlzoo.net/wiki/The_nobel_table_can_be_used_to_practice_more_subquery./zh</p></li>
+<li><p>子查询测试：https://sqlzoo.net/wiki/Nested_SELECT_Quiz/zh</p></li>
+</ul>
+<h5 id="聚合函数和null">聚合函数和Null</h5>
+<ul>
+<li><p>聚合函数练习1：https://sqlzoo.net/wiki/SUM_and_COUNT/zh</p></li>
+<li><p>聚合函数练习2：https://sqlzoo.net/wiki/The_nobel_table_can_be_used_to_practice_more_SUM_and_COUNT_functions./zh</p></li>
+<li><p>聚合函数测试：https://sqlzoo.net/wiki/SUM_and_COUNT_Quiz</p></li>
+<li><p>Null值练习1：https://sqlzoo.net/wiki/Using_Null/zh</p></li>
+<li><p>Null值练习2：https://sqlzoo.net/wiki/Scottish_Parliament/zh</p></li>
+<li><p>Null值测试：https://sqlzoo.net/wiki/Using_Null_Quiz</p></li>
+</ul>
+<h5 id="表连接">表连接</h5>
+<ul>
+<li><p>表连接练习1：https://sqlzoo.net/wiki/The_JOIN_operation/zh</p></li>
+<li><p>表连接练习2：https://sqlzoo.net/wiki/Music_Tutorial/zh</p></li>
+<li><p>表连接测试1：https://sqlzoo.net/wiki/JOIN_Quiz</p></li>
+<li><p>表连接练习3：https://sqlzoo.net/wiki/More_JOIN_operations/zh</p></li>
+<li><p>表连接测试2：https://sqlzoo.net/wiki/JOIN_Quiz_2</p></li>
+</ul>
+<h5 id="自连接及函数">自连接及函数</h5>
+<ul>
+<li><p>自连接练习：https://sqlzoo.net/wiki/Self_join/zh</p></li>
+<li><p>自连接测试：https://sqlzoo.net/wiki/Self_join_Quiz</p></li>
+<li><p>常用函数：https://sqlzoo.net/wiki/Functions_Reference</p></li>
+</ul>
+]]></content>
+      <tags>
+        <tag>SQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>不要死，也不要孤独的生活</title>
+    <url>/2021/3084145281.html</url>
+    <content><![CDATA[<p>打开新闻首页，密密麻麻的标题，独唱团大卖了，北京公交自燃了，贾宏声跳楼了。</p>
+<p>贾宏声是谁？这名字似乎听过，然而完全没印象了。点开新闻，说是周迅前男友，一博客说他从楼下跳下，砸坏了一辆车，口气好象很心痛那车。另一博客开始呼吁社会关心明星心理健康……</p>
+<p>还是不知道贾宏声是谁，也不想知道。每天死的人太多了，我关心不过来。</p>
+<span id="more"></span>
+<p>又在网上乱逛，打开另一个门户，又看到这新闻，看来他终于红了。点开，突然看到了一张照片和一段话。</p>
+<p>我又一次梦见了那条龙，他盘在屋顶上，两只眼睛死死的盯着我，他问我你是谁？我说我是贾宏声，他说贾宏声又是谁?我说贾宏声毕业于中央戏剧学院，是个演员，热爱摇滚乐，爱列侬和罗伯特普兰特，曾经想成为个名伟大的演员，也想组建一支伟大的乐队。他说你什么都不是，就是一个人，你爱吃面条，鸡蛋，爱穿时髦的衣服，可以哭也可以笑，受不了的时候还可以求人。我问他我为什么在这呢?他说这是对你的惩罚，因为你身上恶的东西太多了，必须把这些恶的东西清理出去，你才能彻底干净。我问他我干净了吗？他没有回答，两只眼睛还是死死的盯着我，然后就飞走了，你就是一个人你就是一个人一个人你就是一个人你就是一个人。</p>
+<p>看到这双死死瞪着的眼睛，我突然想起这个人是谁了。</p>
+<p>很早的时候，听过这段话，是中央六台放的电影《昨天》。那是一个关于……我不知道应该怎么介绍这主题……关于一个精神病人的故事？我只知道那里面贾宏声就叫贾宏声，他电影中的父母也是他真正的父母，他演得是他的昨天，是他自己，是真实的故事。</p>
+<p>那是一部让人看完心里很难平静的电影，因为这电影和其他电影不一样，完全不娱乐，而且看着很窝心。你看到了某种真实，在荒诞下的真实，一个不正常的人，做着不正常的事，有着完全不正常的心理。他活的与世界格格不入，他想追求一些东西，但他自己也不知道那是什么，结果自己和自己较劲，自己痛苦，而且搞得周围的人都痛苦，越爱他的人越痛苦。</p>
+<p>这种人当然不是主流，他们就是典型的极少数一小撮。这种人中有极少数一小撮在死后会被称为伟大的艺术家，作品被无数富商追捧，卖到上千万上亿，被奉为经典。而在他们活着的时候，会被送进精神病院，一部分被改造好后和常人无异，另一部分没有被改造好死在某个角落里。</p>
+<p>他们走到哪里都是病人。中国容不了他们，世界也容不了。也许他们唯一的价值就是去死，然后让人想起原来还有这么一个人，拍过这么一部电影。</p>
+<p>当然，贾宏声还拍过很多正常的片子，比如《银蛇谋杀案》之类，在他还正常的时候，在一部正常的娱乐片中演了一个正常的变态杀手。这是网上能找到的仅有剧照。导演居然是李少红。</p>
+<p>如果后来他没病，也许现在他会很有名，像当年他们那一代影视圈里的人，很多都成名成家了。他会继续演很多正常的片子，然后他再跳楼时，会比现在更惊哗——当然，他也不会再跳楼了。</p>
+<p>《昨天》是我唯一看过的贾宏声的作品。他还拍过《苏州河》，我也看过，但我不认为那是他的作品。</p>
+<p>《昨天》其实是张杨导演的，但我还是坚持认为，那是一部贾宏声的电影。</p>
+<p>对张杨来说，那只是部电影，可以冠个《中国病人》的名字拿去参加国际电影节得奖，但对于贾宏声来说，那不是电影，他就是那个病人。有人能给他拍记录片去拿奖，却没有人能治好他。</p>
+<p>张杨从来不下地狱，他拐个弯就上天堂了，他对我说，你下地狱就够了。</p>
+<p>——贾宏声</p>
+<p>贾宏声死了，大部分人都不知道他是谁。当天的新闻热点不是它，是韩寒的杂志，被无数人寄与“文学复兴”厚望而畅销的独唱团。看着贾宏声的照片，突然觉得他们其实有点像，同样带着和一切死磕的反社会姿态、同样被不齿者斥为装逼犯，但不同的是一个跳下去了，一个正走向声名与事业的顶峰。</p>
+<p>韩寒很幸运，早生二十年，以他的叛逆，很可能也被父母强制改造，或因为考不上大学，而沦落在某个角落，到他四十岁的时候，大概也会长成这个样子，无人问津，被当成另类，瞪着双眼，要和这个社会死磕。</p>
+<p>但他生活在一个商业的时代，他成为了一群人的代言人，并且这群人愿意为了他的代言而买他的书，让他致富。</p>
+<p>同一时刻，觉得表演都是骗人的，耻于谈钱，不愿拍商业电影，于是被人遗忘的上一代愤青贾宏声孤独死去，在死后媒体介绍的也不是他的电影，而是和某些女星的绯闻。在网上搜索《昨天》，搜不到这部电影。如果不是他死去，人们也不会再想起这部电影。</p>
+<p>四十三岁时的韩寒会是什么样，希望他那时不会孤独。</p>
+<p>《独唱团》上市了，贾宏声死了。将来不会再有人迷恋列农，也很少再有人知道他和列宁的区别。那些迷着摇滚、写着诗歌，喝着啤酒，谈论着后现代主义，活在八十年代的人，有的上了天堂，有的下了地狱，他们的时代，已经消亡。</p>
+<p>原文链接：<a href="https://movie.douban.com/review/3425047/">不要死 也不要孤独的生活（昨天）影评 (douban.com)</a></p>
+<p>作者：今何在</p>
+]]></content>
+      <tags>
+        <tag>影评</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>愿河南平安</title>
     <url>/2021/3942837084.html</url>
     <content><![CDATA[<p>一直在看着新闻，镜头前的消防战士来往没停过，拖着橡皮艇从南边的地铁站和商场将人员运到较为安全的区域，其中还有不少一两岁的孩子。刚刚记者突然间就断线了，心就突然揪住了，就挺伤心的，莫名的哭了起来</p>
@@ -940,6 +941,29 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
+    <title>摸鱼日记（1）</title>
+    <url>/2021/1510919766.html</url>
+    <content><![CDATA[<p>七月三十一日，这个月结束了大三学年的学习，开始较为枯燥的考研生活，到了月底也是应该做一个小小的总结了，不然这个月也又是要浑浑噩噩地过去了。</p>
+<span id="more"></span>
+<h1 id="考研复习">考研复习</h1>
+<p>先总结一下考研复习进度吧，在七月中把网课过了一遍，是华中科技大学杨广笑老师的<a href="https://www.bilibili.com/video/BV1Ss411i7Mm">生物化学与分子生物学</a>，网课体验还是挺不错的，但是看完之后就觉得这门课要背诵要记忆的内容还是蛮多的，也有好多是自己没有掌握的，也是为过去自己没有好好学习这门科目感到羞愧；另外一个课是北京大学魏丽萍老师的<a href="https://www.bilibili.com/video/BV13t411G7oh">生物信息学</a>，感觉还是蛮简单的，好多东西记忆都还是十分清晰，甚至觉得要是选择生物信息学进行考试的话甚至不用怎么复习。但是又觉得自己要是没有良好的生物化学基础的话怕是对日后的科研道路会有一些影响，于是呢，最后还是选择了生物化学与分子生物学进行复习，本来计划这个月先把第一本书看完来着，但是到目前吧，现在是晚上八点，还有八十页没看，待会儿看一下，应该能在明天也就是下个月开启新的篇章。</p>
+<p>发现生物化学（第三版）这本书有一些有意思的地方，看的时候可以笑起来的那种。</p>
+<blockquote>
+<p>淋病奈瑟球菌（Nsisseria gonorrhoeae）只感染人的生殖器和口腔黏膜，对人的其他部位和其他不起作用。😅</p>
+</blockquote>
+<p>怪起来了。</p>
+<h1 id="代码之路">代码之路</h1>
+<p>虽然说是在复习期间，也没有落下编程的功底，力扣的每日写题也是没有落下，成功拿到了七月的打卡牌子。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/%E8%80%83%E7%A0%94%E6%97%A5%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/image-20210731200525059.png" alt="image-20210731200525059" /></p>
+<p>关于开源项目的开发，倒是开启的一个小项目 <a href="https://github.com/zEpoch/webStart">zEpoch/webStart (github.com)</a>，算是一个前端的入门项目吧，希望能够在日后获得一个 Star 之类的吧。</p>
+<p>关于这个博客，配置这个博客倒是配置了挺多的时间，也是做了很多的调试，目前来说速度和舒适度还是蛮比较不错的。</p>
+]]></content>
+      <tags>
+        <tag>生活</tag>
+        <tag>考研日记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>战争的目的在于消灭战争</title>
     <url>/2021/3536968392.html</url>
     <content><![CDATA[<p>今日读毛选，读到了中国革命战争的战略问题。我觉得毛泽东真的是一位军事奇才，他对战争的规律总结得十分到位，这是一套方法论，不管用到何处都能经过一定程度的变化，从而发挥作用的方法。</p>
@@ -990,45 +1014,6 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
-    <title>摸鱼日记（1）</title>
-    <url>/2021/1510919766.html</url>
-    <content><![CDATA[<p>七月三十一日，这个月结束了大三学年的学习，开始较为枯燥的考研生活，到了月底也是应该做一个小小的总结了，不然这个月也又是要浑浑噩噩地过去了。</p>
-<span id="more"></span>
-<h1 id="考研复习">考研复习</h1>
-<p>先总结一下考研复习进度吧，在七月中把网课过了一遍，是华中科技大学杨广笑老师的<a href="https://www.bilibili.com/video/BV1Ss411i7Mm">生物化学与分子生物学</a>，网课体验还是挺不错的，但是看完之后就觉得这门课要背诵要记忆的内容还是蛮多的，也有好多是自己没有掌握的，也是为过去自己没有好好学习这门科目感到羞愧；另外一个课是北京大学魏丽萍老师的<a href="https://www.bilibili.com/video/BV13t411G7oh">生物信息学</a>，感觉还是蛮简单的，好多东西记忆都还是十分清晰，甚至觉得要是选择生物信息学进行考试的话甚至不用怎么复习。但是又觉得自己要是没有良好的生物化学基础的话怕是对日后的科研道路会有一些影响，于是呢，最后还是选择了生物化学与分子生物学进行复习，本来计划这个月先把第一本书看完来着，但是到目前吧，现在是晚上八点，还有八十页没看，待会儿看一下，应该能在明天也就是下个月开启新的篇章。</p>
-<p>发现生物化学（第三版）这本书有一些有意思的地方，看的时候可以笑起来的那种。</p>
-<blockquote>
-<p>淋病奈瑟球菌（Nsisseria gonorrhoeae）只感染人的生殖器和口腔黏膜，对人的其他部位和其他不起作用。😅</p>
-</blockquote>
-<p>怪起来了。</p>
-<h1 id="代码之路">代码之路</h1>
-<p>虽然说是在复习期间，也没有落下编程的功底，力扣的每日写题也是没有落下，成功拿到了七月的打卡牌子。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/%E8%80%83%E7%A0%94%E6%97%A5%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/image-20210731200525059.png" alt="image-20210731200525059" /></p>
-<p>关于开源项目的开发，倒是开启的一个小项目 <a href="https://github.com/zEpoch/webStart">zEpoch/webStart (github.com)</a>，算是一个前端的入门项目吧，希望能够在日后获得一个 Star 之类的吧。</p>
-<p>关于这个博客，配置这个博客倒是配置了挺多的时间，也是做了很多的调试，目前来说速度和舒适度还是蛮比较不错的。</p>
-]]></content>
-      <tags>
-        <tag>生活</tag>
-        <tag>考研日记</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>摸鱼日记（3）</title>
-    <url>/2021/4026992349.html</url>
-    <content><![CDATA[<p>本来呢，暑假的计划是要读习的，奈何之前的毛选一还没读完，便是摸摸索索地读了毛选一，但也读的并不是很多，最重要地实践论和矛盾论倒是还没有看。</p>
-<p>这毛选读起来是真的有意思，很多东西，修修改改，放到现在，依旧是可以用的，对于中国社会各阶层地分析，将近一百年过去了，中国的阶层中，也就是文中的“地主阶级和买办阶级”换了一种形式存在了下来，有人称其为“人民富豪”之类的。</p>
-<span id="more"></span>
-<p>这两年，天下并不太平，工薪阶层声讨“人民富豪”之类的呼声越来越高，<code>其势如暴风骤雨，迅猛异常，无论什么大的力量都将压抑不住。他们将冲决一切束缚他们的罗网，朝着解放生产力的路上迅跑。一切帝国主义、军阀、贪官污吏、土豪劣绅，都将被他们葬入坟墓。</code>很大一部分原因出在某些人屁股背离了无产阶级的穷人，凡是反抗最力、乱子闹得最大的地方，都是那些“人民富豪”为恶最甚的地方。农民、工人的眼睛，全然没有错的。谁个劣，谁个不劣，谁个最甚，谁个稍次，谁个惩办要严，谁个处罚从轻，农民、工人都有极明白的计算，罚不当罪的极少。</p>
-<p>没有调查就没有发言权，这一点也是很重要的一件事情，尤其是在目前的互联网浪潮中。大多数人上网发表观点其实是所谓的情绪的宣泄，<code>看到一点表面，一个枝节，就指手画脚地说这也不对，那也错误</code>，而非通过调查查明某些事情，得到一手真实有效的证据，然后经过深思熟虑的分析，得到某些结论，这显然是不对的。离开实际调查就要产生唯心的阶级估量和唯心的工作指导， 那么，它的结果，不是机会主义，便是盲动主义。</p>
-<p>关心群众的生活问题，我觉得这一点，现在做的十分好，我是国家级贫困县出身的人，我能看到的是当地的政府工作人员对于当地的很多事情都是十分负责、尽心的。去年是扶贫大年，好多乡政府都想办法带动当地的村民去创业实现长久致富，这都是让当地人感到很开心的事情。前些日子家里发了大水，同志们都是和群众打成一片齐心抗洪的，没有一个人说不理会群众之类的，一个都没有。</p>
-<p>关于毛对战争的理解，除了战争本身外，我最敬佩的便是其中对未来的指导：<code>人类社会进步到消灭了阶级，消灭了国家，到了那时，什么战争也没有了，反革命战争没有了，革命战争也没有了，非正义战争没有了，正义战争也没有了，这就是人类的永久和平的时代。我们研究革命战争的规律，出发于我们要求消灭一切战争的志愿，这是区别我们共产党人和一切剥削阶级的界线。</code>这个便是我们无产阶级要为之奋斗一生的目标。</p>
-]]></content>
-      <tags>
-        <tag>毛选</tag>
-        <tag>摸鱼日记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>摸鱼日记（4）</title>
     <url>/2021/1842364004.html</url>
     <content><![CDATA[<p>呕吼，突然就过去了一个月，上一次更新博客还是上一次（确实）。那就回顾一下这个月做了些什么、发生了些什么吧。</p>
@@ -1045,6 +1030,22 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
         <tag>生活</tag>
         <tag>考研</tag>
         <tag>摸鱼</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>摸鱼日记（3）</title>
+    <url>/2021/4026992349.html</url>
+    <content><![CDATA[<p>本来呢，暑假的计划是要读习的，奈何之前的毛选一还没读完，便是摸摸索索地读了毛选一，但也读的并不是很多，最重要地实践论和矛盾论倒是还没有看。</p>
+<p>这毛选读起来是真的有意思，很多东西，修修改改，放到现在，依旧是可以用的，对于中国社会各阶层地分析，将近一百年过去了，中国的阶层中，也就是文中的“地主阶级和买办阶级”换了一种形式存在了下来，有人称其为“人民富豪”之类的。</p>
+<span id="more"></span>
+<p>这两年，天下并不太平，工薪阶层声讨“人民富豪”之类的呼声越来越高，<code>其势如暴风骤雨，迅猛异常，无论什么大的力量都将压抑不住。他们将冲决一切束缚他们的罗网，朝着解放生产力的路上迅跑。一切帝国主义、军阀、贪官污吏、土豪劣绅，都将被他们葬入坟墓。</code>很大一部分原因出在某些人屁股背离了无产阶级的穷人，凡是反抗最力、乱子闹得最大的地方，都是那些“人民富豪”为恶最甚的地方。农民、工人的眼睛，全然没有错的。谁个劣，谁个不劣，谁个最甚，谁个稍次，谁个惩办要严，谁个处罚从轻，农民、工人都有极明白的计算，罚不当罪的极少。</p>
+<p>没有调查就没有发言权，这一点也是很重要的一件事情，尤其是在目前的互联网浪潮中。大多数人上网发表观点其实是所谓的情绪的宣泄，<code>看到一点表面，一个枝节，就指手画脚地说这也不对，那也错误</code>，而非通过调查查明某些事情，得到一手真实有效的证据，然后经过深思熟虑的分析，得到某些结论，这显然是不对的。离开实际调查就要产生唯心的阶级估量和唯心的工作指导， 那么，它的结果，不是机会主义，便是盲动主义。</p>
+<p>关心群众的生活问题，我觉得这一点，现在做的十分好，我是国家级贫困县出身的人，我能看到的是当地的政府工作人员对于当地的很多事情都是十分负责、尽心的。去年是扶贫大年，好多乡政府都想办法带动当地的村民去创业实现长久致富，这都是让当地人感到很开心的事情。前些日子家里发了大水，同志们都是和群众打成一片齐心抗洪的，没有一个人说不理会群众之类的，一个都没有。</p>
+<p>关于毛对战争的理解，除了战争本身外，我最敬佩的便是其中对未来的指导：<code>人类社会进步到消灭了阶级，消灭了国家，到了那时，什么战争也没有了，反革命战争没有了，革命战争也没有了，非正义战争没有了，正义战争也没有了，这就是人类的永久和平的时代。我们研究革命战争的规律，出发于我们要求消灭一切战争的志愿，这是区别我们共产党人和一切剥削阶级的界线。</code>这个便是我们无产阶级要为之奋斗一生的目标。</p>
+]]></content>
+      <tags>
+        <tag>毛选</tag>
+        <tag>摸鱼日记</tag>
       </tags>
   </entry>
   <entry>

@@ -6,7 +6,7 @@
   <link href="https://zepoch.github.io/atom.xml" rel="self"/>
   
   <link href="https://zepoch.github.io/"/>
-  <updated>2021-09-22T04:39:56.680Z</updated>
+  <updated>2021-09-24T16:25:46.007Z</updated>
   <id>https://zepoch.github.io/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>前端代码规范(1)</title>
+    <link href="https://zepoch.github.io/2021/4204481673.html"/>
+    <id>https://zepoch.github.io/2021/4204481673.html</id>
+    <published>2021-09-24T16:24:25.000Z</published>
+    <updated>2021-09-24T16:25:46.007Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;代码规范&quot;&gt;代码规范&lt;/h1&gt;
+&lt;h2 id=&quot;概述&quot;&gt;1. 概述&lt;/h2&gt;
+&lt;p&gt;欢迎使用品优购代码规范，</summary>
+        
+      
+    
+    
+    
+    
+    <category term="前端" scheme="https://zepoch.github.io/tags/%E5%89%8D%E7%AB%AF/"/>
+    
+    <category term="HTML" scheme="https://zepoch.github.io/tags/HTML/"/>
+    
+    <category term="CSS" scheme="https://zepoch.github.io/tags/CSS/"/>
+    
+  </entry>
   
   <entry>
     <title>不要死，也不要孤独的生活</title>

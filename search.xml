@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>138. 复制带随机指针的链表</title>
+    <url>/2021/3186910758.html</url>
+    <content><![CDATA[<p><a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/">今天的力扣题目</a>的难度是中等，但是实际上做起来却感到稍微有些难。好吧，其实是因为俺太菜了嘤嘤嘤。题干如下：</p>
+<span id="more"></span>
+<blockquote>
+<p>给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random ，该指针可以指向链表中的任何节点或空节点。</p>
+<p>构造这个链表的 深拷贝。 深拷贝应该正好由 n 个 全新 节点组成，其中每个新节点的值都设为其对应的原节点的值。新节点的 next 指针和 random 指针也都应指向复制链表中的新节点，并使原链表和复制链表中的这些指针能够表示相同的链表状态。复制链表中的指针都不应指向原链表中的节点 。</p>
+<p>例如，如果原链表中有 X 和 Y 两个节点，其中 X.random --&gt; Y 。那么在复制链表中对应的两个节点 x 和 y ，同样有 x.random --&gt; y 。</p>
+<p>返回复制链表的头节点。</p>
+<p>用一个由 n 个节点组成的链表来表示输入/输出中的链表。每个节点用一个 [val, random_index] 表示：</p>
+<p>val：一个表示 Node.val 的整数。 random_index：随机指针指向的节点索引（范围从 0 到 n-1）；如果不指向任何节点，则为 null 。 你的代码 只 接受原链表的头节点 head 作为传入参数。</p>
+</blockquote>
+<p>示例：</p>
+<blockquote>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/e1.png" alt="e1" /></p>
+<p>输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]] 输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]</p>
+</blockquote>
+<p>对于链表 <span class="math inline">\(A-&gt;B-&gt;C\)</span>，我们可以将其拆分为 <span class="math inline">\(A-&gt;A&#39;-&gt;B-&gt;B&#39;-&gt;C-&gt;C&#39;\)</span>。对于任意一个节点 <span class="math inline">\(S\)</span>，其拷贝节点 <span class="math inline">\(S&#39;\)</span> 即为其后继节点，那么现在就可以将 <span class="math inline">\(S&#39;\)</span> 的随机节点指向 <span class="math inline">\(S.random.next\)</span>，即 <span class="math inline">\(p.next.random = p.random.next\)</span>，之后将拷贝链与原链分离开来。图示如下（<a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/solution/fu-zhi-dai-sui-ji-zhi-zhen-de-lian-biao-rblsf/">图源</a>）：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/1.png" alt="1" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/2.png" alt="2" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/3.png" alt="3" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/4.png" alt="4" /></p>
+<p>代码如下</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, x: <span class="built_in">int</span>, <span class="built_in">next</span>: <span class="string">&#x27;Node&#x27;</span> = <span class="literal">None</span>, random: <span class="string">&#x27;Node&#x27;</span> = <span class="literal">None</span></span>):</span></span><br><span class="line">        self.val = <span class="built_in">int</span>(x)</span><br><span class="line">        self.<span class="built_in">next</span> = <span class="built_in">next</span></span><br><span class="line">        self.random = random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">copyRandomList</span>(<span class="params">self, head: <span class="string">&#x27;Node&#x27;</span></span>) -&gt; &#x27;Node&#x27;:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> head:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        p = head</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            new_node = Node(p.val,<span class="literal">None</span>,<span class="literal">None</span>)</span><br><span class="line">            new_node.<span class="built_in">next</span> = p.<span class="built_in">next</span></span><br><span class="line">            p.<span class="built_in">next</span> = new_node</span><br><span class="line">            p = new_node.<span class="built_in">next</span></span><br><span class="line">        p = head</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            <span class="keyword">if</span> p.random:</span><br><span class="line">                p.<span class="built_in">next</span>.random = p.random.<span class="built_in">next</span></span><br><span class="line">            p = p.<span class="built_in">next</span>.<span class="built_in">next</span></span><br><span class="line">        </span><br><span class="line">        p = head</span><br><span class="line">        dummy = Node(-<span class="number">1</span>,<span class="literal">None</span>,<span class="literal">None</span>)</span><br><span class="line">        cur = dummy</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            cur.<span class="built_in">next</span> = p.<span class="built_in">next</span></span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">            p.<span class="built_in">next</span> = cur.<span class="built_in">next</span></span><br><span class="line">            p = p.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> dummy.<span class="built_in">next</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <tags>
+        <tag>LeetCode</tag>
+        <tag>搜索</tag>
+        <tag>哈希表</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>5815. 扣分后的最大得分</title>
     <url>/2021/864291102.html</url>
     <content><![CDATA[<p>今天呢，上午还算是比较有空的，便是参加了<a href="https://leetcode-cn.com/contest/weekly-contest-250/">一场 LeetCode 的周赛</a>，而且还是第一次的周赛，体验还是挺不错的。</p>
@@ -51,38 +83,6 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
-    <title>138. 复制带随机指针的链表</title>
-    <url>/2021/3186910758.html</url>
-    <content><![CDATA[<p><a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/">今天的力扣题目</a>的难度是中等，但是实际上做起来却感到稍微有些难。好吧，其实是因为俺太菜了嘤嘤嘤。题干如下：</p>
-<span id="more"></span>
-<blockquote>
-<p>给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random ，该指针可以指向链表中的任何节点或空节点。</p>
-<p>构造这个链表的 深拷贝。 深拷贝应该正好由 n 个 全新 节点组成，其中每个新节点的值都设为其对应的原节点的值。新节点的 next 指针和 random 指针也都应指向复制链表中的新节点，并使原链表和复制链表中的这些指针能够表示相同的链表状态。复制链表中的指针都不应指向原链表中的节点 。</p>
-<p>例如，如果原链表中有 X 和 Y 两个节点，其中 X.random --&gt; Y 。那么在复制链表中对应的两个节点 x 和 y ，同样有 x.random --&gt; y 。</p>
-<p>返回复制链表的头节点。</p>
-<p>用一个由 n 个节点组成的链表来表示输入/输出中的链表。每个节点用一个 [val, random_index] 表示：</p>
-<p>val：一个表示 Node.val 的整数。 random_index：随机指针指向的节点索引（范围从 0 到 n-1）；如果不指向任何节点，则为 null 。 你的代码 只 接受原链表的头节点 head 作为传入参数。</p>
-</blockquote>
-<p>示例：</p>
-<blockquote>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/e1.png" alt="e1" /></p>
-<p>输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]] 输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]</p>
-</blockquote>
-<p>对于链表 <span class="math inline">\(A-&gt;B-&gt;C\)</span>，我们可以将其拆分为 <span class="math inline">\(A-&gt;A&#39;-&gt;B-&gt;B&#39;-&gt;C-&gt;C&#39;\)</span>。对于任意一个节点 <span class="math inline">\(S\)</span>，其拷贝节点 <span class="math inline">\(S&#39;\)</span> 即为其后继节点，那么现在就可以将 <span class="math inline">\(S&#39;\)</span> 的随机节点指向 <span class="math inline">\(S.random.next\)</span>，即 <span class="math inline">\(p.next.random = p.random.next\)</span>，之后将拷贝链与原链分离开来。图示如下（<a href="https://leetcode-cn.com/problems/copy-list-with-random-pointer/solution/fu-zhi-dai-sui-ji-zhi-zhen-de-lian-biao-rblsf/">图源</a>）：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/1.png" alt="1" /></p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/2.png" alt="2" /></p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/3.png" alt="3" /></p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/138.%20%E5%A4%8D%E5%88%B6%E5%B8%A6%E9%9A%8F%E6%9C%BA%E6%8C%87%E9%92%88%E7%9A%84%E9%93%BE%E8%A1%A8/4.png" alt="4" /></p>
-<p>代码如下</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Node</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, x: <span class="built_in">int</span>, <span class="built_in">next</span>: <span class="string">&#x27;Node&#x27;</span> = <span class="literal">None</span>, random: <span class="string">&#x27;Node&#x27;</span> = <span class="literal">None</span></span>):</span></span><br><span class="line">        self.val = <span class="built_in">int</span>(x)</span><br><span class="line">        self.<span class="built_in">next</span> = <span class="built_in">next</span></span><br><span class="line">        self.random = random</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">copyRandomList</span>(<span class="params">self, head: <span class="string">&#x27;Node&#x27;</span></span>) -&gt; &#x27;Node&#x27;:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> head:</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">        p = head</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            new_node = Node(p.val,<span class="literal">None</span>,<span class="literal">None</span>)</span><br><span class="line">            new_node.<span class="built_in">next</span> = p.<span class="built_in">next</span></span><br><span class="line">            p.<span class="built_in">next</span> = new_node</span><br><span class="line">            p = new_node.<span class="built_in">next</span></span><br><span class="line">        p = head</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            <span class="keyword">if</span> p.random:</span><br><span class="line">                p.<span class="built_in">next</span>.random = p.random.<span class="built_in">next</span></span><br><span class="line">            p = p.<span class="built_in">next</span>.<span class="built_in">next</span></span><br><span class="line">        </span><br><span class="line">        p = head</span><br><span class="line">        dummy = Node(-<span class="number">1</span>,<span class="literal">None</span>,<span class="literal">None</span>)</span><br><span class="line">        cur = dummy</span><br><span class="line">        <span class="keyword">while</span> p:</span><br><span class="line">            cur.<span class="built_in">next</span> = p.<span class="built_in">next</span></span><br><span class="line">            cur = cur.<span class="built_in">next</span></span><br><span class="line">            p.<span class="built_in">next</span> = cur.<span class="built_in">next</span></span><br><span class="line">            p = p.<span class="built_in">next</span></span><br><span class="line">        <span class="keyword">return</span> dummy.<span class="built_in">next</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <tags>
-        <tag>LeetCode</tag>
-        <tag>搜索</tag>
-        <tag>哈希表</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hello World</title>
     <url>/2021/1243066710.html</url>
     <content><![CDATA[<p>终于呢，又是开通了我的博客，之所以是说终于，是因为之前也是开通过，但是呢，因为各种各样原因逐渐搁置，所以便是逐渐落下了博客的更新。</p>
@@ -92,27 +92,6 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
 ]]></content>
       <tags>
         <tag>生活</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hexo Next 友链配置</title>
-    <url>/2021/851229289.html</url>
-    <content><![CDATA[<p>在进行配置 Hexo Next 的友情链接的时候遇到了一些麻烦，特此进行记录如何进行 Hexo Next 友链的配置。</p>
-<span id="more"></span>
-<h3 id="创建一个友链界面">创建一个友链界面</h3>
-<p>首先像创建其他的菜单栏一样创建一个新的菜单</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo new page links</span><br></pre></td></tr></table></figure>
-<p>然后呢，需要在主题的<code>_config.yml</code>文件中进行如下配置，即在最后一行加上<code>links: /links/ || fa fa-link</code></p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="attr">home:</span> <span class="string">/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-home</span></span><br><span class="line">  <span class="attr">tags:</span> <span class="string">/tags/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-tags</span></span><br><span class="line">  <span class="comment">#categories: /categories/ || fa fa-th</span></span><br><span class="line">  <span class="attr">archives:</span> <span class="string">/archives/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-archive</span></span><br><span class="line">  <span class="comment">#schedule: /schedule/ || fa fa-calendar</span></span><br><span class="line">  <span class="comment">#sitemap: /sitemap.xml || fa fa-sitemap</span></span><br><span class="line">  <span class="comment">#commonweal: /404/ || fa fa-heartbeat</span></span><br><span class="line">  <span class="attr">about:</span> <span class="string">/about/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-user</span></span><br><span class="line">  <span class="attr">links:</span> <span class="string">/links/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-link</span></span><br></pre></td></tr></table></figure>
-<h3 id="写友链">写友链</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">blog/<span class="built_in">source</span>/links/index.md</span><br></pre></td></tr></table></figure>
-<p>在<code>index.md</code>中写入以下内容便是配置完成啦！</p>
-<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: 友情链接</span><br><span class="line"><span class="section">type: links</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line">以下为本站的友情链接。</span><br><span class="line"></span><br><span class="line">&#123;% linkgrid %&#125;</span><br><span class="line">周涛的站点 | https://zepoch.github.io | 记录我的工作学习与生活 | https://cdn.jsdelivr.net/gh/zEpoch/imageHome/avatar.png</span><br><span class="line"></span><br><span class="line">&#123;% endlinkgrid %&#125;</span><br><span class="line"></span><br><span class="line">如有意交换友情链接，可在评论区留言，格式参考下方。为了确保头像显示正确，建议使用 Gravatar 或者 jsDelivr 等服务。如果需要更新博客信息，请留言回复。</span><br><span class="line"></span><br><span class="line">&#123;% note success %&#125;</span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> 名称：周涛的站点</span><br><span class="line"><span class="bullet">-</span> 网址：https://zepoch.github.io/</span><br><span class="line"><span class="bullet">-</span> 简介：记录我的工作学习与生活</span><br><span class="line"><span class="bullet">-</span> 头像：https://cdn.jsdelivr.net/gh/zEpoch/imageHome/avatar.png</span><br><span class="line"></span><br><span class="line">&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">请您务必确保域名解析正确、https 证书有效且服务器工作正常。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<h3 id="参考">参考</h3>
-<p><a href="https://theme-next.js.org/docs/tag-plugins/link-grid.html">Link Grid | NexT (theme-next.js.org)</a></p>
-]]></content>
-      <tags>
-        <tag>Hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -181,6 +160,27 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
 ]]></content>
       <tags>
         <tag>龙族</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hexo Next 友链配置</title>
+    <url>/2021/851229289.html</url>
+    <content><![CDATA[<p>在进行配置 Hexo Next 的友情链接的时候遇到了一些麻烦，特此进行记录如何进行 Hexo Next 友链的配置。</p>
+<span id="more"></span>
+<h3 id="创建一个友链界面">创建一个友链界面</h3>
+<p>首先像创建其他的菜单栏一样创建一个新的菜单</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo new page links</span><br></pre></td></tr></table></figure>
+<p>然后呢，需要在主题的<code>_config.yml</code>文件中进行如下配置，即在最后一行加上<code>links: /links/ || fa fa-link</code></p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">menu:</span></span><br><span class="line">  <span class="attr">home:</span> <span class="string">/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-home</span></span><br><span class="line">  <span class="attr">tags:</span> <span class="string">/tags/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-tags</span></span><br><span class="line">  <span class="comment">#categories: /categories/ || fa fa-th</span></span><br><span class="line">  <span class="attr">archives:</span> <span class="string">/archives/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-archive</span></span><br><span class="line">  <span class="comment">#schedule: /schedule/ || fa fa-calendar</span></span><br><span class="line">  <span class="comment">#sitemap: /sitemap.xml || fa fa-sitemap</span></span><br><span class="line">  <span class="comment">#commonweal: /404/ || fa fa-heartbeat</span></span><br><span class="line">  <span class="attr">about:</span> <span class="string">/about/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-user</span></span><br><span class="line">  <span class="attr">links:</span> <span class="string">/links/</span> <span class="string">||</span> <span class="string">fa</span> <span class="string">fa-link</span></span><br></pre></td></tr></table></figure>
+<h3 id="写友链">写友链</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">blog/<span class="built_in">source</span>/links/index.md</span><br></pre></td></tr></table></figure>
+<p>在<code>index.md</code>中写入以下内容便是配置完成啦！</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: 友情链接</span><br><span class="line"><span class="section">type: links</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line">以下为本站的友情链接。</span><br><span class="line"></span><br><span class="line">&#123;% linkgrid %&#125;</span><br><span class="line">周涛的站点 | https://zepoch.github.io | 记录我的工作学习与生活 | https://cdn.jsdelivr.net/gh/zEpoch/imageHome/avatar.png</span><br><span class="line"></span><br><span class="line">&#123;% endlinkgrid %&#125;</span><br><span class="line"></span><br><span class="line">如有意交换友情链接，可在评论区留言，格式参考下方。为了确保头像显示正确，建议使用 Gravatar 或者 jsDelivr 等服务。如果需要更新博客信息，请留言回复。</span><br><span class="line"></span><br><span class="line">&#123;% note success %&#125;</span><br><span class="line"></span><br><span class="line"><span class="bullet">-</span> 名称：周涛的站点</span><br><span class="line"><span class="bullet">-</span> 网址：https://zepoch.github.io/</span><br><span class="line"><span class="bullet">-</span> 简介：记录我的工作学习与生活</span><br><span class="line"><span class="bullet">-</span> 头像：https://cdn.jsdelivr.net/gh/zEpoch/imageHome/avatar.png</span><br><span class="line"></span><br><span class="line">&#123;% endnote %&#125;</span><br><span class="line"></span><br><span class="line">请您务必确保域名解析正确、https 证书有效且服务器工作正常。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="参考">参考</h3>
+<p><a href="https://theme-next.js.org/docs/tag-plugins/link-grid.html">Link Grid | NexT (theme-next.js.org)</a></p>
+]]></content>
+      <tags>
+        <tag>Hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -272,21 +272,608 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
-    <title>好玩的 Github</title>
-    <url>/2021/246677465.html</url>
-    <content><![CDATA[<p>前年的时候，做过一些 <a href="https://github.com/zEpoch/next-beautify">Hexo Next 主题的美化</a>，后来再上传的时候，就一股脑全部上传上去了，当然也没那么傻，倒是还是删掉了 node_modules 后再上传的，但是却是没有删掉 package.json，后来呢，Github 就经常提醒我有安全问题。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142124146.png" alt="image-20210719142124146" /></p>
-<p>打开一看，好家伙，全都是依赖警报</p>
-<span id="more"></span>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142440142.png" alt="image-20210719142440142" /></p>
-<p>然后细看一下会发现大都是依赖要进行升级了。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142707537.png" alt="image-20210719142707537" style="zoom:100%;" /></p>
-<p>好在 Github 还是很舒服的，可以直接在线更改升级，还有个小机器人帮你升级。美滋滋</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142825189.png" alt="image-20210719142825189" /></p>
+    <title>前端代码规范(1)</title>
+    <url>/2021/4204481673.html</url>
+    <content><![CDATA[<h1 id="代码规范">代码规范</h1>
+<h2 id="概述">1. 概述</h2>
+<p>欢迎使用品优购代码规范， 这个是我借鉴京东前端代码规范，组织的品优购内部规范。旨在增强团队开发协作、提高代码质量和打造开发基石的编码规范，</p>
+<p>以下规范是团队基本约定的内容，必须严格遵循。</p>
+<h4 id="html规范">HTML规范</h4>
+<p>基于 <a href="http://www.w3.org/">W3C</a>、<a href="https://developer.apple.com/">苹果开发者</a> 等官方文档，并结合团队业务和开发过程中总结的规范约定，让页面HTML代码更具语义性。</p>
+<h4 id="图片规范">图片规范</h4>
+<p>了解各种图片格式特性，根据特性制定图片规范，包括但不限于图片的质量约定、图片引入方式、图片合并处理等，旨在从图片层面优化页面性能。</p>
+<h4 id="css规范">CSS规范</h4>
+<p>统一规范团队 CSS 代码书写风格和使用 CSS 预编译语言语法风格，提供常用媒体查询语句和浏览器私有属性引用，并从业务层面统一规范常用模块的引用。</p>
+<h4 id="命名规范">命名规范</h4>
+<p>从 <code>目录</code>、<code>图片</code>、<code>HTML/CSS文件</code>、<code>ClassName</code> 的命名等层面约定规范团队的命名习惯，增强团队代码的可读性。</p>
+<h2 id="html-规范">2. HTML 规范</h2>
+<h3 id="doctype-声明">DOCTYPE 声明</h3>
+<p>HTML文件必须加上 DOCTYPE 声明，并统一使用 HTML5 的文档声明：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HTML5标准模版</strong></p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;zh-CN&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>HTML5标准模版<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="页面语言lang">页面语言lang</h3>
+<p>推荐使用属性值 <code>cmn-Hans-CN</code>（简体, 中国大陆），但是考虑浏览器和操作系统的兼容性，目前仍然使用 <code>zh-CN</code> 属性值</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;html lang=&quot;zh-CN&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>更多地区语言参考：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">zh-SG 中文 (简体, 新加坡)   对应 cmn-Hans-SG 普通话 (简体, 新加坡)</span><br><span class="line">zh-HK 中文 (繁体, 香港)     对应 cmn-Hant-HK 普通话 (繁体, 香港)</span><br><span class="line">zh-MO 中文 (繁体, 澳门)     对应 cmn-Hant-MO 普通话 (繁体, 澳门)</span><br><span class="line">zh-TW 中文 (繁体, 台湾)     对应 cmn-Hant-TW 普通话 (繁体, 台湾)</span><br></pre></td></tr></table></figure>
+<h3 id="charset-字符集合">charset 字符集合</h3>
+<p>一般情况下统一使用 “UTF-8” 编码</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;meta charset=&quot;UTF-8&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>由于历史原因，有些业务可能会使用 “GBK” 编码</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;meta charset=&quot;GBK&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>请尽量统一写成标准的 “UTF-8”，不要写成 “utf-8” 或 “utf8” 或 “UTF8”。根据 <a href="http://www.ietf.org/rfc/rfc3629">IETF对UTF-8的定义</a>，其编码标准的写法是 “UTF-8”；而 UTF8 或 utf8 的写法只是出现在某些编程系统中，如 .NET framework 的类 System.Text.Encoding 中的一个属性名就叫 UTF8。</p>
+<h3 id="书写风格">书写风格</h3>
+<h4 id="html代码大小写">HTML代码大小写</h4>
+<p>HTML标签名、类名、标签属性和大部分属性值统一用小写</p>
+<p><em>推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div class=&quot;demo&quot;&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div class=&quot;DEMO&quot;&gt;&lt;/div&gt;</span><br><span class="line">	</span><br><span class="line">&lt;DIV CLASS=&quot;DEMO&quot;&gt;&lt;/DIV&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="类型属性">类型属性</h3>
+<p>不需要为 CSS、JS 指定类型属性，HTML5 中默认已包含</p>
+<p><em>推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;&quot; &gt;</span><br><span class="line">&lt;script src=&quot;&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;&quot; &gt;</span><br><span class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;&quot; &gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="元素属性">元素属性</h3>
+<ul>
+<li>元素属性值使用双引号语法</li>
+<li>元素属性值可以写上的都写上</li>
+</ul>
+<p><em>推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;input type=&quot;text&quot;&gt;</span><br><span class="line">&lt;input type=&quot;radio&quot; name=&quot;name&quot; checked=&quot;checked&quot; &gt;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;input type=text&gt;	</span><br><span class="line">&lt;input type=&#x27;text&#x27;&gt;</span><br><span class="line">&lt;input type=&quot;radio&quot; name=&quot;name&quot; checked &gt;</span><br></pre></td></tr></table></figure>
+<h3 id="特殊字符引用">特殊字符引用</h3>
+<p>文本可以和字符引用混合出现。这种方法可以用来转义在文本中不能合法出现的字符。</p>
+<p>在 HTML 中不能使用小于号 “&lt;” 和大于号 “&gt;”特殊字符，浏览器会将它们作为标签解析，若要正确显示，在 HTML 源代码中使用字符实体</p>
+<p><em>推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;a href=&quot;#&quot;&gt;more&amp;gt;&amp;gt;&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;a href=&quot;#&quot;&gt;more&gt;&gt;&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="代码缩进">代码缩进</h3>
+<p>统一使用四个空格进行代码缩进，使得各编辑器表现一致（各编辑器有相关配置）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div class=&quot;jdc&quot;&gt;</span><br><span class="line">    &lt;a href=&quot;#&quot;&gt;&lt;/a&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="代码嵌套">代码嵌套</h3>
+<p>元素嵌套规范，每个块状元素独立一行，内联元素可选</p>
+<p><em>推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;h1&gt;&lt;/h1&gt;</span><br><span class="line">    &lt;p&gt;&lt;/p&gt;</span><br><span class="line">&lt;/div&gt;	</span><br><span class="line">&lt;p&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/p&gt;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;h1&gt;&lt;/h1&gt;&lt;p&gt;&lt;/p&gt;</span><br><span class="line">&lt;/div&gt;	</span><br><span class="line">&lt;p&gt; </span><br><span class="line">    &lt;span&gt;&lt;/span&gt;</span><br><span class="line">    &lt;span&gt;&lt;/span&gt;</span><br><span class="line">&lt;/p&gt;</span><br></pre></td></tr></table></figure>
+<p>段落元素与标题元素只能嵌套内联元素</p>
+<p><em>推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;h1&gt;&lt;span&gt;&lt;/span&gt;&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;&lt;span&gt;&lt;/span&gt;&lt;span&gt;&lt;/span&gt;&lt;/p&gt;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;h1&gt;&lt;div&gt;&lt;/div&gt;&lt;/h1&gt;</span><br><span class="line">&lt;p&gt;&lt;div&gt;&lt;/div&gt;&lt;div&gt;&lt;/div&gt;&lt;/p&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="图片规范-1">3. 图片规范</h2>
+<h3 id="内容图">内容图</h3>
+<p>内容图多以商品图等照片类图片形式存在，颜色较为丰富，文件体积较大</p>
+<ul>
+<li>优先考虑 JPEG 格式，条件允许的话优先考虑 WebP 格式</li>
+<li>尽量不使用PNG格式，PNG8 色位太低，PNG24 压缩率低，文件体积大</li>
+<li><strong>PC平台单张的图片的大小不应大于 200KB。</strong></li>
+</ul>
+<h3 id="背景图">背景图</h3>
+<p>背景图多为图标等颜色比较简单、文件体积不大、起修饰作用的图片</p>
+<ul>
+<li>PNG 与 GIF 格式，优先考虑使用 PNG 格式,PNG格式允许更多的颜色并提供更好的压缩率</li>
+<li>图像颜色比较简单的，如纯色块线条图标，优先考虑使用 PNG8 格式，避免不使用 JPEG 格式</li>
+<li>图像颜色丰富而且图片文件不太大的（40KB 以下）或有半透明效果的优先考虑 PNG24 格式</li>
+<li>图像颜色丰富而且文件比较大的（40KB - 200KB）优先考虑 JPEG 格式</li>
+<li>条件允许的，优先考虑 WebP 代替 PNG 和 JPEG 格式</li>
+</ul>
+<h2 id="css规范-1">4. CSS规范</h2>
+<h3 id="代码格式化">代码格式化</h3>
+<p>样式书写一般有两种：一种是紧凑格式 (Compact)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc&#123; display: block;width: 50px;&#125;</span><br></pre></td></tr></table></figure>
+<p>一种是展开格式（Expanded）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc &#123;</span><br><span class="line">    display: block;</span><br><span class="line">    width: 50px;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>团队约定</strong></p>
+<p>统一使用展开格式书写样式</p>
+<h3 id="代码大小写">代码大小写</h3>
+<p>样式选择器，属性名，属性值关键字全部使用小写字母书写，属性字符串允许使用大小写。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/* 推荐 */</span><br><span class="line">.jdc&#123;</span><br><span class="line">	display:block;</span><br><span class="line">&#125;</span><br><span class="line">	</span><br><span class="line">/* 不推荐 */</span><br><span class="line">.JDC&#123;</span><br><span class="line">	DISPLAY:BLOCK;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="选择器">选择器</h3>
+<ul>
+<li>尽量少用通用选择器 <code>*</code></li>
+<li>不使用 ID 选择器</li>
+<li>不使用无具体语义定义的标签选择器</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* 推荐 */</span></span><br><span class="line"><span class="selector-class">.jdc</span> &#123;&#125;</span><br><span class="line"><span class="selector-class">.jdc</span> <span class="selector-tag">li</span> &#123;&#125;</span><br><span class="line"><span class="selector-class">.jdc</span> <span class="selector-tag">li</span> <span class="selector-tag">p</span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 不推荐 */</span></span><br><span class="line">*&#123;&#125;</span><br><span class="line"><span class="selector-id">#jdc</span> &#123;&#125;</span><br><span class="line"><span class="selector-class">.jdc</span> <span class="selector-tag">div</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="代码缩进-1">代码缩进</h3>
+<p>统一使用四个空格进行代码缩进，使得各编辑器表现一致（各编辑器有相关配置）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc &#123;</span><br><span class="line">    width: 100%;</span><br><span class="line">    height: 100%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="分号">分号</h3>
+<p>每个属性声明末尾都要加分号；</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc &#123;</span><br><span class="line">    width: 100%;</span><br><span class="line">    height: 100%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="代码易读性">代码易读性</h3>
+<p>左括号与类名之间一个空格，冒号与属性值之间一个空格</p>
+<p><em>推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc &#123; </span><br><span class="line">    width: 100%; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc&#123; </span><br><span class="line">    width:100%;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>逗号分隔的取值，逗号之后一个空格</p>
+<p><em>推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc &#123;</span><br><span class="line">    box-shadow: 1px 1px 1px #333, 2px 2px 2px #ccc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc &#123;</span><br><span class="line">    box-shadow: 1px 1px 1px #333,2px 2px 2px #ccc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为单个css选择器或新申明开启新行</p>
+<p><em>推荐：</em></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.jdc</span>, </span><br><span class="line"><span class="selector-class">.jdc_logo</span>, </span><br><span class="line"><span class="selector-class">.jdc_hd</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#ff0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.nav</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#fff</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.jdc</span>,jdc_logo,<span class="selector-class">.jdc_hd</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#ff0</span>;</span><br><span class="line">&#125;<span class="selector-class">.nav</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#fff</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>颜色值 <code>rgb()</code> <code>rgba()</code> <code>hsl()</code> <code>hsla()</code> <code>rect()</code> 中不需有空格，且取值不要带有不必要的 0</p>
+<p><em>推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc &#123;</span><br><span class="line">    color: rgba(255,255,255,.5);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc &#123;</span><br><span class="line">    color: rgba( 255, 255, 255, 0.5 );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>属性值十六进制数值能用简写的尽量用简写</p>
+<p><em>推荐：</em></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">.jdc &#123;</span><br><span class="line">    color: #fff;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.jdc</span> &#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#ffffff</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不要为 <code>0</code> 指明单位</p>
+<p><em>推荐：</em></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.jdc</span> &#123;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><em>不推荐：</em></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.jdc</span> &#123;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0px</span> <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="属性值引号">属性值引号</h3>
+<p>css属性值需要用到引号时，统一使用单引号</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* 推荐 */</span></span><br><span class="line"><span class="selector-class">.jdc</span> &#123; </span><br><span class="line">	<span class="attribute">font-family</span>: <span class="string">&#x27;Hiragino Sans GB&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 不推荐 */</span></span><br><span class="line"><span class="selector-class">.jdc</span> &#123; </span><br><span class="line">	<span class="attribute">font-family</span>: <span class="string">&quot;Hiragino Sans GB&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="属性书写顺序">属性书写顺序</h3>
+<p>建议遵循以下顺序：</p>
+<ol type="1">
+<li>布局定位属性：display / position / float / clear / visibility / overflow（建议 display 第一个写，毕竟关系到模式）</li>
+<li>自身属性：width / height / margin / padding / border / background</li>
+<li>文本属性：color / font / text-decoration / text-align / vertical-align / white- space / break-word</li>
+<li>其他属性（CSS3）：content / cursor / border-radius / box-shadow / text-shadow / background:linear-gradient …</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-class">.jdc</span> &#123;</span><br><span class="line">    <span class="attribute">display</span>: block;</span><br><span class="line">    <span class="attribute">position</span>: relative;</span><br><span class="line">    <span class="attribute">float</span>: left;</span><br><span class="line">    <span class="attribute">width</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>: <span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">margin</span>: <span class="number">0</span> <span class="number">10px</span>;</span><br><span class="line">    <span class="attribute">padding</span>: <span class="number">20px</span> <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">font-family</span>: Arial, <span class="string">&#x27;Helvetica Neue&#x27;</span>, Helvetica, sans-serif;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#333</span>;</span><br><span class="line">    <span class="attribute">background</span>: <span class="built_in">rgba</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,.<span class="number">5</span>);</span><br><span class="line">    -webkit-<span class="attribute">border-radius</span>: <span class="number">10px</span>;</span><br><span class="line">    -moz-<span class="attribute">border-radius</span>: <span class="number">10px</span>;</span><br><span class="line">    -o-<span class="attribute">border-radius</span>: <span class="number">10px</span>;</span><br><span class="line">    -ms-<span class="attribute">border-radius</span>: <span class="number">10px</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>: <span class="number">10px</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="https://www.mozilla.org/css/base/content.css">mozilla官方属性顺序推荐</a></p>
+<h2 id="命名规范-1">命名规范</h2>
+<p>由历史原因及个人习惯引起的 DOM 结构、命名不统一，导致不同成员在维护同一页面时，效率低下，迭代、维护成本极高。</p>
+<h3 id="目录命名">目录命名</h3>
+<ul>
+<li>项目文件夹：shoping</li>
+<li>样式文件夹：css</li>
+<li>脚本文件夹：js</li>
+<li>样式类图片文件夹：img</li>
+<li>产品类图片文件夹： upload</li>
+<li>字体类文件夹： fonts</li>
+</ul>
+<h3 id="classname命名">ClassName命名</h3>
+<p>ClassName的命名应该尽量精短、明确，必须以<strong>字母开头命名</strong>，且<strong>全部字母为小写</strong>，单词之间<strong>统一使用下划线</strong> “_” 连接</p>
+<p>.nav_top</p>
+<h4 id="常用命名推荐">常用命名推荐</h4>
+<p><strong>注意</strong>：ad、banner、gg、guanggao 等有机会和广告挂勾的不建议直接用来做ClassName，因为有些浏览器插件（Chrome的广告拦截插件等）会直接过滤这些类名，因此</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div class=&quot;ad&quot;&gt;&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+<p>这种广告的英文或拼音类名不应该出现</p>
+<p>另外，<strong>敏感不和谐字眼</strong>也不应该出现，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&lt;div class=&quot;fuck&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div class=&quot;jer&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div class=&quot;sm&quot;&gt;&lt;/div&gt;</span><br><span class="line">&lt;div class=&quot;gcd&quot;&gt;&lt;/div&gt; </span><br><span class="line">&lt;div class=&quot;ass&quot;&gt;&lt;/div&gt; </span><br><span class="line">&lt;div class=&quot;KMT&quot;&gt;&lt;/div&gt; </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr class="header">
+<th>ClassName</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>about</td>
+<td>关于</td>
+</tr>
+<tr class="even">
+<td>account</td>
+<td>账户</td>
+</tr>
+<tr class="odd">
+<td>arrow</td>
+<td>箭头图标</td>
+</tr>
+<tr class="even">
+<td>article</td>
+<td>文章</td>
+</tr>
+<tr class="odd">
+<td>aside</td>
+<td>边栏</td>
+</tr>
+<tr class="even">
+<td>audio</td>
+<td>音频</td>
+</tr>
+<tr class="odd">
+<td>avatar</td>
+<td>头像</td>
+</tr>
+<tr class="even">
+<td>bg,background</td>
+<td>背景</td>
+</tr>
+<tr class="odd">
+<td>bar</td>
+<td>栏（工具类）</td>
+</tr>
+<tr class="even">
+<td>branding</td>
+<td>品牌化</td>
+</tr>
+<tr class="odd">
+<td>crumb,breadcrumbs</td>
+<td>面包屑</td>
+</tr>
+<tr class="even">
+<td>btn,button</td>
+<td>按钮</td>
+</tr>
+<tr class="odd">
+<td>caption</td>
+<td>标题，说明</td>
+</tr>
+<tr class="even">
+<td>category</td>
+<td>分类</td>
+</tr>
+<tr class="odd">
+<td>chart</td>
+<td>图表</td>
+</tr>
+<tr class="even">
+<td>clearfix</td>
+<td>清除浮动</td>
+</tr>
+<tr class="odd">
+<td>close</td>
+<td>关闭</td>
+</tr>
+<tr class="even">
+<td>col,column</td>
+<td>列</td>
+</tr>
+<tr class="odd">
+<td>comment</td>
+<td>评论</td>
+</tr>
+<tr class="even">
+<td>community</td>
+<td>社区</td>
+</tr>
+<tr class="odd">
+<td>container</td>
+<td>容器</td>
+</tr>
+<tr class="even">
+<td>content</td>
+<td>内容</td>
+</tr>
+<tr class="odd">
+<td>copyright</td>
+<td>版权</td>
+</tr>
+<tr class="even">
+<td>current</td>
+<td>当前态，选中态</td>
+</tr>
+<tr class="odd">
+<td>default</td>
+<td>默认</td>
+</tr>
+<tr class="even">
+<td>description</td>
+<td>描述</td>
+</tr>
+<tr class="odd">
+<td>details</td>
+<td>细节</td>
+</tr>
+<tr class="even">
+<td>disabled</td>
+<td>不可用</td>
+</tr>
+<tr class="odd">
+<td>entry</td>
+<td>文章，博文</td>
+</tr>
+<tr class="even">
+<td>error</td>
+<td>错误</td>
+</tr>
+<tr class="odd">
+<td>even</td>
+<td>偶数，常用于多行列表或表格中</td>
+</tr>
+<tr class="even">
+<td>fail</td>
+<td>失败（提示）</td>
+</tr>
+<tr class="odd">
+<td>feature</td>
+<td>专题</td>
+</tr>
+<tr class="even">
+<td>fewer</td>
+<td>收起</td>
+</tr>
+<tr class="odd">
+<td>field</td>
+<td>用于表单的输入区域</td>
+</tr>
+<tr class="even">
+<td>figure</td>
+<td>图</td>
+</tr>
+<tr class="odd">
+<td>filter</td>
+<td>筛选</td>
+</tr>
+<tr class="even">
+<td>first</td>
+<td>第一个，常用于列表中</td>
+</tr>
+<tr class="odd">
+<td>footer</td>
+<td>页脚</td>
+</tr>
+<tr class="even">
+<td>forum</td>
+<td>论坛</td>
+</tr>
+<tr class="odd">
+<td>gallery</td>
+<td>画廊</td>
+</tr>
+<tr class="even">
+<td>group</td>
+<td>模块，清除浮动</td>
+</tr>
+<tr class="odd">
+<td>header</td>
+<td>页头</td>
+</tr>
+<tr class="even">
+<td>help</td>
+<td>帮助</td>
+</tr>
+<tr class="odd">
+<td>hide</td>
+<td>隐藏</td>
+</tr>
+<tr class="even">
+<td>hightlight</td>
+<td>高亮</td>
+</tr>
+<tr class="odd">
+<td>home</td>
+<td>主页</td>
+</tr>
+<tr class="even">
+<td>icon</td>
+<td>图标</td>
+</tr>
+<tr class="odd">
+<td>info,information</td>
+<td>信息</td>
+</tr>
+<tr class="even">
+<td>last</td>
+<td>最后一个，常用于列表中</td>
+</tr>
+<tr class="odd">
+<td>links</td>
+<td>链接</td>
+</tr>
+<tr class="even">
+<td>login</td>
+<td>登录</td>
+</tr>
+<tr class="odd">
+<td>logout</td>
+<td>退出</td>
+</tr>
+<tr class="even">
+<td>logo</td>
+<td>标志</td>
+</tr>
+<tr class="odd">
+<td>main</td>
+<td>主体</td>
+</tr>
+<tr class="even">
+<td>menu</td>
+<td>菜单</td>
+</tr>
+<tr class="odd">
+<td>meta</td>
+<td>作者、更新时间等信息栏，一般位于标题之下</td>
+</tr>
+<tr class="even">
+<td>module</td>
+<td>模块</td>
+</tr>
+<tr class="odd">
+<td>more</td>
+<td>更多（展开）</td>
+</tr>
+<tr class="even">
+<td>msg,message</td>
+<td>消息</td>
+</tr>
+<tr class="odd">
+<td>nav,navigation</td>
+<td>导航</td>
+</tr>
+<tr class="even">
+<td>next</td>
+<td>下一页</td>
+</tr>
+<tr class="odd">
+<td>nub</td>
+<td>小块</td>
+</tr>
+<tr class="even">
+<td>odd</td>
+<td>奇数，常用于多行列表或表格中</td>
+</tr>
+<tr class="odd">
+<td>off</td>
+<td>鼠标离开</td>
+</tr>
+<tr class="even">
+<td>on</td>
+<td>鼠标移过</td>
+</tr>
+<tr class="odd">
+<td>output</td>
+<td>输出</td>
+</tr>
+<tr class="even">
+<td>pagination</td>
+<td>分页</td>
+</tr>
+<tr class="odd">
+<td>pop,popup</td>
+<td>弹窗</td>
+</tr>
+<tr class="even">
+<td>preview</td>
+<td>预览</td>
+</tr>
+<tr class="odd">
+<td>previous</td>
+<td>上一页</td>
+</tr>
+<tr class="even">
+<td>primary</td>
+<td>主要</td>
+</tr>
+<tr class="odd">
+<td>progress</td>
+<td>进度条</td>
+</tr>
+<tr class="even">
+<td>promotion</td>
+<td>促销</td>
+</tr>
+<tr class="odd">
+<td>rcommd,recommendations</td>
+<td>推荐</td>
+</tr>
+<tr class="even">
+<td>reg,register</td>
+<td>注册</td>
+</tr>
+<tr class="odd">
+<td>save</td>
+<td>保存</td>
+</tr>
+<tr class="even">
+<td>search</td>
+<td>搜索</td>
+</tr>
+<tr class="odd">
+<td>secondary</td>
+<td>次要</td>
+</tr>
+<tr class="even">
+<td>section</td>
+<td>区块</td>
+</tr>
+<tr class="odd">
+<td>selected</td>
+<td>已选</td>
+</tr>
+<tr class="even">
+<td>share</td>
+<td>分享</td>
+</tr>
+<tr class="odd">
+<td>show</td>
+<td>显示</td>
+</tr>
+<tr class="even">
+<td>sidebar</td>
+<td>边栏，侧栏</td>
+</tr>
+<tr class="odd">
+<td>slide</td>
+<td>幻灯片，图片切换</td>
+</tr>
+<tr class="even">
+<td>sort</td>
+<td>排序</td>
+</tr>
+<tr class="odd">
+<td>sub</td>
+<td>次级的，子级的</td>
+</tr>
+<tr class="even">
+<td>submit</td>
+<td>提交</td>
+</tr>
+<tr class="odd">
+<td>subscribe</td>
+<td>订阅</td>
+</tr>
+<tr class="even">
+<td>subtitle</td>
+<td>副标题</td>
+</tr>
+<tr class="odd">
+<td>success</td>
+<td>成功（提示）</td>
+</tr>
+<tr class="even">
+<td>summary</td>
+<td>摘要</td>
+</tr>
+<tr class="odd">
+<td>tab</td>
+<td>标签页</td>
+</tr>
+<tr class="even">
+<td>table</td>
+<td>表格</td>
+</tr>
+<tr class="odd">
+<td>txt,text</td>
+<td>文本</td>
+</tr>
+<tr class="even">
+<td>thumbnail</td>
+<td>缩略图</td>
+</tr>
+<tr class="odd">
+<td>time</td>
+<td>时间</td>
+</tr>
+<tr class="even">
+<td>tips</td>
+<td>提示</td>
+</tr>
+<tr class="odd">
+<td>title</td>
+<td>标题</td>
+</tr>
+<tr class="even">
+<td>video</td>
+<td>视频</td>
+</tr>
+<tr class="odd">
+<td>wrap</td>
+<td>容器，包，一般用于最外层</td>
+</tr>
+<tr class="even">
+<td>wrapper</td>
+<td>容器，包，一般用于最外层</td>
+</tr>
+</tbody>
+</table>
 ]]></content>
       <tags>
-        <tag>Hexo</tag>
-        <tag>Github</tag>
+        <tag>前端</tag>
+        <tag>HTML</tag>
+        <tag>CSS</tag>
       </tags>
   </entry>
   <entry>
@@ -325,6 +912,24 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
+    <title>好玩的 Github</title>
+    <url>/2021/246677465.html</url>
+    <content><![CDATA[<p>前年的时候，做过一些 <a href="https://github.com/zEpoch/next-beautify">Hexo Next 主题的美化</a>，后来再上传的时候，就一股脑全部上传上去了，当然也没那么傻，倒是还是删掉了 node_modules 后再上传的，但是却是没有删掉 package.json，后来呢，Github 就经常提醒我有安全问题。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142124146.png" alt="image-20210719142124146" /></p>
+<p>打开一看，好家伙，全都是依赖警报</p>
+<span id="more"></span>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142440142.png" alt="image-20210719142440142" /></p>
+<p>然后细看一下会发现大都是依赖要进行升级了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142707537.png" alt="image-20210719142707537" style="zoom:100%;" /></p>
+<p>好在 Github 还是很舒服的，可以直接在线更改升级，还有个小机器人帮你升级。美滋滋</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/img/image-20210719142825189.png" alt="image-20210719142825189" /></p>
+]]></content>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>Github</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>我们把你们想得太好了</title>
     <url>/2021/1333461694.html</url>
     <content><![CDATA[<p>“我们把你们想的太好了，我们认为你们会遵守基本的外交礼节”，有些话，原封不动，换个国家名，他居然还能用</p>
@@ -358,29 +963,6 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
-    <title>摸鱼日记（1）</title>
-    <url>/2021/1510919766.html</url>
-    <content><![CDATA[<p>七月三十一日，这个月结束了大三学年的学习，开始较为枯燥的考研生活，到了月底也是应该做一个小小的总结了，不然这个月也又是要浑浑噩噩地过去了。</p>
-<span id="more"></span>
-<h1 id="考研复习">考研复习</h1>
-<p>先总结一下考研复习进度吧，在七月中把网课过了一遍，是华中科技大学杨广笑老师的<a href="https://www.bilibili.com/video/BV1Ss411i7Mm">生物化学与分子生物学</a>，网课体验还是挺不错的，但是看完之后就觉得这门课要背诵要记忆的内容还是蛮多的，也有好多是自己没有掌握的，也是为过去自己没有好好学习这门科目感到羞愧；另外一个课是北京大学魏丽萍老师的<a href="https://www.bilibili.com/video/BV13t411G7oh">生物信息学</a>，感觉还是蛮简单的，好多东西记忆都还是十分清晰，甚至觉得要是选择生物信息学进行考试的话甚至不用怎么复习。但是又觉得自己要是没有良好的生物化学基础的话怕是对日后的科研道路会有一些影响，于是呢，最后还是选择了生物化学与分子生物学进行复习，本来计划这个月先把第一本书看完来着，但是到目前吧，现在是晚上八点，还有八十页没看，待会儿看一下，应该能在明天也就是下个月开启新的篇章。</p>
-<p>发现生物化学（第三版）这本书有一些有意思的地方，看的时候可以笑起来的那种。</p>
-<blockquote>
-<p>淋病奈瑟球菌（Nsisseria gonorrhoeae）只感染人的生殖器和口腔黏膜，对人的其他部位和其他不起作用。😅</p>
-</blockquote>
-<p>怪起来了。</p>
-<h1 id="代码之路">代码之路</h1>
-<p>虽然说是在复习期间，也没有落下编程的功底，力扣的每日写题也是没有落下，成功拿到了七月的打卡牌子。</p>
-<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/%E8%80%83%E7%A0%94%E6%97%A5%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/image-20210731200525059.png" alt="image-20210731200525059" /></p>
-<p>关于开源项目的开发，倒是开启的一个小项目 <a href="https://github.com/zEpoch/webStart">zEpoch/webStart (github.com)</a>，算是一个前端的入门项目吧，希望能够在日后获得一个 Star 之类的吧。</p>
-<p>关于这个博客，配置这个博客倒是配置了挺多的时间，也是做了很多的调试，目前来说速度和舒适度还是蛮比较不错的。</p>
-]]></content>
-      <tags>
-        <tag>生活</tag>
-        <tag>考研日记</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>摸鱼日记（2）</title>
     <url>/2021/1220239800.html</url>
     <content><![CDATA[<p>早上八点，起床，下了床墨迹了一会儿，醒醒了脑子，再一看时间，已经八点四十了，呕吼，穿上袜子穿上鞋，刷个牙，洗把脸，再抹一曾润肤乳，完事。</p>
@@ -408,6 +990,45 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
+    <title>摸鱼日记（1）</title>
+    <url>/2021/1510919766.html</url>
+    <content><![CDATA[<p>七月三十一日，这个月结束了大三学年的学习，开始较为枯燥的考研生活，到了月底也是应该做一个小小的总结了，不然这个月也又是要浑浑噩噩地过去了。</p>
+<span id="more"></span>
+<h1 id="考研复习">考研复习</h1>
+<p>先总结一下考研复习进度吧，在七月中把网课过了一遍，是华中科技大学杨广笑老师的<a href="https://www.bilibili.com/video/BV1Ss411i7Mm">生物化学与分子生物学</a>，网课体验还是挺不错的，但是看完之后就觉得这门课要背诵要记忆的内容还是蛮多的，也有好多是自己没有掌握的，也是为过去自己没有好好学习这门科目感到羞愧；另外一个课是北京大学魏丽萍老师的<a href="https://www.bilibili.com/video/BV13t411G7oh">生物信息学</a>，感觉还是蛮简单的，好多东西记忆都还是十分清晰，甚至觉得要是选择生物信息学进行考试的话甚至不用怎么复习。但是又觉得自己要是没有良好的生物化学基础的话怕是对日后的科研道路会有一些影响，于是呢，最后还是选择了生物化学与分子生物学进行复习，本来计划这个月先把第一本书看完来着，但是到目前吧，现在是晚上八点，还有八十页没看，待会儿看一下，应该能在明天也就是下个月开启新的篇章。</p>
+<p>发现生物化学（第三版）这本书有一些有意思的地方，看的时候可以笑起来的那种。</p>
+<blockquote>
+<p>淋病奈瑟球菌（Nsisseria gonorrhoeae）只感染人的生殖器和口腔黏膜，对人的其他部位和其他不起作用。😅</p>
+</blockquote>
+<p>怪起来了。</p>
+<h1 id="代码之路">代码之路</h1>
+<p>虽然说是在复习期间，也没有落下编程的功底，力扣的每日写题也是没有落下，成功拿到了七月的打卡牌子。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome/blog/%E8%80%83%E7%A0%94%E6%97%A5%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/image-20210731200525059.png" alt="image-20210731200525059" /></p>
+<p>关于开源项目的开发，倒是开启的一个小项目 <a href="https://github.com/zEpoch/webStart">zEpoch/webStart (github.com)</a>，算是一个前端的入门项目吧，希望能够在日后获得一个 Star 之类的吧。</p>
+<p>关于这个博客，配置这个博客倒是配置了挺多的时间，也是做了很多的调试，目前来说速度和舒适度还是蛮比较不错的。</p>
+]]></content>
+      <tags>
+        <tag>生活</tag>
+        <tag>考研日记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>摸鱼日记（3）</title>
+    <url>/2021/4026992349.html</url>
+    <content><![CDATA[<p>本来呢，暑假的计划是要读习的，奈何之前的毛选一还没读完，便是摸摸索索地读了毛选一，但也读的并不是很多，最重要地实践论和矛盾论倒是还没有看。</p>
+<p>这毛选读起来是真的有意思，很多东西，修修改改，放到现在，依旧是可以用的，对于中国社会各阶层地分析，将近一百年过去了，中国的阶层中，也就是文中的“地主阶级和买办阶级”换了一种形式存在了下来，有人称其为“人民富豪”之类的。</p>
+<span id="more"></span>
+<p>这两年，天下并不太平，工薪阶层声讨“人民富豪”之类的呼声越来越高，<code>其势如暴风骤雨，迅猛异常，无论什么大的力量都将压抑不住。他们将冲决一切束缚他们的罗网，朝着解放生产力的路上迅跑。一切帝国主义、军阀、贪官污吏、土豪劣绅，都将被他们葬入坟墓。</code>很大一部分原因出在某些人屁股背离了无产阶级的穷人，凡是反抗最力、乱子闹得最大的地方，都是那些“人民富豪”为恶最甚的地方。农民、工人的眼睛，全然没有错的。谁个劣，谁个不劣，谁个最甚，谁个稍次，谁个惩办要严，谁个处罚从轻，农民、工人都有极明白的计算，罚不当罪的极少。</p>
+<p>没有调查就没有发言权，这一点也是很重要的一件事情，尤其是在目前的互联网浪潮中。大多数人上网发表观点其实是所谓的情绪的宣泄，<code>看到一点表面，一个枝节，就指手画脚地说这也不对，那也错误</code>，而非通过调查查明某些事情，得到一手真实有效的证据，然后经过深思熟虑的分析，得到某些结论，这显然是不对的。离开实际调查就要产生唯心的阶级估量和唯心的工作指导， 那么，它的结果，不是机会主义，便是盲动主义。</p>
+<p>关心群众的生活问题，我觉得这一点，现在做的十分好，我是国家级贫困县出身的人，我能看到的是当地的政府工作人员对于当地的很多事情都是十分负责、尽心的。去年是扶贫大年，好多乡政府都想办法带动当地的村民去创业实现长久致富，这都是让当地人感到很开心的事情。前些日子家里发了大水，同志们都是和群众打成一片齐心抗洪的，没有一个人说不理会群众之类的，一个都没有。</p>
+<p>关于毛对战争的理解，除了战争本身外，我最敬佩的便是其中对未来的指导：<code>人类社会进步到消灭了阶级，消灭了国家，到了那时，什么战争也没有了，反革命战争没有了，革命战争也没有了，非正义战争没有了，正义战争也没有了，这就是人类的永久和平的时代。我们研究革命战争的规律，出发于我们要求消灭一切战争的志愿，这是区别我们共产党人和一切剥削阶级的界线。</code>这个便是我们无产阶级要为之奋斗一生的目标。</p>
+]]></content>
+      <tags>
+        <tag>毛选</tag>
+        <tag>摸鱼日记</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>摸鱼日记（4）</title>
     <url>/2021/1842364004.html</url>
     <content><![CDATA[<p>呕吼，突然就过去了一个月，上一次更新博客还是上一次（确实）。那就回顾一下这个月做了些什么、发生了些什么吧。</p>
@@ -427,19 +1048,17 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
       </tags>
   </entry>
   <entry>
-    <title>摸鱼日记（3）</title>
-    <url>/2021/4026992349.html</url>
-    <content><![CDATA[<p>本来呢，暑假的计划是要读习的，奈何之前的毛选一还没读完，便是摸摸索索地读了毛选一，但也读的并不是很多，最重要地实践论和矛盾论倒是还没有看。</p>
-<p>这毛选读起来是真的有意思，很多东西，修修改改，放到现在，依旧是可以用的，对于中国社会各阶层地分析，将近一百年过去了，中国的阶层中，也就是文中的“地主阶级和买办阶级”换了一种形式存在了下来，有人称其为“人民富豪”之类的。</p>
+    <title>这个生化怎么这么多啊</title>
+    <url>/2021/887319650.html</url>
+    <content><![CDATA[<p>复习考研，第一门难啃的课就是生物化学，三本书，将近两千页的内容，全是字，淦，怎么背的会哦，当年就是生物化学没有学好，才落得现在没得保研，只能呆呆地考研，谁知道考研也需要学生物化学！淦，我心态炸裂。</p>
 <span id="more"></span>
-<p>这两年，天下并不太平，工薪阶层声讨“人民富豪”之类的呼声越来越高，<code>其势如暴风骤雨，迅猛异常，无论什么大的力量都将压抑不住。他们将冲决一切束缚他们的罗网，朝着解放生产力的路上迅跑。一切帝国主义、军阀、贪官污吏、土豪劣绅，都将被他们葬入坟墓。</code>很大一部分原因出在某些人屁股背离了无产阶级的穷人，凡是反抗最力、乱子闹得最大的地方，都是那些“人民富豪”为恶最甚的地方。农民、工人的眼睛，全然没有错的。谁个劣，谁个不劣，谁个最甚，谁个稍次，谁个惩办要严，谁个处罚从轻，农民、工人都有极明白的计算，罚不当罪的极少。</p>
-<p>没有调查就没有发言权，这一点也是很重要的一件事情，尤其是在目前的互联网浪潮中。大多数人上网发表观点其实是所谓的情绪的宣泄，<code>看到一点表面，一个枝节，就指手画脚地说这也不对，那也错误</code>，而非通过调查查明某些事情，得到一手真实有效的证据，然后经过深思熟虑的分析，得到某些结论，这显然是不对的。离开实际调查就要产生唯心的阶级估量和唯心的工作指导， 那么，它的结果，不是机会主义，便是盲动主义。</p>
-<p>关心群众的生活问题，我觉得这一点，现在做的十分好，我是国家级贫困县出身的人，我能看到的是当地的政府工作人员对于当地的很多事情都是十分负责、尽心的。去年是扶贫大年，好多乡政府都想办法带动当地的村民去创业实现长久致富，这都是让当地人感到很开心的事情。前些日子家里发了大水，同志们都是和群众打成一片齐心抗洪的，没有一个人说不理会群众之类的，一个都没有。</p>
-<p>关于毛对战争的理解，除了战争本身外，我最敬佩的便是其中对未来的指导：<code>人类社会进步到消灭了阶级，消灭了国家，到了那时，什么战争也没有了，反革命战争没有了，革命战争也没有了，非正义战争没有了，正义战争也没有了，这就是人类的永久和平的时代。我们研究革命战争的规律，出发于我们要求消灭一切战争的志愿，这是区别我们共产党人和一切剥削阶级的界线。</code>这个便是我们无产阶级要为之奋斗一生的目标。</p>
+<p>但其实看看也还挺不错的，确实感觉到自己的脑袋里关于生物化学的好多东西都是并不是很清楚，虽然是做过很多的实验，但是好多实验的原理也是在重新开始看书后才真正了解。（对于我大学时期做过的实验，也许我真的了解的也就是操作系统，数据结构之类的了）但是到现在也才看到三百多页是真的心情很不好，确实感觉到自己对于生物这个需要花费很大功夫来背诵的科目感到不是很舒服。关键这东西也不是什么马原毛概之类的，我倒是觉得马原毛概之类的倒是挺有意思的，想起来了看一看，一看就是半本书，还停不下来，确实是因为其中包含了很多的解决问题的方法，很多的哲学的思考，很多的看了让人感到心情极其振奋的思想。</p>
+<p>昨晚失眠到了三点多，今天又是八点起的，中午居然还没睡，中午摸了一下脸颊下巴两侧又是张出了痘痘，懊恼，我怎么就这么运气不好哦，要是生物有写代码那么容易就好了。</p>
+<p>前路漫漫，读书作伴。</p>
 ]]></content>
       <tags>
-        <tag>毛选</tag>
-        <tag>摸鱼日记</tag>
+        <tag>生活</tag>
+        <tag>生物化学</tag>
       </tags>
   </entry>
   <entry>
@@ -464,20 +1083,6 @@ points[i][j]+j+maxf[i−1][k]−k,{k&gt; j}\\
 ]]></content>
       <tags>
         <tag>Hexo</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>这个生化怎么这么多啊</title>
-    <url>/2021/887319650.html</url>
-    <content><![CDATA[<p>复习考研，第一门难啃的课就是生物化学，三本书，将近两千页的内容，全是字，淦，怎么背的会哦，当年就是生物化学没有学好，才落得现在没得保研，只能呆呆地考研，谁知道考研也需要学生物化学！淦，我心态炸裂。</p>
-<span id="more"></span>
-<p>但其实看看也还挺不错的，确实感觉到自己的脑袋里关于生物化学的好多东西都是并不是很清楚，虽然是做过很多的实验，但是好多实验的原理也是在重新开始看书后才真正了解。（对于我大学时期做过的实验，也许我真的了解的也就是操作系统，数据结构之类的了）但是到现在也才看到三百多页是真的心情很不好，确实感觉到自己对于生物这个需要花费很大功夫来背诵的科目感到不是很舒服。关键这东西也不是什么马原毛概之类的，我倒是觉得马原毛概之类的倒是挺有意思的，想起来了看一看，一看就是半本书，还停不下来，确实是因为其中包含了很多的解决问题的方法，很多的哲学的思考，很多的看了让人感到心情极其振奋的思想。</p>
-<p>昨晚失眠到了三点多，今天又是八点起的，中午居然还没睡，中午摸了一下脸颊下巴两侧又是张出了痘痘，懊恼，我怎么就这么运气不好哦，要是生物有写代码那么容易就好了。</p>
-<p>前路漫漫，读书作伴。</p>
-]]></content>
-      <tags>
-        <tag>生活</tag>
-        <tag>生物化学</tag>
       </tags>
   </entry>
 </search>

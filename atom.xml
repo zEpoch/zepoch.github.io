@@ -6,7 +6,7 @@
   <link href="https://www.zepoch.cc/atom.xml" rel="self"/>
   
   <link href="https://www.zepoch.cc/"/>
-  <updated>2025-01-22T02:40:17.105Z</updated>
+  <updated>2025-02-22T09:15:43.041Z</updated>
   <id>https://www.zepoch.cc/</id>
   
   <author>
@@ -17,11 +17,59 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>attention的四重境界</title>
+    <link href="https://www.zepoch.cc/2025/3007271696.html"/>
+    <id>https://www.zepoch.cc/2025/3007271696.html</id>
+    <published>2025-02-22T05:58:43.000Z</published>
+    <updated>2025-02-22T09:15:43.041Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;LLM随着最近deepseek的热潮被推上了新的高峰，楼主在学习之中对于attention的理解也有着不同的见解，借此机会重新试着手写一下attention。&lt;/p&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="llm" scheme="https://www.zepoch.cc/categories/llm/"/>
+    
+    
+    <category term="llm" scheme="https://www.zepoch.cc/tags/llm/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>批量爬取bicnn文件</title>
+    <link href="https://www.zepoch.cc/2025/3817125654.html"/>
+    <id>https://www.zepoch.cc/2025/3817125654.html</id>
+    <published>2025-01-23T15:50:30.000Z</published>
+    <updated>2025-01-23T15:50:30.613Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">
+</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
     <title>随想1</title>
     <link href="https://www.zepoch.cc/2025/172910752.html"/>
     <id>https://www.zepoch.cc/2025/172910752.html</id>
     <published>2025-01-22T02:39:14.000Z</published>
-    <updated>2025-01-22T02:40:17.105Z</updated>
+    <updated>2025-01-22T02:40:31.054Z</updated>
     
     
       
@@ -512,60 +560,6 @@ bin100/bin50 这样子的数据去做区域的注释，而</summary>
     
     
     <category term="技术" scheme="https://www.zepoch.cc/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>杂聊11</title>
-    <link href="https://www.zepoch.cc/2023/3415905598.html"/>
-    <id>https://www.zepoch.cc/2023/3415905598.html</id>
-    <published>2023-11-30T15:26:28.000Z</published>
-    <updated>2023-11-30T15:54:41.249Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;今天起床就更晚了，但是昨晚却是睡得很是舒适，昨天健身到了十一点多，相信身体确实是累了，所以睡得很是香甜。&lt;/p&gt;
-&lt;p&gt;今天早上起来，就是在床上躺了一会儿，然后就是起来洗漱，然后就是去研究院。&lt;/p&gt;
-&lt;p&gt;早上回顾了昨天留下来的一些工作，发现了一些奇妙的科学现象，这很</summary>
-        
-      
-    
-    
-    
-    <category term="生活" scheme="https://www.zepoch.cc/categories/%E7%94%9F%E6%B4%BB/"/>
-    
-    
-    <category term="生活" scheme="https://www.zepoch.cc/tags/%E7%94%9F%E6%B4%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>杂聊10</title>
-    <link href="https://www.zepoch.cc/2023/3164448168.html"/>
-    <id>https://www.zepoch.cc/2023/3164448168.html</id>
-    <published>2023-11-30T03:12:59.000Z</published>
-    <updated>2023-11-30T03:30:53.163Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;回顾一下昨天。&lt;/p&gt;
-&lt;p&gt;昨天是周三，是要开组会的日子，但是我起晚了，醒来一看手机已然是九点半了，想来他们是已经开始会议了，我却还在被窝，究其原因还是昨晚的熬夜，但这就是另外一回事情了。&lt;/p&gt;
-&lt;p&gt;起来也没洗漱，也没去那家我常去买早餐的包子铺，穿上衣服匆匆的来了</summary>
-        
-      
-    
-    
-    
-    <category term="生活" scheme="https://www.zepoch.cc/categories/%E7%94%9F%E6%B4%BB/"/>
-    
-    
-    <category term="生活" scheme="https://www.zepoch.cc/tags/%E7%94%9F%E6%B4%BB/"/>
     
   </entry>
   

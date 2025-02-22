@@ -8,23 +8,112 @@
 <meta property="og:image" content="https://www.zepoch.cc/img/avatar.jpg">
 <meta property="article:author" content="zepoch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.zepoch.cc/img/avatar.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://www.zepoch.cc/page/8/index.html"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="AXddQAUftQD7NDjBUlQvw5LWu1x_A1uNpdVqI8c_3J0"/><meta name="baidu-site-verification" content="code-wVE0OwLLU2"/><meta name="bing_site_verification" content="154CD85FDB00EA195DB3F8F193CE78BE"/><link rel="stylesheet" href="/css/index.css?v=4.12.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=6.5.1"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=5.0.32" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+<meta name="twitter:image" content="https://www.zepoch.cc/img/avatar.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://www.zepoch.cc/page/8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="AXddQAUftQD7NDjBUlQvw5LWu1x_A1uNpdVqI8c_3J0"/><meta name="baidu-site-verification" content="code-wVE0OwLLU2"/><meta name="bing_site_verification" content="154CD85FDB00EA195DB3F8F193CE78BE"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
   root: '/',
   algolia: undefined,
-  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":6,"unescape":true,"languages":{"hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found"}},
+  localSearch: undefined,
   translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
   copy: {
     success: 'Copy Successful',
-    error: 'Copy Error',
+    error: 'Copy Failed',
     noSupport: 'Browser Not Supported'
   },
   relativeDate: {
     homepage: false,
     post: false
   },
-  runtime: 'days',
+  runtime: '',
   dateSuffix: {
     just: 'Just now',
     min: 'minutes ago',
@@ -33,14 +122,14 @@
     month: 'months ago'
   },
   copyright: undefined,
-  lightbox: 'fancybox',
+  lightbox: 'null',
   Snackbar: undefined,
   infinitegrid: {
-    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.11.0',
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
     buttonText: 'Load More'
   },
   isPhotoFigcaption: false,
-  islazyload: true,
+  islazyloadPlugin: false,
   isAnchor: false,
   percent: {
     toc: true,
@@ -49,249 +138,108 @@
   autoDarkmode: false
 }</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
   title: 'zepoch\'s site',
-  isPost: false,
-  isHome: true,
-  isHighlightShrink: undefined,
+  isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2025-02-22 17:23:31'
-}</script><script>(win=>{
-      win.saveToLocal = {
-        set: (key, value, ttl) => {
-          if (ttl === 0) return
-          const now = Date.now()
-          const expiry = now + ttl * 86400000
-          const item = {
-            value,
-            expiry
-          }
-          localStorage.setItem(key, JSON.stringify(item))
-        },
-      
-        get: key => {
-          const itemStr = localStorage.getItem(key)
-      
-          if (!itemStr) {
-            return undefined
-          }
-          const item = JSON.parse(itemStr)
-          const now = Date.now()
-      
-          if (now > item.expiry) {
-            localStorage.removeItem(key)
-            return undefined
-          }
-          return item.value
-        }
-      }
-    
-      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        script.onerror = reject
-        script.onload = script.onreadystatechange = function() {
-          const loadState = this.readyState
-          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-          script.onload = script.onreadystatechange = null
-          resolve()
-        }
+  pageType: 'home'
+}</script><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
-        Object.keys(attr).forEach(key => {
-          script.setAttribute(key, attr[key])
-        })
-
-        document.head.appendChild(script)
-      })
-    
-      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onerror = reject
-        link.onload = link.onreadystatechange = function() {
-          const loadState = this.readyState
-          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-          link.onload = link.onreadystatechange = null
-          resolve()
-        }
-        document.head.appendChild(link)
-      })
-    
-      win.activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      win.activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
-        }
-      }
-      const t = saveToLocal.get('theme')
-    
-        if (t === 'dark') activateDarkMode()
-        else if (t === 'light') activateLightMode()
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        if (asideStatus === 'hide') {
-          document.documentElement.classList.add('hide-aside')
-        } else {
-          document.documentElement.classList.remove('hide-aside')
-        }
-      }
-    
-      const detectApple = () => {
-        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
-          document.documentElement.classList.add('apple')
-        }
-      }
-      detectApple()
-    })(window)</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="zepoch's site" type="application/atom+xml">
-</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">84</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">67</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="zepoch's site"><span class="site-name">zepoch's site</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/851229289.html" title="Hexo Next 友链配置">Hexo Next 友链配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-08-11T16:19:02.000Z" title="Created 2021-08-12 00:19:02">2021-08-12</time></span></div><div class="content">在进行配置 Hexo Next
-的友情链接的时候遇到了一些麻烦，特此进行记录如何进行 Hexo Next
-友链的配置。
-
-创建一个友链界面
-首先像创建其他的菜单栏一样创建一个新的菜单
-hexo new page links
-然后呢，需要在主题的_config.yml文件中进行如下配置，即在最后一行加上links: /links/ || fa fa-link
-menu:
-  home: / || fa fa-home
-  tags: /tags/ || fa fa-tags
-  #categories: /categories/ || fa fa-th
-  archives: /archives/ || fa fa-archive
-  #schedule: /schedule/ || fa fa-calendar
-  #sitemap: /sitemap.xml || fa fa-sitemap
-  #commonweal: /404/ || fa fa-heartbeat
-  about: /about/ || fa fa-user
-  links: /links/ | ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/1220239800.html" title="杂聊2">杂聊2</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-08-11T14:33:42.000Z" title="Created 2021-08-11 22:33:42">2021-08-11</time></span></div><div class="content">早上八点，起床，下了床墨迹了一会儿，醒醒了脑子，再一看时间，已经八点四十了，呕吼，穿上袜子穿上鞋，刷个牙，洗把脸，再抹一曾润肤乳，完事。
-九点，下楼去食堂吃饭，磨磨唧唧到食堂又是五分钟后了，所幸还有饭，一个鸡蛋一个大饼一杯豆浆，肉蛋奶都有了，吃完饭回到寝室就是九点四十了。
-
-为什么今天没有直接去图书馆呢？因为今天有个面试，什么面试呢？腾讯的一个面试，为什么会有这么一个面试呢？因为有个老哥让我扫了个二维码，我扫完二维码，填了姓名学习院校后居然就成功投递了简历，然后笔试都没有就收到了鹅厂的面试邀请，我也挺懵的，其实也还好，可以面试一下看看自己有多菜。
-
-九点四十，到了宿舍，打开力扣，看了一下水友讲的鹅厂大概会面试的题，又做了一遍，再打开
-B 站，又看了一会儿 Pink
-老师的前端课程，磨叽磨叽就到了十一点。
-十一点，开始面试，十一点刚到就打开了面试窗口，但是 hr
-没有来，于是就等了 23
-秒，她终于来了，而且还是个声音十分温柔的姐姐，希望是个姐姐吧，不然我的心态会出问题的。接下来半个小时，我和这位声音十分甜美的姐姐度过了愉快的一段时间（是的）。
-十一点半，面试结束去 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/387524820.html" title="sqlzoo练习规划">sqlzoo练习规划</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-08-05T07:28:10.000Z" title="Created 2021-08-05 15:28:10">2021-08-05</time></span></div><div class="content">推荐一个SQL查询语句在线练习网站——SQLZOO，这个网站上的题目由易到难，把整个网站上的题目都做完的话你可以自主的写出接近100条SQL查询语句，从简单的单表条件查询到多表联结查询，自联结查询等等。
-官网：https://sqlzoo.net/wiki/SQL_Tutorial/zh
-
-sql基础
-
-sql基础：https://sqlzoo.net/wiki/SELECT_basics/zh
-文字样式匹配查询：https://sqlzoo.net/wiki/SELECT_names/zh
-select测试：https://sqlzoo.net/wiki/SELECT_Quiz/zh
-
-一般查询
-
-World表查询：https://sqlzoo.net/wiki/SQLZOO:SELECT_from_WORLD_Tutorial/zh
-World表测试：https://sqlzoo.net/wiki/BBC_QUIZ/zh
-Nobel表查询：https://sqlzoo.net/wiki/SELECT_from_Nobel_Tutorial/zh
-Nobe ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/1510919766.html" title="杂聊1">杂聊1</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-31T12:01:15.000Z" title="Created 2021-07-31 20:01:15">2021-07-31</time></span></div><div class="content">七月三十一日，这个月结束了大三学年的学习，开始较为枯燥的考研生活，到了月底也是应该做一个小小的总结了，不然这个月也又是要浑浑噩噩地过去了。
-
-考研复习
-先总结一下考研复习进度吧，在七月中把网课过了一遍，是华中科技大学杨广笑老师的生物化学与分子生物学，网课体验还是挺不错的，但是看完之后就觉得这门课要背诵要记忆的内容还是蛮多的，也有好多是自己没有掌握的，也是为过去自己没有好好学习这门科目感到羞愧；另外一个课是北京大学魏丽萍老师的生物信息学，感觉还是蛮简单的，好多东西记忆都还是十分清晰，甚至觉得要是选择生物信息学进行考试的话甚至不用怎么复习。但是又觉得自己要是没有良好的生物化学基础的话怕是对日后的科研道路会有一些影响，于是呢，最后还是选择了生物化学与分子生物学进行复习，本来计划这个月先把第一本书看完来着，但是到目前吧，现在是晚上八点，还有八十页没看，待会儿看一下，应该能在明天也就是下个月开启新的篇章。
-发现生物化学（第三版）这本书有一些有意思的地方，看的时候可以笑起来的那种。
-
-淋病奈瑟球菌（Nsisseria
-gonorrhoeae）只感染人的生殖器和口腔黏膜，对人的其他部位 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/1333461694.html" title="我们把你们想得太好了">我们把你们想得太好了</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-28T15:25:06.000Z" title="Created 2021-07-28 23:25:06">2021-07-28</time></span></div><div class="content">“我们把你们想的太好了，我们认为你们会遵守基本的外交礼节”，有些话，原封不动，换个国家名，他居然还能用
-
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/887319650.html" title="这个生化怎么这么多啊">这个生化怎么这么多啊</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-26T12:44:48.000Z" title="Created 2021-07-26 20:44:48">2021-07-26</time></span></div><div class="content">复习考研，第一门难啃的课就是生物化学，三本书，将近两千页的内容，全是字，淦，怎么背的会哦，当年就是生物化学没有学好，才落得现在没得保研，只能呆呆地考研，谁知道考研也需要学生物化学！淦，我心态炸裂。
-
-但其实看看也还挺不错的，确实感觉到自己的脑袋里关于生物化学的好多东西都是并不是很清楚，虽然是做过很多的实验，但是好多实验的原理也是在重新开始看书后才真正了解。（对于我大学时期做过的实验，也许我真的了解的也就是操作系统，数据结构之类的了）但是到现在也才看到三百多页是真的心情很不好，确实感觉到自己对于生物这个需要花费很大功夫来背诵的科目感到不是很舒服。关键这东西也不是什么马原毛概之类的，我倒是觉得马原毛概之类的倒是挺有意思的，想起来了看一看，一看就是半本书，还停不下来，确实是因为其中包含了很多的解决问题的方法，很多的哲学的思考，很多的看了让人感到心情极其振奋的思想。
-昨晚失眠到了三点多，今天又是八点起的，中午居然还没睡，中午摸了一下脸颊下巴两侧又是张出了痘痘，懊恼，我怎么就这么运气不好哦，要是生物有写代码那么容易就好了。
-前路漫漫，读书作伴。
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/3186910758.html" title="138.复制带随机指针的链表">138.复制带随机指针的链表</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-22T03:01:21.000Z" title="Created 2021-07-22 11:01:21">2021-07-22</time></span></div><div class="content">今天的力扣题目的难度是中等，但是实际上做起来却感到稍微有些难。好吧，其实是因为俺太菜了嘤嘤嘤。题干如下：
-
-
-给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random
-，该指针可以指向链表中的任何节点或空节点。
-构造这个链表的 深拷贝。 深拷贝应该正好由 n 个 全新
-节点组成，其中每个新节点的值都设为其对应的原节点的值。新节点的 next
-指针和 random
-指针也都应指向复制链表中的新节点，并使原链表和复制链表中的这些指针能够表示相同的链表状态。复制链表中的指针都不应指向原链表中的节点
-。
-例如，如果原链表中有 X 和 Y 两个节点，其中 X.random --&gt; Y
-。那么在复制链表中对应的两个节点 x 和 y ，同样有 x.random --&gt; y
-。
-返回复制链表的头节点。
-用一个由 n 个节点组成的链表来表示输入/输出中的链表。每个节点用一个
-[val, random_index] 表示：
-val：一个表示 Node.val 的整数。
-random_index：随机指针指向的节点索引（范围从 0 到
-n- ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/3942837084.html" title="愿河南平安">愿河南平安</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-21T04:51:59.000Z" title="Created 2021-07-21 12:51:59">2021-07-21</time></span></div><div class="content">一直在看着新闻，镜头前的消防战士来往没停过，拖着橡皮艇从南边的地铁站和商场将人员运到较为安全的区域，其中还有不少一两岁的孩子。刚刚记者突然间就断线了，心就突然揪住了，就挺伤心的，莫名的哭了起来
-
-
-切到了高架路的设备采像
-
-就逐渐看到路面上开始逐渐有车辆的走动，采像机前的雨滴逐渐减小
-
-约摸二三十分钟后，记者重新连线了，但是却还是一片黑暗，缺少灯光
-
-之后记者也是在黑暗里摸索着找到了较为光亮地方，肉眼可见的雨在逐渐减小
-
-现在记者可以前往之前待救援的南边地区，已经是开始好转起来了；继续向南走还是有很长的一段没有灯光的路，后来开始看到了一家开着的店
-
-，店里还是很多的人在这边作为一个休息区，店主提供了热水充电宝之类的；店门口的是位广东的同志，来河南旅游，算是碰上了前所未遇的一个特大暴雨；
-
-店主也是很勇敢的人，公司可以让直接关门下班了，但是店主很有社会责任感，坚持开门，通宵收容不能回家的人，真的很感动；
-
-采访完毕后记者继续想南边的黑暗处走去，雨又开始大了起来，愿一切平安，众志成城，共克时艰
-继续向前走是碰到了一连串的车队，其实是不能向前走了，前面被淹 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/3536968392.html" title="战争的目的在于消灭战争">战争的目的在于消灭战争</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-20T13:44:09.000Z" title="Created 2021-07-20 21:44:09">2021-07-20</time></span></div><div class="content">今日读毛选，读到了中国革命战争的战略问题。我觉得毛泽东真的是一位军事奇才，他对战争的规律总结得十分到位，这是一套方法论，不管用到何处都能经过一定程度的变化，从而发挥作用的方法。
-
-
-战争的规律——这是任何指导战争的人不能不研究和不能不解决的问题。
-革命战争的规律——这是任何指导革命战争的人不能不研究和不能不解决的问题。
-中国革命战争的规律——这是任何指导中国革命战争的人不能不研究和不能不解决的问题。
-我们现在是从事战争，我们的战争是革命战争，我们的革命战争是在中国这个半殖民地的半封建的国度里进行的。因此，我们不但要研究一般战争的规律，还要研究特殊的革命战争的规律，还要研究更加特殊的中国革命战争的规律。
-大家明白，不论做什么事，不懂得那件事的情形，它的性质，它和它以外的事情的关联，就不知道那件事的规律，就不知道如何去做，就不能做好那件事。
-战争——从有私有财产和有阶级以来就开始了的、用以解决阶级和阶级、民族和民族、国家和国家、政治集团和政治集团之间、在一定发展阶段上的矛盾的一种最高的斗争形式。不懂得它的情形，它的性质，它和它以外事情的关联，就不知道战争的规律，就不知道如何 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/246677465.html" title="好玩的 Github">好玩的 Github</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-19T06:17:37.000Z" title="Created 2021-07-19 14:17:37">2021-07-19</time></span></div><div class="content">前年的时候，做过一些 Hexo Next
-主题的美化，后来再上传的时候，就一股脑全部上传上去了，当然也没那么傻，倒是还是删掉了
-node_modules 后再上传的，但是却是没有删掉 package.json，后来呢，Github
-就经常提醒我有安全问题。
-
-打开一看，好家伙，全都是依赖警报
-
-
-然后细看一下会发现大都是依赖要进行升级了。
-
-好在 Github
-还是很舒服的，可以直接在线更改升级，还有个小机器人帮你升级。美滋滋
-
-</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/7/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/#content-inner">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/#content-inner">9</a><a class="extend next" rel="next" href="/page/9/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">zepoch</div><div class="author-info__description">A full-stack engineer who is improving every day</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">84</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">67</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepoch"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/zepoch" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:zhotoa@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3007271696.html" title="attention的四重境界">attention的四重境界</a><time datetime="2025-02-22T05:58:43.000Z" title="Created 2025-02-22 13:58:43">2025-02-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3817125654.html" title="批量爬取bicnn文件">批量爬取bicnn文件</a><time datetime="2025-01-23T15:50:30.000Z" title="Created 2025-01-23 23:50:30">2025-01-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/172910752.html" title="随想1">随想1</a><time datetime="2025-01-22T02:39:14.000Z" title="Created 2025-01-22 10:39:14">2025-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3896675102.html" title="为什么给你全奖免费读博？科学研究是什么？">为什么给你全奖免费读博？科学研究是什么？</a><time datetime="2025-01-01T02:47:27.000Z" title="Created 2025-01-01 10:47:27">2025-01-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/4091785240.html" title="2024 年记">2024 年记</a><time datetime="2024-12-31T06:34:19.000Z" title="Created 2024-12-31 14:34:19">2024-12-31</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="zepoch's site" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">84</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">67</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">zepoch's site</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><h1 class="title-seo">zepoch's site</h1></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/851229289.html" title="Hexo Next 友链配置">Hexo Next 友链配置</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-08-11T16:19:02.000Z" title="Created 2021-08-12 00:19:02">2021-08-12</time></span></div><div class="content">在进行配置 Hexo Next 的友情链接的时候遇到了一些麻烦，特此进行记录如何进行 Hexo Next 友链的配置。  创建一个友链界面 首先像创建其他的菜单栏一样创建一个新的菜单 hexo new page links 然后呢，需要在主题的_config.yml文件中进行如下配置，即在最后一行加上links: /links/ || fa fa-link menu:   home: / || fa fa-home   tags: /tags/ || fa fa-tags   #categories: /categories/ || fa fa-th   archives: /archives/ || fa fa-archive   #schedule: /schedule/ || fa fa-calendar   #sitemap: /sitemap.xml || fa fa-sitemap   #commonweal: /404/ || fa fa-heartbeat   about: /about/ || fa fa-user   links:...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/1220239800.html" title="杂聊2">杂聊2</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-08-11T14:33:42.000Z" title="Created 2021-08-11 22:33:42">2021-08-11</time></span></div><div class="content">早上八点，起床，下了床墨迹了一会儿，醒醒了脑子，再一看时间，已经八点四十了，呕吼，穿上袜子穿上鞋，刷个牙，洗把脸，再抹一曾润肤乳，完事。 九点，下楼去食堂吃饭，磨磨唧唧到食堂又是五分钟后了，所幸还有饭，一个鸡蛋一个大饼一杯豆浆，肉蛋奶都有了，吃完饭回到寝室就是九点四十了。  为什么今天没有直接去图书馆呢？因为今天有个面试，什么面试呢？腾讯的一个面试，为什么会有这么一个面试呢？因为有个老哥让我扫了个二维码，我扫完二维码，填了姓名学习院校后居然就成功投递了简历，然后笔试都没有就收到了鹅厂的面试邀请，我也挺懵的，其实也还好，可以面试一下看看自己有多菜。  九点四十，到了宿舍，打开力扣，看了一下水友讲的鹅厂大概会面试的题，又做了一遍，再打开 B 站，又看了一会儿 Pink 老师的前端课程，磨叽磨叽就到了十一点。 十一点，开始面试，十一点刚到就打开了面试窗口，但是 hr 没有来，于是就等了...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/387524820.html" title="sqlzoo练习规划">sqlzoo练习规划</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-08-05T07:28:10.000Z" title="Created 2021-08-05 15:28:10">2021-08-05</time></span></div><div class="content">...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/1510919766.html" title="杂聊1">杂聊1</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-31T12:01:15.000Z" title="Created 2021-07-31 20:01:15">2021-07-31</time></span></div><div class="content">...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/1333461694.html" title="我们把你们想得太好了">我们把你们想得太好了</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-28T15:25:06.000Z" title="Created 2021-07-28 23:25:06">2021-07-28</time></span></div><div class="content">“我们把你们想的太好了，我们认为你们会遵守基本的外交礼节”，有些话，原封不动，换个国家名，他居然还能用  </div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/887319650.html" title="这个生化怎么这么多啊">这个生化怎么这么多啊</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-26T12:44:48.000Z" title="Created 2021-07-26 20:44:48">2021-07-26</time></span></div><div class="content">复习考研，第一门难啃的课就是生物化学，三本书，将近两千页的内容，全是字，淦，怎么背的会哦，当年就是生物化学没有学好，才落得现在没得保研，只能呆呆地考研，谁知道考研也需要学生物化学！淦，我心态炸裂。  但其实看看也还挺不错的，确实感觉到自己的脑袋里关于生物化学的好多东西都是并不是很清楚，虽然是做过很多的实验，但是好多实验的原理也是在重新开始看书后才真正了解。（对于我大学时期做过的实验，也许我真的了解的也就是操作系统，数据结构之类的了）但是到现在也才看到三百多页是真的心情很不好，确实感觉到自己对于生物这个需要花费很大功夫来背诵的科目感到不是很舒服。关键这东西也不是什么马原毛概之类的，我倒是觉得马原毛概之类的倒是挺有意思的，想起来了看一看，一看就是半本书，还停不下来，确实是因为其中包含了很多的解决问题的方法，很多的哲学的思考，很多的看了让人感到心情极其振奋的思想。 昨晚失眠到了三点多，今天又是八点起的，中午居然还没睡，中午摸了一下脸颊下巴两侧又是张出了痘痘，懊恼，我怎么就这么运气不好哦，要是生物有写代码那么容易就好了。 前路漫漫，读书作伴。 </div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/3186910758.html" title="138.复制带随机指针的链表">138.复制带随机指针的链表</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-22T03:01:21.000Z" title="Created 2021-07-22 11:01:21">2021-07-22</time></span></div><div class="content">今天的力扣题目的难度是中等，但是实际上做起来却感到稍微有些难。好吧，其实是因为俺太菜了嘤嘤嘤。题干如下：   给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random ，该指针可以指向链表中的任何节点或空节点。 构造这个链表的 深拷贝。 深拷贝应该正好由 n 个 全新 节点组成，其中每个新节点的值都设为其对应的原节点的值。新节点的 next 指针和 random 指针也都应指向复制链表中的新节点，并使原链表和复制链表中的这些指针能够表示相同的链表状态。复制链表中的指针都不应指向原链表中的节点 。 例如，如果原链表中有 X 和 Y 两个节点，其中 X.random --&gt; Y 。那么在复制链表中对应的两个节点 x 和 y ，同样有 x.random --&gt; y 。 返回复制链表的头节点。 用一个由 n 个节点组成的链表来表示输入/输出中的链表。每个节点用一个 [val, random_index] 表示： val：一个表示 Node.val 的整数。 random_index：随机指针指向的节点索引（范围从 0...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/3942837084.html" title="愿河南平安">愿河南平安</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-21T04:51:59.000Z" title="Created 2021-07-21 12:51:59">2021-07-21</time></span></div><div class="content">...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/3536968392.html" title="战争的目的在于消灭战争">战争的目的在于消灭战争</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-20T13:44:09.000Z" title="Created 2021-07-20 21:44:09">2021-07-20</time></span></div><div class="content">...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2021/246677465.html" title="好玩的 Github">好玩的 Github</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2021-07-19T06:17:37.000Z" title="Created 2021-07-19 14:17:37">2021-07-19</time></span></div><div class="content">前年的时候，做过一些 Hexo Next 主题的美化，后来再上传的时候，就一股脑全部上传上去了，当然也没那么傻，倒是还是删掉了 node_modules 后再上传的，但是却是没有删掉 package.json，后来呢，Github 就经常提醒我有安全问题。  打开一看，好家伙，全都是依赖警报   然后细看一下会发现大都是依赖要进行升级了。  好在 Github 还是很舒服的，可以直接在线更改升级，还有个小机器人帮你升级。美滋滋  </div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/7/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/#content-inner">7</a><span class="page-number current">8</span><a class="page-number" href="/page/9/#content-inner">9</a><a class="extend next" rel="next" href="/page/9/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">zepoch</div><div class="author-info-description">A full-stack engineer who is improving every day</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">84</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">67</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepoch"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/zepoch" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhotoa@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3007271696.html" title="attention的四重境界">attention的四重境界</a><time datetime="2025-02-22T05:58:43.000Z" title="Created 2025-02-22 13:58:43">2025-02-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3817125654.html" title="批量爬取bicnn文件">批量爬取bicnn文件</a><time datetime="2025-01-23T15:50:30.000Z" title="Created 2025-01-23 23:50:30">2025-01-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/172910752.html" title="随想1">随想1</a><time datetime="2025-01-22T02:39:14.000Z" title="Created 2025-01-22 10:39:14">2025-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3896675102.html" title="为什么给你全奖免费读博？科学研究是什么？">为什么给你全奖免费读博？科学研究是什么？</a><time datetime="2025-01-01T02:47:27.000Z" title="Created 2025-01-01 10:47:27">2025-01-01</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/4091785240.html" title="2024 年记">2024 年记</a><time datetime="2024-12-31T06:34:19.000Z" title="Created 2024-12-31 14:34:19">2024-12-31</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
             <i class="fas fa-folder-open"></i>
             <span>Categories</span>
             <a class="card-more-btn" href="/categories/" title="View More">
-    <i class="fas fa-angle-right"></i></a>
-            </div>
-            <ul class="card-category-list" id="aside-cat-list">
+      <i class="fas fa-angle-right"></i></a>
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
             <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/llm/"><span class="card-category-list-name">llm</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/spatial-transcriptomics/"><span class="card-category-list-name">spatial transcriptomics</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/tech/"><span class="card-category-list-name">tech</span><span class="card-category-list-count">9</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/tech/%E6%8A%80%E6%9C%AF/"><span class="card-category-list-name">技术</span><span class="card-category-list-count">6</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/"><span class="card-category-list-name">技术</span><span class="card-category-list-count">19</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9D%82%E8%81%8A/"><span class="card-category-list-name">杂聊</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%94%9F%E6%B4%BB/"><span class="card-category-list-name">生活</span><span class="card-category-list-count">13</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/"><span class="card-category-list-name">生物信息</span><span class="card-category-list-count">1</span></a></li>
-            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/%E9%BE%99%E6%97%8F/" style="font-size: 1.1em; color: #999">龙族</a> <a href="/tags/Git/" style="font-size: 1.1em; color: #999">Git</a> <a href="/tags/yarn/" style="font-size: 1.1em; color: #999">yarn</a> <a href="/tags/%E5%BD%B1%E8%AF%84/" style="font-size: 1.1em; color: #999">影评</a> <a href="/tags/Promise/" style="font-size: 1.1em; color: #999">Promise</a> <a href="/tags/tech/" style="font-size: 1.42em; color: #99a6b7">tech</a> <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 1.1em; color: #999">哈希表</a> <a href="/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/" style="font-size: 1.1em; color: #999">碎碎念</a> <a href="/tags/HTML/" style="font-size: 1.1em; color: #999">HTML</a> <a href="/tags/CSS/" style="font-size: 1.1em; color: #999">CSS</a> <a href="/tags/Scanpy/" style="font-size: 1.1em; color: #999">Scanpy</a> <a href="/tags/%E7%BB%84%E5%AD%A6/" style="font-size: 1.1em; color: #999">组学</a> <a href="/tags/jQuery/" style="font-size: 1.18em; color: #999ca1">jQuery</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 1.1em; color: #999">编程</a> <a href="/tags/%E6%AF%9B%E9%80%89/" style="font-size: 1.18em; color: #999ca1">毛选</a> <a href="/tags/AI/" style="font-size: 1.1em; color: #999">AI</a> <a href="/tags/python/" style="font-size: 1.1em; color: #999">python</a> <a href="/tags/Hexo/" style="font-size: 1.26em; color: #999fa8">Hexo</a> <a href="/tags/Python/" style="font-size: 1.1em; color: #999">Python</a> <a href="/tags/scanpy/" style="font-size: 1.18em; color: #999ca1">scanpy</a> <a href="/tags/%E8%BD%AC%E8%BD%BD/" style="font-size: 1.1em; color: #999">转载</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 1.5em; color: #99a9bf">技术</a> <a href="/tags/%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/" style="font-size: 1.1em; color: #999">梯度下降</a> <a href="/tags/tensorflow/" style="font-size: 1.1em; color: #999">tensorflow</a> <a href="/tags/%E8%AE%BA%E6%96%87/" style="font-size: 1.1em; color: #999">论文</a> <a href="/tags/this/" style="font-size: 1.1em; color: #999">this</a> <a href="/tags/Seurat/" style="font-size: 1.1em; color: #999">Seurat</a> <a href="/tags/llm/" style="font-size: 1.1em; color: #999">llm</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 1.34em; color: #99a3b0">机器学习</a> <a href="/tags/torch/" style="font-size: 1.1em; color: #999">torch</a> <a href="/tags/%E7%96%BE%E7%97%85/" style="font-size: 1.1em; color: #999">疾病</a> <a href="/tags/Coursera/" style="font-size: 1.1em; color: #999">Coursera</a> <a href="/tags/%E6%88%90%E7%94%B5/" style="font-size: 1.1em; color: #999">成电</a> <a href="/tags/%E6%97%A5%E8%AE%B0/" style="font-size: 1.26em; color: #999fa8">日记</a> <a href="/tags/%E8%80%83%E7%A0%94%E6%97%A5%E8%AE%B0/" style="font-size: 1.1em; color: #999">考研日记</a> <a href="/tags/%E6%AF%95%E4%B8%9A/" style="font-size: 1.1em; color: #999">毕业</a> <a href="/tags/spatial-transcriptomics/" style="font-size: 1.18em; color: #999ca1">spatial transcriptomics</a> <a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" style="font-size: 1.1em; color: #999">人工智能</a> <a href="/tags/AJAX/" style="font-size: 1.1em; color: #999">AJAX</a> <a href="/tags/%E4%B8%9C%E4%BA%AC%E5%A5%A5%E8%BF%90%E4%BC%9A/" style="font-size: 1.1em; color: #999">东京奥运会</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span><a class="card-more-btn" href="/archives/" title="View More">
-    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/02/"><span class="card-archive-list-date">February 2025</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/01/"><span class="card-archive-list-date">January 2025</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/12/"><span class="card-archive-list-date">December 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">May 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">April 2024</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">January 2024</span><span class="card-archive-list-count">8</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/12/"><span class="card-archive-list-date">December 2023</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/11/"><span class="card-archive-list-date">November 2023</span><span class="card-archive-list-count">7</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">84</div></div><div class="webinfo-item"><div class="item-name">Runtime :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-07-16T16:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Total Count :</div><div class="item-count">115.5k</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-02-22T09:23:31.165Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2025 By zepoch</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.12.0"></script><script src="/js/main.js?v=4.12.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=5.0.32"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=17.8.5"></script><script>function panguFn () {
-  if (typeof pangu === 'object') pangu.autoSpacingPage()
-  else {
-    getScript('/pluginsSrc/pangu/dist/browser/pangu.min.js?v=4.0.7')
-      .then(() => {
-        pangu.autoSpacingPage()
-      })
-  }
-}
-
-function panguInit () {
-  if (false){
-    GLOBAL_CONFIG_SITE.isPost && panguFn()
-  } else {
-    panguFn()
-  }
-}
-
-document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.12.0"></script></div></div>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" style="font-size: 1.1em; color: #999">哈希表</a> <a href="/tags/DOM/" style="font-size: 1.1em; color: #999">DOM</a> <a href="/tags/Github/" style="font-size: 1.1em; color: #999">Github</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 1.1em; color: #999">编程</a> <a href="/tags/tech/" style="font-size: 1.5em; color: #99a9bf">tech</a> <a href="/tags/Transformer/" style="font-size: 1.1em; color: #999">Transformer</a> <a href="/tags/torch/" style="font-size: 1.1em; color: #999">torch</a> <a href="/tags/%E6%90%9C%E7%B4%A2/" style="font-size: 1.1em; color: #999">搜索</a> <a href="/tags/tensorflow/" style="font-size: 1.1em; color: #999">tensorflow</a> <a href="/tags/%E9%BE%99%E6%97%8F/" style="font-size: 1.1em; color: #999">龙族</a> <a href="/tags/Python/" style="font-size: 1.1em; color: #999">Python</a> <a href="/tags/%E7%A7%91%E7%A0%94/" style="font-size: 1.1em; color: #999">科研</a> <a href="/tags/AI/" style="font-size: 1.1em; color: #999">AI</a> <a href="/tags/CSS/" style="font-size: 1.1em; color: #999">CSS</a> <a href="/tags/Hexo/" style="font-size: 1.37em; color: #99a4b2">Hexo</a> <a href="/tags/%E6%97%A5%E8%AE%B0/" style="font-size: 1.37em; color: #99a4b2">日记</a> <a href="/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/" style="font-size: 1.1em; color: #999">碎碎念</a> <a href="/tags/Seurat/" style="font-size: 1.1em; color: #999">Seurat</a> <a href="/tags/%E4%B8%9C%E4%BA%AC%E5%A5%A5%E8%BF%90%E4%BC%9A/" style="font-size: 1.1em; color: #999">东京奥运会</a> <a href="/tags/LeetCode/" style="font-size: 1.23em; color: #999ea6">LeetCode</a> <a href="/tags/spatial-transcriptomics/" style="font-size: 1.23em; color: #999ea6">spatial transcriptomics</a> <a href="/tags/HTML/" style="font-size: 1.1em; color: #999">HTML</a> <a href="/tags/%E6%9D%82%E8%81%8A/" style="font-size: 1.37em; color: #99a4b2">杂聊</a> <a href="/tags/%E5%AE%B6%E4%B9%A1/" style="font-size: 1.1em; color: #999">家乡</a> <a href="/tags/AJAX/" style="font-size: 1.1em; color: #999">AJAX</a> <a href="/tags/NLP/" style="font-size: 1.1em; color: #999">NLP</a> <a href="/tags/Promise/" style="font-size: 1.1em; color: #999">Promise</a> <a href="/tags/Git/" style="font-size: 1.1em; color: #999">Git</a> <a href="/tags/%E7%BB%84%E5%AD%A6/" style="font-size: 1.1em; color: #999">组学</a> <a href="/tags/npm/" style="font-size: 1.1em; color: #999">npm</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 1.23em; color: #999ea6">前端</a> <a href="/tags/%E6%AF%95%E4%B8%9A/" style="font-size: 1.1em; color: #999">毕业</a> <a href="/tags/scanpy/" style="font-size: 1.23em; color: #999ea6">scanpy</a> <a href="/tags/%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/" style="font-size: 1.1em; color: #999">梯度下降</a> <a href="/tags/spateo/" style="font-size: 1.1em; color: #999">spateo</a> <a href="/tags/%E8%BD%AC%E8%BD%BD/" style="font-size: 1.1em; color: #999">转载</a> <a href="/tags/%E5%BD%B1%E8%AF%84/" style="font-size: 1.1em; color: #999">影评</a> <a href="/tags/%E6%B1%87%E6%8A%A5/" style="font-size: 1.1em; color: #999">汇报</a> <a href="/tags/python/" style="font-size: 1.1em; color: #999">python</a> <a href="/tags/SQL/" style="font-size: 1.1em; color: #999">SQL</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>Archives</span>
+      <a class="card-more-btn" href="/archives/"
+            title="View More">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/02/">
+            <span class="card-archive-list-date">
+              February 2025
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/01/">
+            <span class="card-archive-list-date">
+              January 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/12/">
+            <span class="card-archive-list-date">
+              December 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/05/">
+            <span class="card-archive-list-date">
+              May 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/04/">
+            <span class="card-archive-list-date">
+              April 2024
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/01/">
+            <span class="card-archive-list-date">
+              January 2024
+            </span>
+            <span class="card-archive-list-count">8</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/12/">
+            <span class="card-archive-list-date">
+              December 2023
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/11/">
+            <span class="card-archive-list-date">
+              November 2023
+            </span>
+            <span class="card-archive-list-count">7</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Website Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article Count :</div><div class="item-count">84</div></div><div class="webinfo-item"><div class="item-name">Total Word Count :</div><div class="item-count">116k</div></div><div class="webinfo-item"><div class="item-name">Unique Visitors :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Page Views :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-02-22T10:10:59.616Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2025 By zepoch</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.3</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div>
         <style>
             [bg-lazy] {
                 background-image: none !important;

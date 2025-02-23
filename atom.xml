@@ -28,7 +28,9 @@
       
         
         
-    <summary type="html">&lt;p&gt;上回说到了 &lt;code&gt;self-attention&lt;/code&gt; 的四种写法，这次更新一下 &lt;code&gt;multi-head attention&lt;/code&gt; 的写法。&lt;code&gt;multi-head attention&lt;/code&gt; 与</summary>
+    <summary type="html">&lt;p&gt;上回说到了 &lt;code&gt;self-attention&lt;/code&gt; 的四种写法，这次更新一下
+&lt;code&gt;multi-head attention&lt;/code&gt;
+的写法。&lt;code&gt;multi-head attention&lt;/code&gt; 与</summary>
         
       
     
@@ -72,11 +74,25 @@
     <link href="https://www.zepoch.cc/2025/3817125654.html"/>
     <id>https://www.zepoch.cc/2025/3817125654.html</id>
     <published>2025-01-23T15:50:30.000Z</published>
-    <updated>2025-02-22T09:15:58.535Z</updated>
+    <updated>2025-02-23T14:14:10.394Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近在下载文章数据的时候，发现了一个很让人感到头痛的数据，如下图所示：
+&lt;img
+src=&quot;https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/批量爬取bicnn文件/20250223221153.p</summary>
+        
+      
     
     
     
+    <category term="技术" scheme="https://www.zepoch.cc/categories/%E6%8A%80%E6%9C%AF/"/>
     
+    
+    <category term="爬虫" scheme="https://www.zepoch.cc/tags/%E7%88%AC%E8%99%AB/"/>
     
   </entry>
   
@@ -93,7 +109,7 @@
         
         
     <summary type="html">&lt;p&gt;在所有生物中，唯有DNA可以通过遗传传递给后代继承某些特征。一旦DNA发生改变，它所有的后代都将继承改变后的DNA。转基因技术就是通过修改DNA来执行创造一个新的生物的指令，这些指令是以某种方式编程在DNA双螺旋结构里面的。&lt;/p&gt;
-&lt;p&gt;我有个程序员朋友，他喜欢从0开始写</summary>
+&lt;p&gt;我有个程序员朋友，他喜欢从0开始</summary>
         
       
     
@@ -118,7 +134,10 @@
       
         
         
-    <summary type="html">&lt;p&gt;前言：2024 年诺贝尔化学奖授予了 David Baker、Demis Hassabis 和 John Jumper。&lt;em&gt;一半授予 David Baker 以表彰其在计算蛋白质设计方面的贡献&lt;/em&gt;，他成功构建了全新的蛋白质；另一半授予 Demis</summary>
+    <summary type="html">&lt;p&gt;前言：2024 年诺贝尔化学奖授予了 David Baker、Demis Hassabis 和 John
+Jumper。&lt;em&gt;一半授予 David Baker
+以表彰其在计算蛋白质设计方面的贡献&lt;/em&gt;，他成功构建了全新的蛋白质；另一半授予
+Demis</summary>
         
       
     
@@ -139,8 +158,7 @@
       
         
         
-    <summary type="html">&lt;p&gt;看到 Obsidian 的 CEO Steph Ango 写过 80 个问题，是他用于每年、每十年自问的。感觉这些问题还有点意思，先分享出来，或许可以做些增删，调整出一份适合自己的，然后定期回顾，也蛮不错。&lt;/p&gt;
-&lt;h2</summary>
+    <summary type="html">&lt;p&gt;看到 Obsidian 的 CEO Steph Ango 写过</summary>
         
       
     
@@ -165,7 +183,7 @@
       
         
         
-    <summary type="html">&lt;h2 id=&quot;零-负十字架的人&quot;&gt;零、负十字架的人&lt;/h2&gt;
+    <summary type="html">&lt;h2 id=&quot;零负十字架的人&quot;&gt;零、负十字架的人&lt;/h2&gt;
 &lt;p&gt;1947</summary>
         
       
@@ -192,7 +210,8 @@
         
         
     <summary type="html">&lt;p&gt;最近在做各种各样的物种的单细胞数据清洗，在清洗到某个数据的时候，用sceasy转格式从h5ad到rds，发现了一个问题，基因名字消失了。&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
+&lt;p&gt;&lt;img
+src=&quot;https://raw.githubusercontent.com/zEpoch/imageHom</summary>
         
       
     
@@ -251,7 +270,7 @@
         
         
     <summary type="html">&lt;p&gt;换了新的电脑，一直以来自己的博客撰写的地址都是在电脑上面，自己的博客是基于hexo搭建的，所以需要将博客的文件迁移到新的电脑上面，这里记录一下迁移的过程。&lt;/p&gt;
-&lt;p&gt;直接把 node_modules</summary>
+&lt;p&gt;直接把</summary>
         
       
     
@@ -277,7 +296,8 @@
         
         
     <summary type="html">&lt;p&gt;还是大家熟悉的猴脑文章，可能是大家较为熟悉的一张UMAP图片，但是其呈现方式和其他的UMAP图片却是有所不同，它的UMAP图片如下所示，其名字为Voronoi图：&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
+&lt;p&gt;&lt;img
+src=&quot;https://raw.githubusercontent.com/zE</summary>
         
       
     
@@ -304,8 +324,9 @@
       
         
         
-    <summary type="html">&lt;p&gt;大多数文章在进行空间转录组细胞可视化的时候，通常会使用 square bin 或是 cellbin，但是究其展示本质，其实还是 square bin，比如下面的这种，每个细胞的呈现形式是一个 spot_size 固定为某个值的点。&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
+    <summary type="html">&lt;p&gt;大多数文章在进行空间转录组细胞可视化的时候，通常会使用 square bin
+或是 cellbin，但是究其展示本质，其实还是 square
+bin，比如下面的这种，每个细胞的呈现形式是一个</summary>
         
       
     
@@ -332,8 +353,9 @@
       
         
         
-    <summary type="html">&lt;p&gt;昨天抽了些时间对博客进行了一些优化，主要是对 butterfly 主题进行升级，由原先的 4.1.1 升级到了现在的 4.12.0。&lt;/p&gt;
-&lt;p&gt;之后对主题进行了一些个性化的修改，包括不限于：header bar 的样式、文章的样式、代码块的样式、字体的样式；cdn</summary>
+    <summary type="html">&lt;p&gt;昨天抽了些时间对博客进行了一些优化，主要是对 butterfly
+主题进行升级，由原先的 4.1.1 升级到了现在的 4.12.0。&lt;/p&gt;
+&lt;p&gt;之后对主题进行了一些个性化的修改，包括不限于：header</summary>
         
       
     
@@ -358,7 +380,9 @@
       
         
         
-    <summary type="html">&lt;p&gt;上一篇帖子提到了猴脑文章中&lt;a</summary>
+    <summary type="html">&lt;p&gt;上一篇帖子提到了猴脑文章中&lt;a
+href=&quot;https://www.zepoch.cc/2023/959813387.html&quot;&gt;某个区域中细胞复杂性的计算&lt;/a&gt;，后面又看到一张图，才是发现自己的计算少了一些东西，这里补充一下。&lt;/p&gt;
+&lt;p&gt;在原文的图四中还有一个图</summary>
         
       
     
@@ -387,7 +411,8 @@
       
         
         
-    <summary type="html">&lt;p&gt;After the spatial transcriptome is annotated manually, the regional annotation information of the spatial group is obtained. At this</summary>
+    <summary type="html">&lt;p&gt;After the spatial transcriptome is annotated manually, the regional
+annotation information of the spatial group is obtained. At this</summary>
         
       
     
@@ -413,7 +438,7 @@
         
         
     <summary type="html">&lt;p&gt;空间转录组通过手动划区注释之后，得到空间组的区域注释信息，这个时候我们便是想要得到其差异表达基因的功能注释信息，这里并没有能够通用的脚本，本人仅是提供一种思路，供大家参考。&lt;/p&gt;
-&lt;p&gt;由于我们的空间组的数据大都是 anndata 的 h5ad</summary>
+&lt;p&gt;由于我们的空间组的数据大都是 anndata 的</summary>
         
       
     
@@ -443,7 +468,7 @@
         
         
     <summary type="html">&lt;p&gt;在处理空间组的数据的时候，很多情况下，我们会根据解剖学知识给某些地方进行区域注释；这块区域的细胞类型则是通过单细胞映射空间组进行的，再进行了手动赋予区域信息以及迁移映射了细胞类型信息之后，则需要对这些进行进行一些可视化以及一些统计分析。&lt;/p&gt;
-&lt;p&gt;可视化的代码如下，为一</summary>
+&lt;p&gt;可视化的代码如下，为</summary>
         
       
     
@@ -473,8 +498,7 @@
         
         
     <summary type="html">&lt;p&gt;人的消费情况，是一个很好的反映人生活状态的指标。消费情况的好坏，直接影响到人的生活质量。所以决定对自己的消费情况进行总结，以此来反映自己的生活状态。&lt;/p&gt;
-&lt;p&gt;买衣服和吃饭的消费居于较高的位置。&lt;br&gt;
-买衣服的消费</summary>
+&lt;p&gt;买衣服和吃饭的消费居于较高的位置。</summary>
         
       
     
@@ -499,7 +523,8 @@
       
         
         
-    <summary type="html">&lt;p&gt;In some spatial group atlas articles, we often see a picture, which is to calculate the complexity of cells in a region. We take an</summary>
+    <summary type="html">&lt;p&gt;In some spatial group atlas articles, we often see a picture, which
+is to calculate the complexity of cells in a region. We take an</summary>
         
       
     
@@ -524,7 +549,10 @@
       
         
         
-    <summary type="html">&lt;p&gt;在某系空间组图谱文章中，我们经常会看到一种图片，是去计算某个区域中细胞的复杂性，我们以今年在 Cell 上发表的一篇文章为例，来看看如何计算某个区域中细胞的复杂性。文章名字为Single-cell spatial transcriptome reveals</summary>
+    <summary type="html">&lt;p&gt;在某系空间组图谱文章中，我们经常会看到一种图片，是去计算某个区域中细胞的复杂性，我们以今年在
+Cell
+上发表的一篇文章为例，来看看如何计算某个区域中细胞的复杂性。文章名字为Single-cell
+spatial transcriptome reveals</summary>
         
       
     

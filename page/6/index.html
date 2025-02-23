@@ -8,23 +8,112 @@
 <meta property="og:image" content="https://www.zepoch.cc/img/avatar.jpg">
 <meta property="article:author" content="zepoch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.zepoch.cc/img/avatar.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://www.zepoch.cc/page/6/index.html"><link rel="preconnect"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="AXddQAUftQD7NDjBUlQvw5LWu1x_A1uNpdVqI8c_3J0"/><meta name="baidu-site-verification" content="code-wVE0OwLLU2"/><meta name="bing_site_verification" content="154CD85FDB00EA195DB3F8F193CE78BE"/><link rel="stylesheet" href="/css/index.css?v=4.12.0"><link rel="stylesheet" href="/pluginsSrc/@fortawesome/fontawesome-free/css/all.min.css?v=6.5.1"><link rel="stylesheet" href="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.css?v=5.0.32" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+<meta name="twitter:image" content="https://www.zepoch.cc/img/avatar.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://www.zepoch.cc/page/6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="AXddQAUftQD7NDjBUlQvw5LWu1x_A1uNpdVqI8c_3J0"/><meta name="baidu-site-verification" content="code-wVE0OwLLU2"/><meta name="bing_site_verification" content="154CD85FDB00EA195DB3F8F193CE78BE"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
   root: '/',
   algolia: undefined,
-  localSearch: {"path":"/search.xml","preload":true,"top_n_per_article":6,"unescape":true,"languages":{"hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found"}},
+  localSearch: undefined,
   translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
   copy: {
     success: 'Copy Successful',
-    error: 'Copy Error',
+    error: 'Copy Failed',
     noSupport: 'Browser Not Supported'
   },
   relativeDate: {
     homepage: false,
     post: false
   },
-  runtime: 'days',
+  runtime: '',
   dateSuffix: {
     just: 'Just now',
     min: 'minutes ago',
@@ -32,16 +121,16 @@
     day: 'days ago',
     month: 'months ago'
   },
-  copyright: undefined,
-  lightbox: 'fancybox',
+  copyright: {"limitCount":150,"languages":{"author":"Author: zepoch","link":"Link: ","source":"Source: zepoch's site","info":"Copyright belongs to the author. For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source."}},
+  lightbox: 'null',
   Snackbar: undefined,
   infinitegrid: {
-    js: '/pluginsSrc/@egjs/infinitegrid/dist/infinitegrid.min.js?v=4.11.0',
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
     buttonText: 'Load More'
   },
   isPhotoFigcaption: false,
-  islazyload: true,
-  isAnchor: false,
+  islazyloadPlugin: false,
+  isAnchor: true,
   percent: {
     toc: true,
     rightside: false,
@@ -49,271 +138,108 @@
   autoDarkmode: false
 }</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
   title: 'zepoch\'s site',
-  isPost: false,
-  isHome: true,
-  isHighlightShrink: undefined,
+  isHighlightShrink: false,
   isToc: false,
-  postUpdate: '2025-02-23 22:14:45'
-}</script><script>(win=>{
-      win.saveToLocal = {
-        set: (key, value, ttl) => {
-          if (ttl === 0) return
-          const now = Date.now()
-          const expiry = now + ttl * 86400000
-          const item = {
-            value,
-            expiry
-          }
-          localStorage.setItem(key, JSON.stringify(item))
-        },
-      
-        get: key => {
-          const itemStr = localStorage.getItem(key)
-      
-          if (!itemStr) {
-            return undefined
-          }
-          const item = JSON.parse(itemStr)
-          const now = Date.now()
-      
-          if (now > item.expiry) {
-            localStorage.removeItem(key)
-            return undefined
-          }
-          return item.value
-        }
-      }
-    
-      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        script.onerror = reject
-        script.onload = script.onreadystatechange = function() {
-          const loadState = this.readyState
-          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-          script.onload = script.onreadystatechange = null
-          resolve()
-        }
-
-        Object.keys(attr).forEach(key => {
-          script.setAttribute(key, attr[key])
-        })
-
-        document.head.appendChild(script)
-      })
-    
-      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onerror = reject
-        link.onload = link.onreadystatechange = function() {
-          const loadState = this.readyState
-          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-          link.onload = link.onreadystatechange = null
-          resolve()
-        }
-        document.head.appendChild(link)
-      })
-    
-      win.activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      win.activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
-        }
-      }
-      const t = saveToLocal.get('theme')
-    
-        if (t === 'dark') activateDarkMode()
-        else if (t === 'light') activateLightMode()
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        if (asideStatus === 'hide') {
-          document.documentElement.classList.add('hide-aside')
-        } else {
-          document.documentElement.classList.remove('hide-aside')
-        }
-      }
-    
-      const detectApple = () => {
-        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
-          document.documentElement.classList.add('apple')
-        }
-      }
-      detectApple()
-    })(window)</script><!-- hexo injector head_end start -->
+  pageType: 'home'
+}</script><!-- hexo injector head_end start -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="zepoch's site" type="application/atom+xml">
-<link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">68</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="zepoch's site"><span class="site-name">zepoch's site</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> Search</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/3627254244.html" title="身体是革命的本钱">身体是革命的本钱</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-08-13T08:09:54.000Z" title="Created 2022-08-13 16:09:54">2022-08-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a></span></div><div class="content">最开始感到身体不适的时候，大概是在六月初，那时候觉得右下腹隐隐不适，但是并不疼痛，我一直以为是肝脏出了问题，随机买了护肝片，然后减少了熬夜。起初还是有一些效果，不适程度减少了很多，但是不到一周的时间又开始了，那是我正在做俯卧撑的时候，毕业的那段时间是每天一百个俯卧撑，那天俯卧撑的时候，突然觉得右胸猛的一痛，就像是要被撕裂了一般，随机停止了，然后上床休息。这便是已经六月中了。
-之后便是毕业典礼之类类的事情，这时候大概一直右胸下部都有一种异物感，还是觉得是肝脏的问题，于是去校医院做了肝胆检查，检查结果表示一切正常，所以觉得，是不是健身练的太多了，导致肌肉拉伸了？虽然那个部位肌肉确实没有怎么练到，但是确实就没有继续往下面检查。
-时间到了28号，毕业前往深圳，去华大实习，师兄给安排了食宿，然后自己去办理入职，入职需要入职体检，随机去了医院进行体检，血常规没有什么问题，检查心率的时候当时心率达到了116，医生说让做个心电图，这是上午的时候。下午体检结果出来，医生说我X光有问题，肺部有密集的阴影，需要做个CT进行深度检查，然后赶忙去做了CT，然后又去做了心电图，心电图倒是一切正常，还是往常的窦 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/3640031914.html" title="再见小破电">再见小破电</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-06-15T13:17:15.000Z" title="Created 2022-06-15 21:17:15">2022-06-15</time></span></div><div class="content">感谢成电，我爱成电，这是我四年本科生涯的经历所能给予成电的评价。
-我本身并不是很想分主题写，但是又害怕自己错过一些部分，为了让自己逻辑更为通顺，我将从下面这些方面叙说我的四年。
-
-我自己
-首先介绍一下我自己，楼主是来自河南十八线小县城的学生，生命科学与技术学院2018级生物信息复合培养。在2020年国家全面脱贫之前，按照国家的定义是国家级贫困县的贫困家庭的贫困学生，纯纯的小镇做题家。上大学之前甚至都没有出过我们那个屁大点地方的小县城，没有特长，没有兴趣爱好，当然家庭也不支持；身体也不好，小时候家里没钱吃肉，甚至给我搞出了佝偻病，也遗传了父亲母亲的一些其他的奇奇怪怪无关紧要但是会在体检报告单上体现出来的病。我的母亲一直是处于无业状态，在家照顾我以及我的弟弟；我的父亲原先是位农民，后来地被收了，就南下打工，成为了一名农民工。总体来说，属于是纯纯的衰仔一条了，衰的程度甩了路明非十八条街。但是个人有点可能比较适应这个时代的一些优点吧，我的心态比较好，也有可能是已经见惯了太多不好的事情已经麻木了。大概就是我总体的一个介绍了。
-学业
-二十一世纪是生物的世纪，大概就是大家经常听到的一句话 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/1075637985.html" title="讲讲各个编程语言的特点">讲讲各个编程语言的特点</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-04-25T08:46:41.000Z" title="Created 2022-04-25 16:46:41">2022-04-25</time></span></div><div class="content">目前呢，市面上主流的编程语言有
-PHP、Java、Python、C、C++、JavaScript等，这些语言呢也是各有千秋，今天呢，就用简短的话语细数一下他们的特点。
-PHP：没有优点
-Java：库多，库多，库多
-Python：语法清楚，语法清楚，语法清楚
-C：能操纵底层，能细粒度优化性能
-C++：啥都有，啥都有，啥都有
-
-汇编： 
-C语言： 
-Java： 
-C#： 
-PHP： 
-Python： 
-Go： 
-Haskell： 
-Lisp： 
-最后是 C++： 
-</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/2213706848.html" title="关于 pandoc exited with code null 的解决方案">关于 pandoc exited with code null 的解决方案</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-04-09T12:19:55.000Z" title="Created 2022-04-09 20:19:55">2022-04-09</time></span></div><div class="content">今天在写博客的时候，渲染的时候发生了一些问题，主要报错如下
-1[ERROR][hexo-renderer-pandoc] pandoc exited with code null.
-看了一些博主的方案，也进行了尝试，但是结果并不是很好，但是自己经过摸索还是解决了，便是来写一下相关的解决方案。
-
-第一种是将 hexo-renderer-pandoc 卸载
-1npm remove --save hexo-renderer-pandoc
-但是呢，卸载之后，hexo 的渲染器就需要重新装配，不符合我的需求。
-第二种则是在 Linux 之下的的一个官方的解决方法：
-1234567891011name: Simple Usageon: pushjobs:  convert_via_pandoc:    runs-on: ubuntu-18.04    steps:      - uses: docker://pandoc/core:2.9        with:          args: &quot;--help&quot; # gets appended to pandoc ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/3652601009.html" title="tensorflow入门">tensorflow入门</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-04-09T04:16:40.000Z" title="Created 2022-04-09 12:16:40">2022-04-09</time></span></div><div class="content">首先是 tensorflow 及其相关包的安装，作者本人使用的是
-miniconda，安装命令如下
-1234567conda create -n &#x27;tensorflow&#x27;activate tensorflowconda install -c conda-forge tensorflowconda install scikit-learnconda install -c conda-forge pandasconda install -c conda-forge matplotlibconda install -c conda-forge seaborn
-
-代码仓库为 deeplearning-ai 的
-1git clone https://github.com/https-deeplearning-ai/tensorflow-1-public
-首先要讲一下机器学习和传统编程的区别，传统编程在于通过输入规则和数据，得到结果；机器学习则是通过输入结果和数据，得到规则，即如下图所示
-
-首先可以做一个例子 x = -1, 0, 1, 2, 3, 4 y =  ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/47935670.html" title="关于 torch.nn.CrossEntropyLoss 的计算">关于 torch.nn.CrossEntropyLoss 的计算</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-03-28T03:09:45.000Z" title="Created 2022-03-28 11:09:45">2022-03-28</time></span></div><div class="content">torch中计算损失函数时，会使用到名为 CrossEntropyLoss
-的交叉熵损失函数，这个函数的公式为： \[
-\begin{aligned}
-loss(x,class)&amp;=−log\frac{∑_jexp(x[j])}{exp(x[class])}\\
-&amp;= −x[class] + log(∑_jexp(x[j]))
-\end{aligned}
-\]
-
-class 表示该样本的分类，x[j] 表示预测函数的第 j
-个输出，关于此公式的解释如下：
-假设我们的预测函数的输出如下 \[
-[[0.0541, 0.1762, 0.9489 ], [−0.0288, −0.8072, 0.4909]]
-\] 假设我们的应该的分类如下 \[
-[0,2]
-\] 即第一个样本为类别class=0，第二个样本为类别class=2
-那么 loss 函数则为： \[
-\begin{aligned}
-\frac{e^{0.0541}}{e^{0.0541}+e^{0.1762}+e^{0.9489}}&amp;=0.2185\\
-\frac{e^{0 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/719072326.html" title="关于 Couesrea 奖学金的申请">关于 Couesrea 奖学金的申请</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-03-25T02:09:03.000Z" title="Created 2022-03-25 10:09:03">2022-03-25</time></span></div><div class="content">
-Coursera是免费大型公开在线课程项目，由美国斯坦福大学两名计算机科学教授创办。旨在同世界顶尖大学合作，在线提供免费的网络公开课程。Coursera的首批合作院校包括斯坦福大学、密歇根大学、普林斯顿大学、宾夕法尼亚大学等美国名校。
-Coursera与另外1达成合作协议。其课程报名学生突破了150万，来自全球190多个国家和地区，而网站注册学生为68万。注册124门课程。目前新增的大学包括了佐治亚理工学院、杜克大学、华盛顿大学、加州理工学院、莱斯大学、爱丁堡大学、多伦多大学、洛桑联邦理工学院
--
-洛桑（瑞士）、约翰·霍普金斯大学公共卫生学院、加州大学旧金山分校、伊利诺伊大学厄巴纳
-- 香槟分校以及弗吉尼亚大学。
-
-除了免费课程之外还有一些付费性质的课程，但是也会有相应的课程福利，比如提供运算的服务器之类的。但是费用可能较为高。毕竟是学生嘛，Coursera也是提供了一套完整的助学金申请方案，可以用于助学金申请。
-
-于是乎，就做了一个助学金申请模版
-
-I am very interested in this course. I believe that this ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/2502972644.html" title="手写Promise">手写Promise</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-28T14:04:26.000Z" title="Created 2022-01-28 22:04:26">2022-01-28</time></span></div><div class="content">初始结构
-我们在 New 一个 Promise
-里的时候肯定是需要传入参数的，不然这个实例用处不大，而这个参数我们知道是一个函数，而且当我们传入这个函数参数的时候，这个函数参数会被自动执行。
-因此我们需要在类的 constructor 里面添加一个参数，这里就用
-func
-来作为形参，并且执行一下这个参数，接下来需要为这个函数参数传入他自己的参数，也就是
-resolve 和 reject，原生的 Promise 里面可以传入
-resolve，reject
-两个参数，那么我们也得允许手写这边可以传入这两个参数。
-12345class Promise &#123;    constructor(func) &#123;        func(resolve,reject);    &#125;&#125;
-
-但是这样写明显有问题，因为手写这边不知道在哪里调用
-resolve 和 reject 这两个参数，毕竟
-resolve 和 reject
-还没有定义。因此，就需要创造出这两个对象，有一点我们要知道的是，resolve、reject
-也是以函数的形式来执行 ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/3868603507.html" title="关于npm和yarn">关于npm和yarn</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-26T09:55:28.000Z" title="Created 2022-01-26 17:55:28">2022-01-26</time></span></div><div class="content">什么是 NPM
-
-NPM（全称Node Package Manager，即node包管理器）
-
-是Node.js默认的、以JavaScript编写的软件包管理系统
-npm 来分享和使用代码已经成了前端的标配
-官网： https://www.npmjs.com
-npm被全球超过1100万开发人员所依赖
-拥有超过一百万个软件包，是世界上最大的软件注册表 
-
-
-安装NPM
-
-npm是Node.js默认的软件包管理系统
-安装完毕node后，会默认安装好npm
-npm本身也是基于Node.js开发的软件
-下载Node: http://nodejs.cn
-
-NPM 的使用
-123456789101112131415161718192021222324npm -v   #通过查看版本，看npm是否安装成功npm install &lt;Module Name&gt;      #使用 npm 命令安装模块npm install &lt;Module Name&gt; -g   #可以直接在命令行里使用npm list -g  #查看所有全局安装的模块npm li ...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/3494410286.html" title="关于Git">关于Git</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-24T15:12:39.000Z" title="Created 2022-01-24 23:12:39">2022-01-24</time></span></div><div class="content">版本控制
-
-版本控制（Revision
-control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的版本的软件工程技术。
-
-
-实现跨区域多人协同开发
-追踪和记载一个或者多个文件的历史记录
-组织和保护你的源代码和文档
-统计工作量
-并行开发、提高开发效率
-跟踪记录整个软件的开发过程
-减轻开发人员的负担，节省时间，同时降低人为错误
-
-简单说就是用于管理多人协同开发项目的技术。 
-没有进行版本控制或者版本控制本身缺乏正确的流程管理，在软件开发过程中将会引入很多问题，如软件代码的一致性、软件内容的冗余、软件过程的事物性、软件开发过程中的并发性、软件源代码的安全性，以及软件的整合等问题。
-无论是工作还是学习，或者是自己做笔记，都经历过这样一个阶段！我们就迫切需要一个版本控制工具！
-
-
-常见的版本控制工具
-
-主流的版本控制器有如下这些：
-
-Git
-SVN（Subversion）
-CVS（Concurrent Versions System）
-VSS（Microsoft Visual S ...</div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/5/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/#content-inner">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/#content-inner">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/#content-inner">9</a><a class="extend next" rel="next" href="/page/7/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">zepoch</div><div class="author-info__description">A full-stack engineer who is improving every day</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">68</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepoch"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/zepoch" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:zhotoa@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/2644058787.html" title="PyTorch手写多头注意力">PyTorch手写多头注意力</a><time datetime="2025-02-23T07:44:25.000Z" title="Created 2025-02-23 15:44:25">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3007271696.html" title="attention的四重境界">attention的四重境界</a><time datetime="2025-02-22T05:58:43.000Z" title="Created 2025-02-22 13:58:43">2025-02-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3817125654.html" title="批量爬取bicnn文件">批量爬取bicnn文件</a><time datetime="2025-01-23T15:50:30.000Z" title="Created 2025-01-23 23:50:30">2025-01-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/172910752.html" title="随想1">随想1</a><time datetime="2025-01-22T02:39:14.000Z" title="Created 2025-01-22 10:39:14">2025-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3896675102.html" title="为什么给你全奖免费读博？科学研究是什么？">为什么给你全奖免费读博？科学研究是什么？</a><time datetime="2025-01-01T02:47:27.000Z" title="Created 2025-01-01 10:47:27">2025-01-01</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+<link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">68</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">zepoch's site</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><h1 class="title-seo">zepoch's site</h1></header><main class="layout" id="content-inner"><div class="recent-posts nc" id="recent-posts"><div class="recent-post-items"><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/3627254244.html" title="身体是革命的本钱">身体是革命的本钱</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-08-13T08:09:54.000Z" title="Created 2022-08-13 16:09:54">2022-08-13</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%94%9F%E6%B4%BB/">生活</a></span></div><div class="content">...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/3640031914.html" title="再见小破电">再见小破电</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-06-15T13:17:15.000Z" title="Created 2022-06-15 21:17:15">2022-06-15</time></span></div><div class="content">...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/1075637985.html" title="讲讲各个编程语言的特点">讲讲各个编程语言的特点</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-04-25T08:46:41.000Z" title="Created 2022-04-25 16:46:41">2022-04-25</time></span></div><div class="content">目前呢，市面上主流的编程语言有 PHP、Java、Python、C、C++、JavaScript等，这些语言呢也是各有千秋，今天呢，就用简短的话语细数一下他们的特点。 PHP：没有优点 Java：库多，库多，库多 Python：语法清楚，语法清楚，语法清楚 C：能操纵底层，能细粒度优化性能 C++：啥都有，啥都有，啥都有  汇编：  C语言：  Java：  C#：  PHP：  Python：  Go：  Haskell：  Lisp：  最后是 C++：  </div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/2213706848.html" title="关于 pandoc exited with code null 的解决方案">关于 pandoc exited with code null 的解决方案</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-04-09T12:19:55.000Z" title="Created 2022-04-09 20:19:55">2022-04-09</time></span></div><div class="content">今天在写博客的时候，渲染的时候发生了一些问题，主要报错如下 1[ERROR][hexo-renderer-pandoc] pandoc exited with code null. 看了一些博主的方案，也进行了尝试，但是结果并不是很好，但是自己经过摸索还是解决了，便是来写一下相关的解决方案。  第一种是将  hexo-renderer-pandoc  卸载 1npm remove --save hexo-renderer-pandoc 但是呢，卸载之后，hexo 的渲染器就需要重新装配，不符合我的需求。 第二种则是在 Linux 之下的的一个官方的解决方法： 1234567891011name: Simple Usageon: pushjobs:  convert_via_pandoc:    runs-on: ubuntu-18.04    steps:      - uses: docker://pandoc/core:2.9        with:          args: &quot;--help&quot; # gets appended to pandoc...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/3652601009.html" title="tensorflow入门">tensorflow入门</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-04-09T04:16:40.000Z" title="Created 2022-04-09 12:16:40">2022-04-09</time></span></div><div class="content">首先是 tensorflow 及其相关包的安装，作者本人使用的是 miniconda，安装命令如下 1234567conda create -n &#x27;tensorflow&#x27;activate tensorflowconda install -c conda-forge tensorflowconda install scikit-learnconda install -c conda-forge pandasconda install -c conda-forge matplotlibconda install -c conda-forge seaborn  代码仓库为 deeplearning-ai 的 1git clone https://github.com/https-deeplearning-ai/tensorflow-1-public 首先要讲一下机器学习和传统编程的区别，传统编程在于通过输入规则和数据，得到结果；机器学习则是通过输入结果和数据，得到规则，即如下图所示  首先可以做一个例子 x = -1, 0, 1, 2, 3, 4 y = -3,...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/47935670.html" title="关于 torch.nn.CrossEntropyLoss 的计算">关于 torch.nn.CrossEntropyLoss 的计算</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-03-28T03:09:45.000Z" title="Created 2022-03-28 11:09:45">2022-03-28</time></span></div><div class="content">torch中计算损失函数时，会使用到名为 CrossEntropyLoss 的交叉熵损失函数，这个函数的公式为： loss(x,class)=−log∑jexp(x[j])exp(x[class])=−x[class]+log(∑jexp(x[j]))\begin{aligned} loss(x,class)&amp;=−log\frac{∑_jexp(x[j])}{exp(x[class])}\\ &amp;= −x[class] + log(∑_jexp(x[j])) \end{aligned} loss(x,class)​=−logexp(x[class])∑j​exp(x[j])​=−x[class]+log(j∑​exp(x[j]))​  class 表示该样本的分类，x[j] 表示预测函数的第 j 个输出，关于此公式的解释如下： 假设我们的预测函数的输出如下 [[0.0541,0.1762,0.9489],[−0.0288,−0.8072,0.4909]][[0.0541, 0.1762, 0.9489 ], [−0.0288, −0.8072,...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/719072326.html" title="关于 Couesrea 奖学金的申请">关于 Couesrea 奖学金的申请</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-03-25T02:09:03.000Z" title="Created 2022-03-25 10:09:03">2022-03-25</time></span></div><div class="content"> Coursera是免费大型公开在线课程项目，由美国斯坦福大学两名计算机科学教授创办。旨在同世界顶尖大学合作，在线提供免费的网络公开课程。Coursera的首批合作院校包括斯坦福大学、密歇根大学、普林斯顿大学、宾夕法尼亚大学等美国名校。 Coursera与另外1达成合作协议。其课程报名学生突破了150万，来自全球190多个国家和地区，而网站注册学生为68万。注册124门课程。目前新增的大学包括了佐治亚理工学院、杜克大学、华盛顿大学、加州理工学院、莱斯大学、爱丁堡大学、多伦多大学、洛桑联邦理工学院 - 洛桑（瑞士）、约翰·霍普金斯大学公共卫生学院、加州大学旧金山分校、伊利诺伊大学厄巴纳 - 香槟分校以及弗吉尼亚大学。  除了免费课程之外还有一些付费性质的课程，但是也会有相应的课程福利，比如提供运算的服务器之类的。但是费用可能较为高。毕竟是学生嘛，Coursera也是提供了一套完整的助学金申请方案，可以用于助学金申请。  于是乎，就做了一个助学金申请模版  I am very interested in this course. I believe that this course...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/2502972644.html" title="手写Promise">手写Promise</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-28T14:04:26.000Z" title="Created 2022-01-28 22:04:26">2022-01-28</time></span></div><div class="content">初始结构 我们在 New 一个 Promise 里的时候肯定是需要传入参数的，不然这个实例用处不大，而这个参数我们知道是一个函数，而且当我们传入这个函数参数的时候，这个函数参数会被自动执行。 因此我们需要在类的 constructor 里面添加一个参数，这里就用 func 来作为形参，并且执行一下这个参数，接下来需要为这个函数参数传入他自己的参数，也就是 resolve 和 reject，原生的 Promise 里面可以传入 resolve，reject 两个参数，那么我们也得允许手写这边可以传入这两个参数。 12345class Promise &#123;    constructor(func) &#123;        func(resolve,reject);    &#125;&#125;  但是这样写明显有问题，因为手写这边不知道在哪里调用 resolve 和 reject 这两个参数，毕竟 resolve 和 reject 还没有定义。因此，就需要创造出这两个对象，有一点我们要知道的是，resolve、reject 也是以函数的形式来执行的，我们在原生...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/3868603507.html" title="关于npm和yarn">关于npm和yarn</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-26T09:55:28.000Z" title="Created 2022-01-26 17:55:28">2022-01-26</time></span></div><div class="content">什么是 NPM  NPM（全称Node Package Manager，即node包管理器） 是Node.js默认的、以JavaScript编写的软件包管理系统 npm 来分享和使用代码已经成了前端的标配 官网： https://www.npmjs.com npm被全球超过1100万开发人员所依赖 拥有超过一百万个软件包，是世界上最大的软件注册表    安装NPM  npm是Node.js默认的软件包管理系统 安装完毕node后，会默认安装好npm npm本身也是基于Node.js开发的软件 下载Node: http://nodejs.cn  NPM 的使用 123456789101112131415161718192021222324npm -v   #通过查看版本，看npm是否安装成功npm install &lt;Module Name&gt;      #使用 npm 命令安装模块npm install &lt;Module Name&gt; -g   #可以直接在命令行里使用npm list -g  #查看所有全局安装的模块npm list vue...</div></div></div><div class="recent-post-item"><div class="recent-post-info no-cover"><a class="article-title" href="/2022/3494410286.html" title="关于Git">关于Git</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">Created</span><time datetime="2022-01-24T15:12:39.000Z" title="Created 2022-01-24 23:12:39">2022-01-24</time></span></div><div class="content">版本控制  版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的版本的软件工程技术。   实现跨区域多人协同开发 追踪和记载一个或者多个文件的历史记录 组织和保护你的源代码和文档 统计工作量 并行开发、提高开发效率 跟踪记录整个软件的开发过程 减轻开发人员的负担，节省时间，同时降低人为错误  简单说就是用于管理多人协同开发项目的技术。  没有进行版本控制或者版本控制本身缺乏正确的流程管理，在软件开发过程中将会引入很多问题，如软件代码的一致性、软件内容的冗余、软件过程的事物性、软件开发过程中的并发性、软件源代码的安全性，以及软件的整合等问题。 无论是工作还是学习，或者是自己做笔记，都经历过这样一个阶段！我们就迫切需要一个版本控制工具！   常见的版本控制工具  主流的版本控制器有如下这些：  Git SVN（Subversion） CVS（Concurrent Versions System） VSS（Microsoft Visual SourceSafe） TFS（Team...</div></div></div></div><nav id="pagination"><div class="pagination"><a class="extend prev" rel="prev" href="/page/5/#content-inner"><i class="fas fa-chevron-left fa-fw"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/#content-inner">5</a><span class="page-number current">6</span><a class="page-number" href="/page/7/#content-inner">7</a><span class="space">&hellip;</span><a class="page-number" href="/page/9/#content-inner">9</a><a class="extend next" rel="next" href="/page/7/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">zepoch</div><div class="author-info-description">A full-stack engineer who is improving every day</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">85</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">68</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepoch"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/zepoch" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhotoa@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/2644058787.html" title="PyTorch手写多头注意力">PyTorch手写多头注意力</a><time datetime="2025-02-23T07:44:25.000Z" title="Created 2025-02-23 15:44:25">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3007271696.html" title="attention的四重境界">attention的四重境界</a><time datetime="2025-02-22T05:58:43.000Z" title="Created 2025-02-22 13:58:43">2025-02-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3817125654.html" title="批量爬取bicnn文件">批量爬取bicnn文件</a><time datetime="2025-01-23T15:50:30.000Z" title="Created 2025-01-23 23:50:30">2025-01-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/172910752.html" title="随想1">随想1</a><time datetime="2025-01-22T02:39:14.000Z" title="Created 2025-01-22 10:39:14">2025-01-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3896675102.html" title="为什么给你全奖免费读博？科学研究是什么？">为什么给你全奖免费读博？科学研究是什么？</a><time datetime="2025-01-01T02:47:27.000Z" title="Created 2025-01-01 10:47:27">2025-01-01</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
             <i class="fas fa-folder-open"></i>
             <span>Categories</span>
             <a class="card-more-btn" href="/categories/" title="View More">
-    <i class="fas fa-angle-right"></i></a>
-            </div>
-            <ul class="card-category-list" id="aside-cat-list">
+      <i class="fas fa-angle-right"></i></a>
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
             <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/llm/"><span class="card-category-list-name">llm</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/spatial-transcriptomics/"><span class="card-category-list-name">spatial transcriptomics</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/tech/"><span class="card-category-list-name">tech</span><span class="card-category-list-count">9</span></a><ul class="card-category-list child"><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/tech/%E6%8A%80%E6%9C%AF/"><span class="card-category-list-name">技术</span><span class="card-category-list-count">6</span></a></li></ul></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%8A%80%E6%9C%AF/"><span class="card-category-list-name">技术</span><span class="card-category-list-count">20</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E6%9D%82%E8%81%8A/"><span class="card-category-list-name">杂聊</span><span class="card-category-list-count">1</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%94%9F%E6%B4%BB/"><span class="card-category-list-name">生活</span><span class="card-category-list-count">13</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF/"><span class="card-category-list-name">生物信息</span><span class="card-category-list-count">1</span></a></li>
-            </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/Git/" style="font-size: 1.1em; color: #999">Git</a> <a href="/tags/AI/" style="font-size: 1.1em; color: #999">AI</a> <a href="/tags/tensorflow/" style="font-size: 1.1em; color: #999">tensorflow</a> <a href="/tags/CSS/" style="font-size: 1.1em; color: #999">CSS</a> <a href="/tags/%E6%91%B8%E9%B1%BC/" style="font-size: 1.1em; color: #999">摸鱼</a> <a href="/tags/%E8%AE%BA%E6%96%87/" style="font-size: 1.1em; color: #999">论文</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%8C%96%E5%AD%A6/" style="font-size: 1.1em; color: #999">生物化学</a> <a href="/tags/%E7%BC%96%E7%A8%8B/" style="font-size: 1.1em; color: #999">编程</a> <a href="/tags/sceasy/" style="font-size: 1.1em; color: #999">sceasy</a> <a href="/tags/%E7%BB%84%E5%AD%A6/" style="font-size: 1.1em; color: #999">组学</a> <a href="/tags/%E8%80%83%E7%A0%94/" style="font-size: 1.1em; color: #999">考研</a> <a href="/tags/genomics/" style="font-size: 1.1em; color: #999">genomics</a> <a href="/tags/%E8%BD%AC%E8%BD%BD/" style="font-size: 1.1em; color: #999">转载</a> <a href="/tags/Scanpy/" style="font-size: 1.1em; color: #999">Scanpy</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 1.5em; color: #99a9bf">技术</a> <a href="/tags/HTML/" style="font-size: 1.1em; color: #999">HTML</a> <a href="/tags/tech/" style="font-size: 1.37em; color: #99a4b2">tech</a> <a href="/tags/%E8%80%83%E7%A0%94%E6%97%A5%E8%AE%B0/" style="font-size: 1.1em; color: #999">考研日记</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 1.3em; color: #99a1ac">机器学习</a> <a href="/tags/CHATGPT/" style="font-size: 1.1em; color: #999">CHATGPT</a> <a href="/tags/JavaScript/" style="font-size: 1.37em; color: #99a4b2">JavaScript</a> <a href="/tags/%E6%AF%95%E4%B8%9A/" style="font-size: 1.1em; color: #999">毕业</a> <a href="/tags/%E6%AF%9B%E9%80%89/" style="font-size: 1.17em; color: #999c9f">毛选</a> <a href="/tags/spateo/" style="font-size: 1.1em; color: #999">spateo</a> <a href="/tags/jQuery/" style="font-size: 1.17em; color: #999c9f">jQuery</a> <a href="/tags/%E6%B1%87%E6%8A%A5/" style="font-size: 1.1em; color: #999">汇报</a> <a href="/tags/Python/" style="font-size: 1.1em; color: #999">Python</a> <a href="/tags/%E7%94%9F%E6%B4%BB/" style="font-size: 1.43em; color: #99a6b9">生活</a> <a href="/tags/%E7%A7%91%E7%A0%94/" style="font-size: 1.1em; color: #999">科研</a> <a href="/tags/%E5%8D%95%E7%BB%86%E8%83%9E/" style="font-size: 1.17em; color: #999c9f">单细胞</a> <a href="/tags/DOM/" style="font-size: 1.1em; color: #999">DOM</a> <a href="/tags/torch/" style="font-size: 1.1em; color: #999">torch</a> <a href="/tags/llm/" style="font-size: 1.17em; color: #999c9f">llm</a> <a href="/tags/python/" style="font-size: 1.1em; color: #999">python</a> <a href="/tags/%E6%9D%82%E8%81%8A/" style="font-size: 1.23em; color: #999ea6">杂聊</a> <a href="/tags/Seurat/" style="font-size: 1.1em; color: #999">Seurat</a> <a href="/tags/npm/" style="font-size: 1.1em; color: #999">npm</a> <a href="/tags/%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/" style="font-size: 1.1em; color: #999">梯度下降</a> <a href="/tags/%E6%88%90%E7%94%B5/" style="font-size: 1.1em; color: #999">成电</a> <a href="/tags/%E7%96%BE%E7%97%85/" style="font-size: 1.1em; color: #999">疾病</a></div></div><div class="card-widget card-archives"><div class="item-headline"><i class="fas fa-archive"></i><span>Archives</span><a class="card-more-btn" href="/archives/" title="View More">
-    <i class="fas fa-angle-right"></i></a></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/02/"><span class="card-archive-list-date">February 2025</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2025/01/"><span class="card-archive-list-date">January 2025</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/12/"><span class="card-archive-list-date">December 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/05/"><span class="card-archive-list-date">May 2024</span><span class="card-archive-list-count">2</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/04/"><span class="card-archive-list-date">April 2024</span><span class="card-archive-list-count">1</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2024/01/"><span class="card-archive-list-date">January 2024</span><span class="card-archive-list-count">8</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/12/"><span class="card-archive-list-date">December 2023</span><span class="card-archive-list-count">3</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2023/11/"><span class="card-archive-list-date">November 2023</span><span class="card-archive-list-count">7</span></a></li></ul></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article :</div><div class="item-count">85</div></div><div class="webinfo-item"><div class="item-name">Runtime :</div><div class="item-count" id="runtimeshow" data-publishDate="2021-07-16T16:00:00.000Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Total Count :</div><div class="item-count">117.1k</div></div><div class="webinfo-item"><div class="item-name">UV :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">PV :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-02-23T14:14:43.567Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2025 By zepoch</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.12.0"></script><script src="/js/main.js?v=4.12.0"></script><script src="/pluginsSrc/@fancyapps/ui/dist/fancybox/fancybox.umd.js?v=5.0.32"></script><script src="/pluginsSrc/instant.page/instantpage.js?v=5.2.0" type="module"></script><script src="/pluginsSrc/vanilla-lazyload/dist/lazyload.iife.min.js?v=17.8.5"></script><script>function panguFn () {
-  if (typeof pangu === 'object') pangu.autoSpacingPage()
-  else {
-    getScript('/pluginsSrc/pangu/dist/browser/pangu.min.js?v=4.0.7')
-      .then(() => {
-        pangu.autoSpacingPage()
-      })
-  }
-}
-
-function panguInit () {
-  if (false){
-    GLOBAL_CONFIG_SITE.isPost && panguFn()
-  } else {
-    panguFn()
-  }
-}
-
-document.addEventListener('DOMContentLoaded', panguInit)</script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading the Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.12.0"></script></div></div>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>Tags</span></div><div class="card-tag-cloud"><a href="/tags/SQL/" style="font-size: 1.1em; color: #999">SQL</a> <a href="/tags/BOM/" style="font-size: 1.1em; color: #999">BOM</a> <a href="/tags/Git/" style="font-size: 1.1em; color: #999">Git</a> <a href="/tags/Python/" style="font-size: 1.1em; color: #999">Python</a> <a href="/tags/%E4%B8%9C%E4%BA%AC%E5%A5%A5%E8%BF%90%E4%BC%9A/" style="font-size: 1.1em; color: #999">东京奥运会</a> <a href="/tags/%E6%88%90%E7%94%B5/" style="font-size: 1.1em; color: #999">成电</a> <a href="/tags/CHATGPT/" style="font-size: 1.1em; color: #999">CHATGPT</a> <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" style="font-size: 1.3em; color: #99a1ac">机器学习</a> <a href="/tags/AJAX/" style="font-size: 1.1em; color: #999">AJAX</a> <a href="/tags/%E7%94%9F%E7%89%A9%E5%8C%96%E5%AD%A6/" style="font-size: 1.1em; color: #999">生物化学</a> <a href="/tags/%E8%AE%BA%E6%96%87/" style="font-size: 1.1em; color: #999">论文</a> <a href="/tags/Promise/" style="font-size: 1.1em; color: #999">Promise</a> <a href="/tags/%E7%A7%91%E7%A0%94/" style="font-size: 1.1em; color: #999">科研</a> <a href="/tags/tech/" style="font-size: 1.37em; color: #99a4b2">tech</a> <a href="/tags/%E7%96%BE%E7%97%85/" style="font-size: 1.1em; color: #999">疾病</a> <a href="/tags/%E6%9D%82%E8%81%8A/" style="font-size: 1.23em; color: #999ea6">杂聊</a> <a href="/tags/%E5%89%8D%E7%AB%AF/" style="font-size: 1.17em; color: #999c9f">前端</a> <a href="/tags/sceasy/" style="font-size: 1.1em; color: #999">sceasy</a> <a href="/tags/%E6%AF%9B%E9%80%89/" style="font-size: 1.17em; color: #999c9f">毛选</a> <a href="/tags/%E6%90%9C%E7%B4%A2/" style="font-size: 1.1em; color: #999">搜索</a> <a href="/tags/npm/" style="font-size: 1.1em; color: #999">npm</a> <a href="/tags/%E8%80%83%E7%A0%94%E6%97%A5%E8%AE%B0/" style="font-size: 1.1em; color: #999">考研日记</a> <a href="/tags/Github/" style="font-size: 1.1em; color: #999">Github</a> <a href="/tags/%E8%BD%AC%E8%BD%BD/" style="font-size: 1.1em; color: #999">转载</a> <a href="/tags/torch/" style="font-size: 1.1em; color: #999">torch</a> <a href="/tags/%E7%88%AC%E8%99%AB/" style="font-size: 1.1em; color: #999">爬虫</a> <a href="/tags/%E6%8A%80%E6%9C%AF/" style="font-size: 1.5em; color: #99a9bf">技术</a> <a href="/tags/Hexo/" style="font-size: 1.23em; color: #999ea6">Hexo</a> <a href="/tags/this/" style="font-size: 1.1em; color: #999">this</a> <a href="/tags/genomics/" style="font-size: 1.1em; color: #999">genomics</a> <a href="/tags/DOM/" style="font-size: 1.1em; color: #999">DOM</a> <a href="/tags/%E6%91%B8%E9%B1%BC/" style="font-size: 1.1em; color: #999">摸鱼</a> <a href="/tags/%E7%94%9F%E6%B4%BB/" style="font-size: 1.43em; color: #99a6b9">生活</a> <a href="/tags/llm/" style="font-size: 1.17em; color: #999c9f">llm</a> <a href="/tags/Seurat/" style="font-size: 1.1em; color: #999">Seurat</a> <a href="/tags/spatial-transcriptomics/" style="font-size: 1.17em; color: #999c9f">spatial transcriptomics</a> <a href="/tags/%E8%A1%A8%E8%A7%82%E9%81%97%E4%BC%A0%E5%AD%A6/" style="font-size: 1.1em; color: #999">表观遗传学</a> <a href="/tags/Coursera/" style="font-size: 1.1em; color: #999">Coursera</a> <a href="/tags/spateo/" style="font-size: 1.1em; color: #999">spateo</a> <a href="/tags/%E5%BD%B1%E8%AF%84/" style="font-size: 1.1em; color: #999">影评</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>Archives</span>
+      <a class="card-more-btn" href="/archives/"
+            title="View More">
+            <i class="fas fa-angle-right"></i>
+          </a>
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/02/">
+            <span class="card-archive-list-date">
+              February 2025
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/01/">
+            <span class="card-archive-list-date">
+              January 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/12/">
+            <span class="card-archive-list-date">
+              December 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/05/">
+            <span class="card-archive-list-date">
+              May 2024
+            </span>
+            <span class="card-archive-list-count">2</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/04/">
+            <span class="card-archive-list-date">
+              April 2024
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/01/">
+            <span class="card-archive-list-date">
+              January 2024
+            </span>
+            <span class="card-archive-list-count">8</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/12/">
+            <span class="card-archive-list-date">
+              December 2023
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2023/11/">
+            <span class="card-archive-list-date">
+              November 2023
+            </span>
+            <span class="card-archive-list-count">7</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>Website Info</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">Article Count :</div><div class="item-count">85</div></div><div class="webinfo-item"><div class="item-name">Total Word Count :</div><div class="item-count">118.7k</div></div><div class="webinfo-item"><div class="item-name">Unique Visitors :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Page Views :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">Last Update :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-02-23T14:33:27.419Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2025 By zepoch</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.3</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div>
         <style>
             [bg-lazy] {
                 background-image: none !important;

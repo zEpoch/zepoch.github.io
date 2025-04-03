@@ -6,7 +6,7 @@
   <link href="https://www.zepoch.cc/atom.xml" rel="self"/>
   
   <link href="https://www.zepoch.cc/"/>
-  <updated>2025-02-23T13:58:31.435Z</updated>
+  <updated>2025-04-03T07:50:30.178Z</updated>
   <id>https://www.zepoch.cc/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>正义的残缺</title>
+    <link href="https://www.zepoch.cc/2025/3180577521.html"/>
+    <id>https://www.zepoch.cc/2025/3180577521.html</id>
+    <published>2025-04-03T07:49:10.000Z</published>
+    <updated>2025-04-03T07:50:30.178Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;见义勇为是充满正义的行为，不为交换任何资源的行为。&lt;/p&gt;
+&lt;p&gt;柏拉图认为我们对“正义”这种理念（原相）的认识不可能是凭空出现的，这只能是我们“前世的残存记忆（内心OS：是本人灵魂残存还是肉体DNA残留呢？），是在一个理念世界中生存时，遗留下来的模糊记忆”。&lt;/p&gt;
+</summary>
+        
+      
+    
+    
+    
+    <category term="杂聊" scheme="https://www.zepoch.cc/categories/%E6%9D%82%E8%81%8A/"/>
+    
+    
+    <category term="碎碎念" scheme="https://www.zepoch.cc/tags/%E7%A2%8E%E7%A2%8E%E5%BF%B5/"/>
+    
+  </entry>
   
   <entry>
     <title>PyTorch手写多头注意力</title>
@@ -535,38 +562,6 @@ is to calculate the complexity of cells in a region. We take an</summary>
     
     
     <category term="tech" scheme="https://www.zepoch.cc/tags/tech/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>计算某个区域中细胞的复杂性</title>
-    <link href="https://www.zepoch.cc/2023/959813387.html"/>
-    <id>https://www.zepoch.cc/2023/959813387.html</id>
-    <published>2023-12-29T02:55:57.000Z</published>
-    <updated>2025-02-23T16:45:45.529Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;在某系空间组图谱文章中，我们经常会看到一种图片，是去计算某个区域中细胞的复杂性，我们以今年在
-Cell
-上发表的一篇文章为例，来看看如何计算某个区域中细胞的复杂性。文章名字为Single-cell
-spatial transcriptome reveals</summary>
-        
-      
-    
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/categories/tech/"/>
-    
-    <category term="技术" scheme="https://www.zepoch.cc/categories/tech/%E6%8A%80%E6%9C%AF/"/>
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/tags/tech/"/>
-    
-    <category term="技术" scheme="https://www.zepoch.cc/tags/%E6%8A%80%E6%9C%AF/"/>
     
   </entry>
   

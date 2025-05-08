@@ -6,7 +6,7 @@
   <link href="https://www.zepoch.cc/atom.xml" rel="self"/>
   
   <link href="https://www.zepoch.cc/"/>
-  <updated>2025-04-03T07:50:30.178Z</updated>
+  <updated>2025-05-08T10:10:08.260Z</updated>
   <id>https://www.zepoch.cc/</id>
   
   <author>
@@ -17,11 +17,39 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>CentOS glibc 升级</title>
+    <link href="https://www.zepoch.cc/2025/896014564.html"/>
+    <id>https://www.zepoch.cc/2025/896014564.html</id>
+    <published>2025-05-08T10:01:18.000Z</published>
+    <updated>2025-05-08T10:10:08.260Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;最近在安装 &lt;a href=&quot;https://docs.rapids.ai/install/&quot;&gt;Nvidia
+Rapids&lt;/a&gt; 用于更为高效的科学计算。&lt;/p&gt;
+&lt;p&gt;安装代码如下:&lt;/p&gt;
+&lt;figure class=&quot;highlight</summary>
+        
+      
+    
+    
+    
+    <category term="技术" scheme="https://www.zepoch.cc/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+    <category term="Linux" scheme="https://www.zepoch.cc/tags/Linux/"/>
+    
+  </entry>
+  
+  <entry>
     <title>正义的残缺</title>
     <link href="https://www.zepoch.cc/2025/3180577521.html"/>
     <id>https://www.zepoch.cc/2025/3180577521.html</id>
     <published>2025-04-03T07:49:10.000Z</published>
-    <updated>2025-04-03T07:50:30.178Z</updated>
+    <updated>2025-04-03T07:50:47.364Z</updated>
     
     
       
@@ -536,32 +564,6 @@ annotation information of the spatial group is obtained. At this</summary>
     
     
     <category term="生活" scheme="https://www.zepoch.cc/tags/%E7%94%9F%E6%B4%BB/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Calculate the complexity of cells in a region</title>
-    <link href="https://www.zepoch.cc/2023/2669081178.html"/>
-    <id>https://www.zepoch.cc/2023/2669081178.html</id>
-    <published>2023-12-29T03:26:11.000Z</published>
-    <updated>2023-12-29T03:30:22.398Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;In some spatial group atlas articles, we often see a picture, which
-is to calculate the complexity of cells in a region. We take an</summary>
-        
-      
-    
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/categories/tech/"/>
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/tags/tech/"/>
     
   </entry>
   

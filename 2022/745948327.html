@@ -1,369 +1,0 @@
-<!DOCTYPE html><html lang="en-US" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>关于 AJAX 的理解 | zepoch's site</title><meta name="author" content="zepoch"><meta name="copyright" content="zepoch"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="原生AJAX 1.1 AJAX 简介 AJAX 全称为Asynchronous JavaScript And XML，就是异步的 JS 和 XML。 通过AJAX 可以在浏览器中向服务器发送异步请求，最大的优势：无刷新获取数据。 AJAX 不是新的编程语言，而是一种将现有的标准组合在一起使用的新方式。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="关于 AJAX 的理解">
-<meta property="og:url" content="https://www.zepoch.cc/2022/745948327.html">
-<meta property="og:site_name" content="zepoch&#39;s site">
-<meta property="og:description" content="原生AJAX 1.1 AJAX 简介 AJAX 全称为Asynchronous JavaScript And XML，就是异步的 JS 和 XML。 通过AJAX 可以在浏览器中向服务器发送异步请求，最大的优势：无刷新获取数据。 AJAX 不是新的编程语言，而是一种将现有的标准组合在一起使用的新方式。">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.zepoch.cc/img/avatar.jpg">
-<meta property="article:published_time" content="2022-01-19T05:44:42.000Z">
-<meta property="article:modified_time" content="2022-01-19T06:27:10.819Z">
-<meta property="article:author" content="zepoch">
-<meta property="article:tag" content="JavaScript">
-<meta property="article:tag" content="jQuery">
-<meta property="article:tag" content="AJAX">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.zepoch.cc/img/avatar.jpg"><script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "关于 AJAX 的理解",
-  "url": "https://www.zepoch.cc/2022/745948327.html",
-  "image": "https://www.zepoch.cc/img/avatar.jpg",
-  "datePublished": "2022-01-19T05:44:42.000Z",
-  "dateModified": "2022-01-19T06:27:10.819Z",
-  "author": [
-    {
-      "@type": "Person",
-      "name": "zepoch",
-      "url": "https://www.zepoch.cc/"
-    }
-  ]
-}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://www.zepoch.cc/2022/745948327.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="AXddQAUftQD7NDjBUlQvw5LWu1x_A1uNpdVqI8c_3J0"/><meta name="baidu-site-verification" content="code-wVE0OwLLU2"/><meta name="bing_site_verification" content="154CD85FDB00EA195DB3F8F193CE78BE"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return value
-      }
-    }
-
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!false && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
-    }
-  
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
-        }
-      }
-
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
-
-      const theme = saveToLocal.get('theme')
-    
-          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
-        
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
-    
-      
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-  
-    })()
-  </script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
-  copy: {
-    success: 'Copy Successful',
-    error: 'Copy Failed',
-    noSupport: 'Browser Not Supported'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  dateSuffix: {
-    just: 'Just now',
-    min: 'minutes ago',
-    hour: 'hours ago',
-    day: 'days ago',
-    month: 'months ago'
-  },
-  copyright: {"limitCount":150,"languages":{"author":"Author: zepoch","link":"Link: ","source":"Source: zepoch's site","info":"Copyright belongs to the author. For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source."}},
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
-    buttonText: 'Load More'
-  },
-  isPhotoFigcaption: false,
-  islazyloadPlugin: false,
-  isAnchor: true,
-  percent: {
-    toc: true,
-    rightside: false,
-  },
-  autoDarkmode: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: '关于 AJAX 的理解',
-  isHighlightShrink: false,
-  isToc: true,
-  pageType: 'post'
-}</script><!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="zepoch's site" type="application/atom+xml">
-<link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">zepoch's site</span></a><a class="nav-page-title" href="/"><span class="site-name">关于 AJAX 的理解</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">关于 AJAX 的理解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-01-19T05:44:42.000Z" title="Created 2022-01-19 13:44:42">2022-01-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2022-01-19T06:27:10.819Z" title="Updated 2022-01-19 14:27:10">2022-01-19</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">1.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>6mins</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><h2 id="原生ajax">原生AJAX</h2>
-<h3 id="ajax-简介">1.1 AJAX 简介</h3>
-<p>AJAX 全称为Asynchronous JavaScript And XML，就是异步的 JS 和 XML。
-通过AJAX
-可以在浏览器中向服务器发送异步请求，最大的优势：无刷新获取数据。 AJAX
-不是新的编程语言，而是一种将现有的标准组合在一起使用的新方式。
-<span id="more"></span></p>
-<h3 id="xml-简介">1.2 XML 简介</h3>
-<p>XML 可扩展标记语言。 XML 被设计用来传输和存储数据。 XML 和 HTML
-类似，不同的是 HTML 中都是预定义标签，而 XML 中没有预定义标签，
-全都是自定义标签，用来表示一些数据。 比如说我有一个学生数据：</p>
-<blockquote>
-<p>name = "孙悟空" ; age = 18 ; gender = "男" ;</p>
-</blockquote>
-<p>用 XML 表示：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">student</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>孙悟空<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">age</span>&gt;</span>18<span class="tag">&lt;/<span class="name">age</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">gender</span>&gt;</span>男<span class="tag">&lt;/<span class="name">gender</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">student</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>用 JSON 表示：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;name&quot;</span><span class="punctuation">:</span><span class="string">&quot;孙悟空&quot;</span><span class="punctuation">,</span><span class="attr">&quot;age&quot;</span><span class="punctuation">:</span><span class="number">18</span><span class="punctuation">,</span><span class="attr">&quot;gender&quot;</span><span class="punctuation">:</span><span class="string">&quot;男&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-<h3 id="ajax-的特点">1.3 AJAX 的特点</h3>
-<h4 id="ajax-的优点">1.3.1 AJAX 的优点</h4>
-<ol type="1">
-<li>可以无需刷新页面而与服务器端进行通信。</li>
-<li>允许你根据用户事件来更新部分页面内容。</li>
-</ol>
-<h4 id="ajax-的缺点">1.3.2 AJAX 的缺点</h4>
-<ol type="1">
-<li>没有浏览历史，不能回退</li>
-<li>存在跨域问题(同源)</li>
-<li>SEO 不友好</li>
-</ol>
-<h3 id="ajax-的使用">1.4 AJAX 的使用</h3>
-<h4 id="核心对象">1.4.1 核心对象</h4>
-<p>XMLHttpRequest，AJAX 的所有操作都是通过该对象进行的。</p>
-<h4 id="使用步骤">1.4.2 使用步骤</h4>
-<ol type="1">
-<li><p>创建XMLHttpRequest 对象</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br></pre></td></tr></table></figure></p></li>
-<li><p>设置请求信息</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">xhr.<span class="title function_">open</span>(method, url);</span><br><span class="line"><span class="comment">//可以设置请求头，一般不设置</span></span><br><span class="line">xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&#x27;content-Type&#x27;</span>, <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>);</span><br></pre></td></tr></table></figure></p></li>
-<li><p>发送请求</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xhr.<span class="title function_">send</span>(body) <span class="comment">//get 请求不传body 参数，只有post 请求使用</span></span><br></pre></td></tr></table></figure></p></li>
-<li><p>接收响应</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//xhr.responseXML 接收xml 格式的响应数据</span></span><br><span class="line"><span class="comment">//xhr.responseText 接收文本格式的响应数据</span></span><br><span class="line">xhr.<span class="property">onreadystatechange</span> = <span class="keyword">function</span> (<span class="params"></span>)&#123;</span><br><span class="line">  <span class="keyword">if</span>(xhr.<span class="property">readyState</span> == <span class="number">4</span> &amp;&amp; xhr.<span class="property">status</span> == <span class="number">200</span>)&#123;</span><br><span class="line">    <span class="keyword">var</span> text = xhr.<span class="property">responseText</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(text);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p></li>
-</ol>
-<h4 id="解决ie-缓存问题">1.4.3 解决IE 缓存问题</h4>
-<p>问题：在一些浏览器中(IE),由于缓存机制的存在，ajax
-只会发送的第一次请求，剩余多次请求不会在发送给浏览器而是直接加载缓存中的数据。</p>
-<p>解决方式：浏览器的缓存是根据url 地址来记录的，所以我们只需要修改url
-地址即可避免缓存问题.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xhr.<span class="title function_">open</span>(<span class="string">&quot;get&quot;</span>,<span class="string">&quot;/testAJAX?t=&quot;</span>+<span class="title class_">Date</span>.<span class="title function_">now</span>());</span><br></pre></td></tr></table></figure>
-<h4 id="ajax-请求状态">1.4.4 AJAX 请求状态</h4>
-<p>xhr.readyState 可以用来查看请求当前的状态 <a
-target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest/readyState"
-class="uri">https://developer.mozilla.org/zh-CN/docs/Web/API/XMLHttpRequest/readyState</a></p>
-<blockquote>
-<p>0: 表示 XMLHttpRequest 实例已经生成，但是
-open()方法还没有被调用。<br />
-1: 表示 send()方法还没有被调用，仍然可以使用 setRequestHeader()，设定
-HTTP 请求的头信息。<br />
-2: 表示 send()方法已经执行，并且头信息和状态码已经收到。<br />
-3: 表示正在接收服务器传来的 body 部分的数据。<br />
-4: 表示服务器数据已经完全接收，或者本次接收已经失败了</p>
-</blockquote>
-<h2 id="jquery-中的ajax">jQuery 中的AJAX</h2>
-<h3 id="get-请求">2.1 get 请求</h3>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">get</span>(url, [data], [callback], [type])</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>url:请求的URL 地址。<br />
-data:请求携带的参数。<br />
-callback:载入成功时回调函数。<br />
-type:设置返回内容格式，xml, html, script, json, text, &gt;_default。</p>
-</blockquote>
-<h3 id="post-请求">2.2 post 请求</h3>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$.<span class="title function_">post</span>(url, [data], [callback], [type])</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>url:请求的URL 地址。<br />
-data:请求携带的参数。<br />
-callback:载入成功时回调函数。<br />
-type:设置返回内容格式，xml, html, script, json, text,_default。</p>
-</blockquote>
-<h2 id="跨域">跨域</h2>
-<h3 id="同源策略">3.1 同源策略</h3>
-<p>同源策略(Same-Origin Policy)最早由 Netscape
-公司提出，是浏览器的一种安全策略. 同源： 协议、域名、端口号
-必须完全相同。 违背同源策略就是跨域。</p>
-<h3 id="如何解决跨域">3.2 如何解决跨域</h3>
-<h4 id="jsonp">3.2.1 JSONP</h4>
-<h5 id="jsonp-是什么">1) JSONP 是什么</h5>
-<p>JSONP(JSON with
-Padding)，是一个非官方的跨域解决方案，纯粹凭借程序员的聪明才智开发出来，只支持get
-请求。</p>
-<h5 id="jsonp-怎么工作的">2) JSONP 怎么工作的？</h5>
-<p>在网页有一些标签天生具有跨域能力，比如：img link iframe script。
-JSONP 就是利用script 标签的跨域能力来发送请求的。</p>
-<h5 id="jsonp-的使用">3) JSONP 的使用</h5>
-<p>1.动态的创建一个script 标签</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> script = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&quot;script&quot;</span>);</span><br></pre></td></tr></table></figure></p>
-<p>2.设置script 的src，设置回调函数</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">script.<span class="property">src</span> = <span class="string">&quot;http://localhost:3000/testAJAX?callback=abc&quot;</span>;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">abc</span>(<span class="params">data</span>) &#123;</span><br><span class="line">  <span class="title function_">alert</span>(data.<span class="property">name</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<p>3.将script 添加到body 中</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">appendChild</span>(script);</span><br></pre></td></tr></table></figure></p>
-<p>4.服务器中路由的处理</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">get</span>(<span class="string">&quot;/testAJAX&quot;</span> , <span class="keyword">function</span> (<span class="params">req , res</span>) &#123;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;收到请求&quot;</span>);</span><br><span class="line"><span class="keyword">var</span> callback = req.<span class="property">query</span>.<span class="property">callback</span>;</span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    <span class="attr">name</span>:<span class="string">&quot;孙悟空&quot;</span>,</span><br><span class="line">    <span class="attr">age</span>:<span class="number">18</span></span><br><span class="line">  &#125;</span><br><span class="line">  res.<span class="title function_">send</span>(callback+<span class="string">&quot;(&quot;</span>+<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(obj)+<span class="string">&quot;)&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
-<h5 id="jquery-中的jsonp">4) jQuery 中的JSONP</h5>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>Title<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button</span> <span class="attr">id</span>=<span class="string">&quot;btn&quot;</span>&gt;</span>按钮<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">ul</span> <span class="attr">id</span>=<span class="string">&quot;list&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">ul</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span> <span class="attr">src</span>=<span class="string">&quot;./jquery-1.12.3.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="variable language_">window</span>.<span class="property">onload</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">var</span> btn = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;btn&#x27;</span>)</span></span><br><span class="line"><span class="language-javascript">      btn.<span class="property">onclick</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">  </span></span><br><span class="line"><span class="language-javascript">        $.<span class="title function_">getJSON</span>(<span class="string">&quot;http://api.douban.com/v2/movie/in_theaters?callback=?&quot;</span>,</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">function</span>(<span class="params">data</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">          <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span></span><br><span class="line"><span class="language-javascript">          <span class="comment">//获取所有的电影的条目</span></span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">var</span> subjects = data.<span class="property">subjects</span>;</span></span><br><span class="line"><span class="language-javascript">          <span class="comment">//遍历电影条目</span></span></span><br><span class="line"><span class="language-javascript">          <span class="keyword">for</span>(<span class="keyword">var</span> i=<span class="number">0</span> ; i&lt;subjects.<span class="property">length</span> ; i++)&#123;</span></span><br><span class="line"><span class="language-javascript">            $(<span class="string">&quot;#list&quot;</span>).<span class="title function_">append</span>(</span></span><br><span class="line"><span class="language-javascript">              <span class="string">&quot;&lt;li&gt;&quot;</span>+</span></span><br><span class="line"><span class="language-javascript">              subjects[i].<span class="property">title</span>+<span class="string">&quot;&lt;br /&gt;&quot;</span>+</span></span><br><span class="line"><span class="language-javascript">              <span class="string">&quot;&lt;img src=\&quot;&quot;</span>+subjects[i].<span class="property">images</span>.<span class="property">large</span>+<span class="string">&quot;\&quot; &gt;&quot;</span>+</span></span><br><span class="line"><span class="language-javascript">              <span class="string">&quot;&lt;/li&gt;&quot;</span></span></span><br><span class="line"><span class="language-javascript">            );</span></span><br><span class="line"><span class="language-javascript">          &#125;</span></span><br><span class="line"><span class="language-javascript">        &#125;);</span></span><br><span class="line"><span class="language-javascript">      &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">  </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h4 id="cors">3.2.2 CORS</h4>
-<p><a
-target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS"
-class="uri">https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS</a></p>
-<h5 id="cors-是什么">1) CORS 是什么？</h5>
-<p>CORS（Cross-Origin Resource Sharing），跨域资源共享。CORS
-是官方的跨域解决方
-案，它的特点是不需要在客户端做任何特殊的操作，完全在服务器中进行处理，支持
-get 和post 请求。跨域资源共享标准新增了一组HTTP
-首部字段，允许服务器声明哪些 源站通过浏览器有权限访问哪些资源</p>
-<h5 id="cors-怎么工作的">2) CORS 怎么工作的？</h5>
-<p>CORS
-是通过设置一个响应头来告诉浏览器，该请求允许跨域，浏览器收到该响应
-以后就会对响应放行。</p>
-<h5 id="cors-的使用">3) CORS 的使用</h5>
-<p>主要是服务器端的设置：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">get</span>(<span class="string">&quot;/testAJAX&quot;</span> , <span class="keyword">function</span> (<span class="params">req , res</span>) &#123;</span><br><span class="line">  <span class="comment">//通过res 来设置响应头，来允许跨域请求</span></span><br><span class="line">  <span class="comment">//res.set(&quot;Access-Control-Allow-Origin&quot;,&quot;http://127.0.0.1:3000&quot;);</span></span><br><span class="line">  res.<span class="title function_">set</span>(<span class="string">&quot;Access-Control-Allow-Origin&quot;</span>,<span class="string">&quot;*&quot;</span>);</span><br><span class="line">  res.<span class="title function_">send</span>(<span class="string">&quot;testAJAX 返回的响应&quot;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.zepoch.cc">zepoch</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.zepoch.cc/2022/745948327.html">https://www.zepoch.cc/2022/745948327.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/JavaScript/">JavaScript</a><a class="post-meta__tags" href="/tags/jQuery/">jQuery</a><a class="post-meta__tags" href="/tags/AJAX/">AJAX</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2022/2202928548.html" title="jQuery 入门"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">jQuery 入门</div></div><div class="info-2"><div class="info-item-1">jQuery 入门 jQuery 概述 JavaScript 库  JavaScript库：即 library，是一个封装好的特定的集合(方法和函数)。从封装一大堆函数的角度理解库，就是在这个库中，封装了很多预先定义好的函数在里面，比如动画animate、hide、show，比如获取元素等。 简单理解∶就是一个JS文件，里面对我们原生js代码进行了封装，存放到里面。这样我们可以快速高效的使用这些封装好的功能了。 比如jQuery，就是为了快速方便的操作DOM，里面基本都是函数(方法)。 常见的 JavaScript 库  jQuery Prototype YUI Ext JS 移动端的 zepto    jQuery 的概念  jQuery 是一个快速、简洁的JavaScript库，其设计的宗旨是“write Less, Do More”，即倡导写更少的代码，做更多的事情。 j 就是 JavaScript；Query查询;意思就是查询 js，把 js 中的DOM 操作做了封装，我们可以快速的查询使用里面的功能。 jQuery...</div></div></div></a><a class="pagination-related" href="/2022/1449894788.html" title="关于 this 指向的理解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">关于 this 指向的理解</div></div><div class="info-2"><div class="info-item-1">函数内 this 的指向 这些 this 的指向，是当我们调用函数的时候确定的。 调用方式的不同决定了this 的指向不同一般指向我们的调用者.   1. 普通函数 this 指向window 1234function fn() &#123;    console.log(&#x27;普通函数的this&#x27; + this);&#125;window.fn(); 2. 对象的方法 this指向的是对象 o 123456var o = &#123;    sayHi: function() &#123;        console.log(&#x27;对象方法的this:&#x27; + this);    &#125;&#125;o.sayHi(); 3. 构造函数 this 指向 ldh 这个实例对象 原型对象里面的this 指向的也是 ldh这个实例对象 1234function Star() &#123;&#125;;Star.prototype.sing = function() &#123;&#125;var ldh = new...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2022/2202928548.html" title="jQuery 入门"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-15</div><div class="info-item-2">jQuery 入门</div></div><div class="info-2"><div class="info-item-1">jQuery 入门 jQuery 概述 JavaScript 库  JavaScript库：即 library，是一个封装好的特定的集合(方法和函数)。从封装一大堆函数的角度理解库，就是在这个库中，封装了很多预先定义好的函数在里面，比如动画animate、hide、show，比如获取元素等。 简单理解∶就是一个JS文件，里面对我们原生js代码进行了封装，存放到里面。这样我们可以快速高效的使用这些封装好的功能了。 比如jQuery，就是为了快速方便的操作DOM，里面基本都是函数(方法)。 常见的 JavaScript 库  jQuery Prototype YUI Ext JS 移动端的 zepto    jQuery 的概念  jQuery 是一个快速、简洁的JavaScript库，其设计的宗旨是“write Less, Do More”，即倡导写更少的代码，做更多的事情。 j 就是 JavaScript；Query查询;意思就是查询 js，把 js 中的DOM 操作做了封装，我们可以快速的查询使用里面的功能。 jQuery...</div></div></div></a><a class="pagination-related" href="/2022/4031264998.html" title="PC&amp;移动端网页特效"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-15</div><div class="info-item-2">PC&amp;移动端网页特效</div></div><div class="info-2"><div class="info-item-1">PC 端网页特效 元素偏移量 offset 系列  offset 概述  offset 翻译过来就是偏移量，我们使用 offset 系列相关属性可以动态的得到该元素的位置（偏移）、大小等 获得元素距离带有定位父元素得到位置 获得元素自身的大小（宽度高度） 注意：返回的数值都不带单位  常用属性  offsetTop offsetLeft  以带有定位的父亲为准  offsetParent  返回带有定位的父亲，否则返回 body  offsetWidth offsetHeight    元素可视区 client 系列  概述  client 翻译过来就是客户端，我们使用 client 系列的相关属性来获取元素可视区的相关信息。通过client系列的相关属性可以动态的得到该元素的边框大小、元素大小等。   元素滚动 scroll 系列  概述  scroll 翻译过来就是滚动的，我们使用...</div></div></div></a><a class="pagination-related" href="/2022/1979900830.html" title="关于 API 与 DOM 的理解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-03</div><div class="info-item-2">关于 API 与 DOM 的理解</div></div><div class="info-2"><div class="info-item-1">关于 API API Application Programming Interface， 应用程序编程接口，是一些预先定于的函数，目的是提供应用程序与开发人员基于某硬件或软件得以访问一组例程的能力，而又无需访问源码，或理解内部工作机制的细节。 API是给程序员提供的某种工具，以便能更轻松的实现想要完成的功能 WEB API 是浏览器提供的一套操作浏览器功能和页面元素的API（BOM和DOM），MDN API: https://developer.mozilla.org/zh-CN/docs/Web/API  DOM DOM 简介 什么是 DOM 文档对象模型（Document Object Model，简称 DOM），是W3C组织推荐的处理可拓展标记语言（HTML 或者 XML）的标准编程接口 DOM树 W3C已经定义了一系列的DOM接口，通过这些 DOM 可以改变网页的结构和样式 文档：一个页面就是一个文档，DOM中使用 document 表示 元素：页面中的所有标签都是元素，DOM中使用 element...</div></div></div></a><a class="pagination-related" href="/2022/1449894788.html" title="关于 this 指向的理解"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-21</div><div class="info-item-2">关于 this 指向的理解</div></div><div class="info-2"><div class="info-item-1">函数内 this 的指向 这些 this 的指向，是当我们调用函数的时候确定的。 调用方式的不同决定了this 的指向不同一般指向我们的调用者.   1. 普通函数 this 指向window 1234function fn() &#123;    console.log(&#x27;普通函数的this&#x27; + this);&#125;window.fn(); 2. 对象的方法 this指向的是对象 o 123456var o = &#123;    sayHi: function() &#123;        console.log(&#x27;对象方法的this:&#x27; + this);    &#125;&#125;o.sayHi(); 3. 构造函数 this 指向 ldh 这个实例对象 原型对象里面的this 指向的也是 ldh这个实例对象 1234function Star() &#123;&#125;;Star.prototype.sing = function() &#123;&#125;var ldh = new...</div></div></div></a><a class="pagination-related" href="/2023/2262097032.html" title="写一个小脚本"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-13</div><div class="info-item-2">写一个小脚本</div></div><div class="info-2"><div class="info-item-1">最近上课，有一门课有一部分网课，这部分网课其实已经学过了，但是老师还是让看，看就看呗，原以为直接挂着就行了，但是发现这个网站每隔几分钟就会弹出窗口，需要点击才能继续观看。可是呢，我还有别的任务，于是便写了一个小脚本，使得可以实现自动刷课。 找到弹出窗口   通过检查元素可以看到，class name 为 btn-ok btn 的只在弹出窗口中出现。 整理思路写脚本 那么只要这个元素出现，选中这个元素，再添加一个 click 事件便可。 12345678function click_btn_ok()&#123;  try&#123;    document.getElementsByClassName(&#x27;btn-ok btn&#x27;)[0].click()    console.log(&#x27;弹出窗口，已经点击&#x27;)  &#125;catch(e )&#123;    console.log(&#x27;没有弹出窗口&#x27;) ...</div></div></div></a><a class="pagination-related" href="/2022/257512457.html" title="关于高级事件和 BOM 浏览器对象类型"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-07</div><div class="info-item-2">关于高级事件和 BOM 浏览器对象类型</div></div><div class="info-2"><div class="info-item-1">高级事件 注册事件  给元素添加事件成为注册事件或者绑定事件 传统方式和方法监听注册方式  传统注册  利用 on 开头的事件 onclick  1&lt;button onclick = alert(&quot;hi~&quot;)&gt;&lt;/button&gt; 1btn.onclick = function()&#123;&#125;  特点：注册事件的唯一性 同一元素同一事件只能设置一个处理函数，最后注册的处理函数将会覆盖前面注册的处理函数   方法监听注册方式  w3c 标准 推荐方式 addEventListener() 是一个方法 1addEventListener(type, listener[, useCapture])  type 事件类型字符串，比如click mouseover 注意这里不要带on listener 事件处理函数，事件发生时，会调用该监听函数 可选参数，是一个布尔值，默认是false attachEvent 事件监听方式  ie9...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">zepoch</div><div class="author-info-description">A full-stack engineer who is improving every day</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepoch"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/zepoch" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhotoa@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Hello!</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%94%9Fajax"><span class="toc-number">1.</span> <span class="toc-text">原生AJAX</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ajax-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 AJAX 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xml-%E7%AE%80%E4%BB%8B"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 XML 简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ajax-%E7%9A%84%E7%89%B9%E7%82%B9"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 AJAX 的特点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ajax-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">1.3.1.</span> <span class="toc-text">1.3.1 AJAX 的优点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ajax-%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-number">1.3.2.</span> <span class="toc-text">1.3.2 AJAX 的缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ajax-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">1.4.</span> <span class="toc-text">1.4 AJAX 的使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.4.1.</span> <span class="toc-text">1.4.1 核心对象</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%AD%A5%E9%AA%A4"><span class="toc-number">1.4.2.</span> <span class="toc-text">1.4.2 使用步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3ie-%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.3.</span> <span class="toc-text">1.4.3 解决IE 缓存问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ajax-%E8%AF%B7%E6%B1%82%E7%8A%B6%E6%80%81"><span class="toc-number">1.4.4.</span> <span class="toc-text">1.4.4 AJAX 请求状态</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jquery-%E4%B8%AD%E7%9A%84ajax"><span class="toc-number">2.</span> <span class="toc-text">jQuery 中的AJAX</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#get-%E8%AF%B7%E6%B1%82"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 get 请求</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#post-%E8%AF%B7%E6%B1%82"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 post 请求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%A8%E5%9F%9F"><span class="toc-number">3.</span> <span class="toc-text">跨域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 同源策略</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E8%B7%A8%E5%9F%9F"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 如何解决跨域</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#jsonp"><span class="toc-number">3.2.1.</span> <span class="toc-text">3.2.1 JSONP</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#jsonp-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">3.2.1.1.</span> <span class="toc-text">1) JSONP 是什么</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#jsonp-%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="toc-number">3.2.1.2.</span> <span class="toc-text">2) JSONP 怎么工作的？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#jsonp-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">3.2.1.3.</span> <span class="toc-text">3) JSONP 的使用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#jquery-%E4%B8%AD%E7%9A%84jsonp"><span class="toc-number">3.2.1.4.</span> <span class="toc-text">4) jQuery 中的JSONP</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cors"><span class="toc-number">3.2.2.</span> <span class="toc-text">3.2.2 CORS</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#cors-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">3.2.2.1.</span> <span class="toc-text">1) CORS 是什么？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#cors-%E6%80%8E%E4%B9%88%E5%B7%A5%E4%BD%9C%E7%9A%84"><span class="toc-number">3.2.2.2.</span> <span class="toc-text">2) CORS 怎么工作的？</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#cors-%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-number">3.2.2.3.</span> <span class="toc-text">3) CORS 的使用</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/896014564.html" title="CentOS glibc 升级">CentOS glibc 升级</a><time datetime="2025-05-08T10:01:18.000Z" title="Created 2025-05-08 18:01:18">2025-05-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3180577521.html" title="正义的残缺">正义的残缺</a><time datetime="2025-04-03T07:49:10.000Z" title="Created 2025-04-03 15:49:10">2025-04-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/2644058787.html" title="PyTorch手写多头注意力">PyTorch手写多头注意力</a><time datetime="2025-02-23T07:44:25.000Z" title="Created 2025-02-23 15:44:25">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3007271696.html" title="attention的四重境界">attention的四重境界</a><time datetime="2025-02-22T05:58:43.000Z" title="Created 2025-02-22 13:58:43">2025-02-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3817125654.html" title="批量爬取bicnn文件">批量爬取bicnn文件</a><time datetime="2025-01-23T15:50:30.000Z" title="Created 2025-01-23 23:50:30">2025-01-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2025 By zepoch</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.3</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
-  const showKatex = () => {
-    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
-  }
-
-  if (!window.katex_js_css) {
-    window.katex_js_css = true
-    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
-    if (false) {
-      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
-    }
-  }
-
-  showKatex()
-})()</script><script>(() => {
-  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
-  const option = null
-
-  const initValine = (el, path) => {
-    if (isShuoshuo) {
-      window.shuoshuoComment.destroyValine = () => {
-        if (el.children.length) {
-          el.innerHTML = ''
-          el.classList.add('no-comment')
-        }
-      }
-    }
-
-    const valineConfig = {
-      el: '#vcomment',
-      appId: 'WspkUq7TuRDz5tk68Ry6TSa1-gzGzoHsz',
-      appKey: 'xz4SYcXtJNP1hns8iBFAlhHT',
-      avatar: 'monsterid',
-      serverURLs: '',
-      emojiMaps: "",
-      visitor: false,
-      ...option,
-      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
-    }
-
-    new Valine(valineConfig)
-  }
-
-  const loadValine = async (el, path) => {
-    if (typeof Valine === 'function') {
-      initValine(el, path)
-    } else {
-      await btf.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
-      initValine(el, path)
-    }
-  }
-
-  if (isShuoshuo) {
-    'Valine' === 'Valine'
-      ? window.shuoshuoComment = { loadComment: loadValine }
-      : window.loadOtherComment = loadValine
-    return
-  }
-
-  if ('Valine' === 'Valine' || !false) {
-    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
-    else setTimeout(loadValine, 0)
-  } else {
-    window.loadOtherComment = loadValine
-  }
-})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div>
-        <style>
-            [bg-lazy] {
-                background-image: none !important;
-                background-color: #eee !important;
-            }
-        </style>
-        <script>
-            window.imageLazyLoadSetting = {
-                isSPA: true,
-                preloadRatio: 1,
-                processImages: null,
-            };
-        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body></html>

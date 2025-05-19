@@ -1,298 +1,0 @@
-<!DOCTYPE html><html lang="en-US" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>机器学习-梯度下降的优化 | zepoch's site</title><meta name="author" content="zepoch"><meta name="copyright" content="zepoch"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="在回归中，我们需要解决下面的优化问题，即使得Loss函数尽可能的小 \[ \theta^*&#x3D;arg\min L(\theta),L:loss function,\theta:parameters \] 假设一共有两个参数\(\theta_1,\theta_2\)，使得\(\theta^0&#x3D; \begin{bmatrix}\theta^0\\\theta^1\end{bmatrix}\)，">
-<meta property="og:type" content="article">
-<meta property="og:title" content="机器学习-梯度下降的优化">
-<meta property="og:url" content="https://www.zepoch.cc/2022/3163358201.html">
-<meta property="og:site_name" content="zepoch&#39;s site">
-<meta property="og:description" content="在回归中，我们需要解决下面的优化问题，即使得Loss函数尽可能的小 \[ \theta^*&#x3D;arg\min L(\theta),L:loss function,\theta:parameters \] 假设一共有两个参数\(\theta_1,\theta_2\)，使得\(\theta^0&#x3D; \begin{bmatrix}\theta^0\\\theta^1\end{bmatrix}\)，">
-<meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://www.zepoch.cc/img/avatar.jpg">
-<meta property="article:published_time" content="2022-08-16T05:13:32.000Z">
-<meta property="article:modified_time" content="2025-02-22T11:09:32.153Z">
-<meta property="article:author" content="zepoch">
-<meta property="article:tag" content="技术">
-<meta property="article:tag" content="机器学习">
-<meta property="article:tag" content="梯度下降">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.zepoch.cc/img/avatar.jpg"><script type="application/ld+json">{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "机器学习-梯度下降的优化",
-  "url": "https://www.zepoch.cc/2022/3163358201.html",
-  "image": "https://www.zepoch.cc/img/avatar.jpg",
-  "datePublished": "2022-08-16T05:13:32.000Z",
-  "dateModified": "2025-02-22T11:09:32.153Z",
-  "author": [
-    {
-      "@type": "Person",
-      "name": "zepoch",
-      "url": "https://www.zepoch.cc/"
-    }
-  ]
-}</script><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="https://www.zepoch.cc/2022/3163358201.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="AXddQAUftQD7NDjBUlQvw5LWu1x_A1uNpdVqI8c_3J0"/><meta name="baidu-site-verification" content="code-wVE0OwLLU2"/><meta name="bing_site_verification" content="154CD85FDB00EA195DB3F8F193CE78BE"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
-    (() => {
-      
-    const saveToLocal = {
-      set: (key, value, ttl) => {
-        if (!ttl) return
-        const expiry = Date.now() + ttl * 86400000
-        localStorage.setItem(key, JSON.stringify({ value, expiry }))
-      },
-      get: key => {
-        const itemStr = localStorage.getItem(key)
-        if (!itemStr) return undefined
-        const { value, expiry } = JSON.parse(itemStr)
-        if (Date.now() > expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return value
-      }
-    }
-
-    window.btf = {
-      saveToLocal,
-      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
-        const script = document.createElement('script')
-        script.src = url
-        script.async = true
-        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
-        script.onload = script.onreadystatechange = () => {
-          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
-        }
-        script.onerror = reject
-        document.head.appendChild(script)
-      }),
-      getCSS: (url, id) => new Promise((resolve, reject) => {
-        const link = document.createElement('link')
-        link.rel = 'stylesheet'
-        link.href = url
-        if (id) link.id = id
-        link.onload = link.onreadystatechange = () => {
-          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
-        }
-        link.onerror = reject
-        document.head.appendChild(link)
-      }),
-      addGlobalFn: (key, fn, name = false, parent = window) => {
-        if (!false && key.startsWith('pjax')) return
-        const globalFn = parent.globalFn || {}
-        globalFn[key] = globalFn[key] || {}
-        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
-        parent.globalFn = globalFn
-      }
-    }
-  
-      
-      const activateDarkMode = () => {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      const activateLightMode = () => {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
-        }
-      }
-
-      btf.activateDarkMode = activateDarkMode
-      btf.activateLightMode = activateLightMode
-
-      const theme = saveToLocal.get('theme')
-    
-          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
-        
-      
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
-      }
-    
-      
-    const detectApple = () => {
-      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-  
-    })()
-  </script><script>const GLOBAL_CONFIG = {
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":true},
-  copy: {
-    success: 'Copy Successful',
-    error: 'Copy Failed',
-    noSupport: 'Browser Not Supported'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  dateSuffix: {
-    just: 'Just now',
-    min: 'minutes ago',
-    hour: 'hours ago',
-    day: 'days ago',
-    month: 'months ago'
-  },
-  copyright: {"limitCount":150,"languages":{"author":"Author: zepoch","link":"Link: ","source":"Source: zepoch's site","info":"Copyright belongs to the author. For commercial use, please contact the author for authorization. For non-commercial use, please indicate the source."}},
-  lightbox: 'null',
-  Snackbar: undefined,
-  infinitegrid: {
-    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
-    buttonText: 'Load More'
-  },
-  isPhotoFigcaption: false,
-  islazyloadPlugin: false,
-  isAnchor: true,
-  percent: {
-    toc: true,
-    rightside: false,
-  },
-  autoDarkmode: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: '机器学习-梯度下降的优化',
-  isHighlightShrink: false,
-  isToc: false,
-  pageType: 'post'
-}</script><!-- hexo injector head_end start -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
-<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="zepoch's site" type="application/atom+xml">
-<link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="not-top-img" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">zepoch's site</span></a><a class="nav-page-title" href="/"><span class="site-name">机器学习-梯度下降的优化</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> categories</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> about</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav></header><main class="layout" id="content-inner"><div id="post"><div id="post-info"><h1 class="post-title">机器学习-梯度下降的优化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2022-08-16T05:13:32.000Z" title="Created 2022-08-16 13:13:32">2022-08-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-02-22T11:09:32.153Z" title="Updated 2025-02-22 19:09:32">2025-02-22</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">481</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>2mins</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div><article class="container post-content" id="article-container"><p>在回归中，我们需要解决下面的优化问题，即使得Loss函数尽可能的小</p>
-<p><span class="math display">\[
-\theta^*=arg\min L(\theta),L:loss function,\theta:parameters
-\]</span></p>
-<p>假设一共有两个参数<span
-class="math inline">\(\theta_1,\theta_2\)</span>，使得<span
-class="math inline">\(\theta^0=
-\begin{bmatrix}\theta^0\\\theta^1\end{bmatrix}\)</span>，便有梯度如下</p>
-<p><span class="math display">\[\nabla L(\theta)=\begin{bmatrix}
-\partial L(\theta_1)/ \partial \theta_1\\\ \partial L(\theta_2)/
-\partial \theta_2\end{bmatrix}\]</span></p>
-<p>那么参数的更新便可通过向量的形式进行</p>
-<p><span class="math display">\[
-\begin{bmatrix}\theta^1_1\\\theta^1_2\end{bmatrix}=\begin{bmatrix}\theta^0_1\\\theta^0_2\end{bmatrix}-\eta\begin{bmatrix}
-\partial L(\theta^0_1)/ \partial \theta_1\\\ \partial L(\theta^0_2)/
-\partial \theta_2\end{bmatrix}
-\]</span></p>
-<p>但是其中，<span
-class="math inline">\(\eta\)</span>是一直不变的，但是我们知道，经过迭代之后，在越来约接近目标的时候，我们需要将学习率降低，使其能够愈发趋近目的地。故，我们对<span
-class="math inline">\(eta\)</span>进行改进，使其经过一定的迭代后越来越小。</p>
-<p><span class="math display">\[
-\eta^t=\eta/\sqrt{t+1}
-\]</span></p>
-<p>但是学习率不能一刀切，对于参数，我们也需要给予其一定的改变。一般我们的参数的改变为</p>
-<p><span class="math display">\[
-w^{t+1}=w^t-\eta^tg^t
-\]</span></p>
-<p>w是一个参数，我们设置<span class="math inline">\(\eta^t\)</span>
-为参数w之前导数的均方根，使其成为一个参数依赖型的学习率。也就是说</p>
-<p><span class="math display">\[
-w^1=w^0-\frac{\eta^0}{\sigma^0}g^0,\sigma^0=\sqrt{(g^0)^2}\\
-w^2=w^1-\frac{\eta^1}{\sigma^1}g^1,\sigma^1=\sqrt{\frac{1}{2}[(g^0)^2+(g^1)^2]}\\
-\]</span></p>
-<p>如此迭代，直到</p>
-<p><span class="math display">\[
-w^{t+1}=w^t-\frac{\eta^t}{\sigma^t}g^t,\sigma^t=\sqrt{\frac{1}{t+1}\sum^t_{i=0}(g^i)^2}
-\]</span></p>
-<p>从上面的式子中，我们可以看到<span
-class="math inline">\(\eta^t\)</span>是一个时间相关的学习率，<span
-class="math inline">\(\sigma^t\)</span>是一个参数相关的学习率，且</p>
-<p><span class="math display">\[
-\eta^t=\frac{\eta}{\sqrt{t+1}},\sigma^t=\sqrt{\frac{1}{t+1}\sum^t_{i=0}(g^i)^2}
-\]</span></p>
-<p>故相除之后得到下列的公式</p>
-<p><span class="math display">\[
-w^{t+1}=w^t-\frac{\eta}{\sqrt{\sum^t_{i=0}(g^i)^2}}g^t
-\]</span></p>
-<p>梯度改进之后的对比如下：</p>
-<p><img
-src="https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/机器学习-梯度下降的优化/20220816173111.png"
-alt="20220816173111" /></p>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://www.zepoch.cc">zepoch</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://www.zepoch.cc/2022/3163358201.html">https://www.zepoch.cc/2022/3163358201.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%8A%80%E6%9C%AF/">技术</a><a class="post-meta__tags" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a><a class="post-meta__tags" href="/tags/%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D/">梯度下降</a></div><div class="post-share"><div class="social-share" data-image="/img/avatar.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2022/1247504268.html" title="机器学习-回归"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">机器学习-回归</div></div><div class="info-2"><div class="info-item-1">前言 此次学习的课程为李宏毅机器学习，之前学过一遍吴恩达的课程，只可惜当时没记笔记，且近些时候没有写代码，逐渐疏忽了，故选择李宏毅再进行新一遍的学习，所谓温故而知新。 回归是我们通常会使用的机器学习中的一类，比如日常中的我们的身高预测，股票预测等等，这些都可以看作为粗略的回归。 举一个例子 小时候我们会玩一个叫赛尔号的游戏，游戏里有各种各样的精力，就好比我们捕捉到了一只雷伊，然后我们可以向雷伊投经验值，让他升级，这只雷伊会有一个攻击力，我们想要预测雷伊的各种各样的属性与其攻击力之间的关系。  于是我们设其血量为\(X_{hp}\)，其体重为\(x_{w}\)，其身高为\(x_{h}\)，其物种为\(x_s\)，其战斗力为\(x_{cp}\)，然后预测他进化之后的战斗力值。那么便有\(y=b+\sum w_ix_i\)，其中\(w_i:weight,b:bias\)。如果单一个\(x_{cp}\)作预测的话便是\(y=b+w\cdot x_{cp}\)。 收集到了数据之后，便是可以进行预测，在此我们使用一个名为Loss函数进行Loss计算 \[ L(f) =...</div></div></div></a><a class="pagination-related" href="/2022/925661245.html" title="机器学习-概率生成模型"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">机器学习-概率生成模型</div></div><div class="info-2"><div class="info-item-1">理论基础 概率生成模型，是概率统计和机器学习中的一类重要模型，指一系列用于随机生成可观测数据的模型。假设有两类数据，每一类都有若干个样本；概率生成模型认为每一类数据都服从某一种分布，如高斯分布；从两类训练数据中得到两个高斯分布的密度函数，具体的是获得均值和方差两个参数；测试样本输入到其中一个高斯分布函数，得到的概率值若大于0.5，则说明该样本属于该类，否则属于另一类。 生成模型可以和贝叶斯概率公式进行结合，用于分类问题。原始贝叶斯概率公式为： \[ P(A|B)=\frac{P(B|A)P(A)}{P(B)}...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2022/1247504268.html" title="机器学习-回归"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-15</div><div class="info-item-2">机器学习-回归</div></div><div class="info-2"><div class="info-item-1">前言 此次学习的课程为李宏毅机器学习，之前学过一遍吴恩达的课程，只可惜当时没记笔记，且近些时候没有写代码，逐渐疏忽了，故选择李宏毅再进行新一遍的学习，所谓温故而知新。 回归是我们通常会使用的机器学习中的一类，比如日常中的我们的身高预测，股票预测等等，这些都可以看作为粗略的回归。 举一个例子 小时候我们会玩一个叫赛尔号的游戏，游戏里有各种各样的精力，就好比我们捕捉到了一只雷伊，然后我们可以向雷伊投经验值，让他升级，这只雷伊会有一个攻击力，我们想要预测雷伊的各种各样的属性与其攻击力之间的关系。  于是我们设其血量为\(X_{hp}\)，其体重为\(x_{w}\)，其身高为\(x_{h}\)，其物种为\(x_s\)，其战斗力为\(x_{cp}\)，然后预测他进化之后的战斗力值。那么便有\(y=b+\sum w_ix_i\)，其中\(w_i:weight,b:bias\)。如果单一个\(x_{cp}\)作预测的话便是\(y=b+w\cdot x_{cp}\)。 收集到了数据之后，便是可以进行预测，在此我们使用一个名为Loss函数进行Loss计算 \[ L(f) =...</div></div></div></a><a class="pagination-related" href="/2022/925661245.html" title="机器学习-概率生成模型"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-17</div><div class="info-item-2">机器学习-概率生成模型</div></div><div class="info-2"><div class="info-item-1">理论基础 概率生成模型，是概率统计和机器学习中的一类重要模型，指一系列用于随机生成可观测数据的模型。假设有两类数据，每一类都有若干个样本；概率生成模型认为每一类数据都服从某一种分布，如高斯分布；从两类训练数据中得到两个高斯分布的密度函数，具体的是获得均值和方差两个参数；测试样本输入到其中一个高斯分布函数，得到的概率值若大于0.5，则说明该样本属于该类，否则属于另一类。 生成模型可以和贝叶斯概率公式进行结合，用于分类问题。原始贝叶斯概率公式为： \[ P(A|B)=\frac{P(B|A)P(A)}{P(B)}...</div></div></div></a><a class="pagination-related" href="/2022/2694928426.html" title="机器学习-逻辑回归"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-18</div><div class="info-item-2">机器学习-逻辑回归</div></div><div class="info-2"><div class="info-item-1">接着上篇博客继续，我们发现，概率生成模型最终推导函数，其本质还是寻找参数w和b，所以可以设置一个函数，直接来寻找最优的w和b \[ f_{w,b}(x)=P_{w,b}(C_1|x)=\sigma(z)\\ \sigma(z)=\frac{1}{1+exp(-z)}\\ z = w \cdot x+b \] 相较于线性回归，逻辑回归做的事情便是将 wx+b 放入 sigmoid 函数中，使其输出一直处于0~1之间。 在我们确定了函数之后，便是应该再定义一个损失函数。  假设有一组训练数据，其数据大小为 N，而且分别有自己的类别标签C。给定一组 w 和 b，就可以计算这组w，b下产生上图N个训练数据的概率，\(f_{w,b}(x^3)\)表示 \(x^3\) 属于C1的概率，但是其真实分类为C2，所以要用 \(1-f_{w,b}(x^3)\)。 \(L(w,b)L(w,b)\)取得的数值最大的时候，即取得最好的w和b，\(w^∗,b^∗ = argmax_{w,b}L(w,b)\)  在此我们可以做一个变换，对...</div></div></div></a><a class="pagination-related" href="/2024/956785006.html" title="Transformer架构"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-06</div><div class="info-item-2">Transformer架构</div></div><div class="info-2"><div class="info-item-1">...</div></div></div></a><a class="pagination-related" href="/2023/581620572.html" title="rds与h5ad的相互转换"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-11-13</div><div class="info-item-2">rds与h5ad的相互转换</div></div><div class="info-2"><div class="info-item-1">之前做过一个 rds 转 h5ad 的教程，现在看来发现有些过于繁琐，且随着时间的发展，也有了更好的方法的出现，所以这里再写一个教程。 新的工具包是 https://github.com/cellgeni/sceasy ，这是一个专注于做各种单细胞文件格式转换的文件，但是作者也并没有写明一个特别完整的参数说明，所以这里我也只能根据自己的使用经验来写一下。 安装可以如作者所述，直接安装即可 123conda install -c bioconda r-sceasy# 或者devtools::install_github(&quot;cellgeni/sceasy&quot;) 安装并不复杂，这里会详细讲一下其更为优秀的使用 12345678910# 首先是包的载入，只需载入这两行即可，如果你的文件没有 loom的话，那么就不需要载入 loom包library(sceasy)library(reticulate)# 单细胞的 rds 文件与 h5ad 文件之间的互相转换如下即可sceasy::convertFormat(seurat_object,...</div></div></div></a><a class="pagination-related" href="/2023/36631468.html" title="pip install fa2"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2023-02-20</div><div class="info-item-2">pip install fa2</div></div><div class="info-2"><div class="info-item-1">最近在学习scanpy，读scanpy文档的toturial部分的 Trajectory inference for hematopoiesis in mouse 部分的时候，出现了一个错误，在我的 jupyter notebook 运行的时候，出现了一个 warning 1WARNING: Package &#x27;fa2&#x27; is not installed, falling back to layout &#x27;fr&#x27;.To use the faster and better ForceAtlas2 layout, install package &#x27;fa2&#x27; (`pip install fa2`).  这个warning会导致我之后绘制的图片与文档中的原图有区别，在执行命令sc.pl.draw_graph(adata, color='paul15_clusters', legend_loc='on data')的时候，可以看到，左边是源文档的图片，右边是我画出来的图片     ...</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgdmlld0JveD0iMCAwIDI0IDI0Ij48Y2lyY2xlIGN4PSI0IiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgaWQ9InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAiIGF0dHJpYnV0ZU5hbWU9InIiIGJlZ2luPSIwO3N2Z1NwaW5uZXJzM0RvdHNTY2FsZTEuZW5kLTAuMjVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjMiIGZpbGw9ImN1cnJlbnRDb2xvciI+PGFuaW1hdGUgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNnMiIGR1cj0iMC43NXMiIHZhbHVlcz0iMzsuMjszIi8+PC9jaXJjbGU+PGNpcmNsZSBjeD0iMjAiIGN5PSIxMiIgcj0iMyIgZmlsbD0iY3VycmVudENvbG9yIj48YW5pbWF0ZSBpZD0ic3ZnU3Bpbm5lcnMzRG90c1NjYWxlMSIgYXR0cmlidXRlTmFtZT0iciIgYmVnaW49InN2Z1NwaW5uZXJzM0RvdHNTY2FsZTAuZW5kLTAuNDVzIiBkdXI9IjAuNzVzIiB2YWx1ZXM9IjM7LjI7MyIvPjwvY2lyY2xlPjwvc3ZnPg==" data-original="/img/avatar.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">zepoch</div><div class="author-info-description">A full-stack engineer who is improving every day</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">69</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">11</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zepoch"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/zepoch" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:zhotoa@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Hello!</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/896014564.html" title="CentOS glibc 升级">CentOS glibc 升级</a><time datetime="2025-05-08T10:01:18.000Z" title="Created 2025-05-08 18:01:18">2025-05-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3180577521.html" title="正义的残缺">正义的残缺</a><time datetime="2025-04-03T07:49:10.000Z" title="Created 2025-04-03 15:49:10">2025-04-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/2644058787.html" title="PyTorch手写多头注意力">PyTorch手写多头注意力</a><time datetime="2025-02-23T07:44:25.000Z" title="Created 2025-02-23 15:44:25">2025-02-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3007271696.html" title="attention的四重境界">attention的四重境界</a><time datetime="2025-02-22T05:58:43.000Z" title="Created 2025-02-22 13:58:43">2025-02-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/3817125654.html" title="批量爬取bicnn文件">批量爬取bicnn文件</a><time datetime="2025-01-23T15:50:30.000Z" title="Created 2025-01-23 23:50:30">2025-01-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2021 - 2025 By zepoch</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.3</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(async () => {
-  const showKatex = () => {
-    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
-  }
-
-  if (!window.katex_js_css) {
-    window.katex_js_css = true
-    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
-    if (false) {
-      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
-    }
-  }
-
-  showKatex()
-})()</script><script>(() => {
-  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
-  const option = null
-
-  const initValine = (el, path) => {
-    if (isShuoshuo) {
-      window.shuoshuoComment.destroyValine = () => {
-        if (el.children.length) {
-          el.innerHTML = ''
-          el.classList.add('no-comment')
-        }
-      }
-    }
-
-    const valineConfig = {
-      el: '#vcomment',
-      appId: 'WspkUq7TuRDz5tk68Ry6TSa1-gzGzoHsz',
-      appKey: 'xz4SYcXtJNP1hns8iBFAlhHT',
-      avatar: 'monsterid',
-      serverURLs: '',
-      emojiMaps: "",
-      visitor: false,
-      ...option,
-      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
-    }
-
-    new Valine(valineConfig)
-  }
-
-  const loadValine = async (el, path) => {
-    if (typeof Valine === 'function') {
-      initValine(el, path)
-    } else {
-      await btf.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
-      initValine(el, path)
-    }
-  }
-
-  if (isShuoshuo) {
-    'Valine' === 'Valine'
-      ? window.shuoshuoComment = { loadComment: loadValine }
-      : window.loadOtherComment = loadValine
-    return
-  }
-
-  if ('Valine' === 'Valine' || !false) {
-    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
-    else setTimeout(loadValine, 0)
-  } else {
-    window.loadOtherComment = loadValine
-  }
-})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div>
-        <style>
-            [bg-lazy] {
-                background-image: none !important;
-                background-color: #eee !important;
-            }
-        </style>
-        <script>
-            window.imageLazyLoadSetting = {
-                isSPA: true,
-                preloadRatio: 1,
-                processImages: null,
-            };
-        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>!function(r){r.imageLazyLoadSetting.processImages=t;var a=r.imageLazyLoadSetting.isSPA,n=r.imageLazyLoadSetting.preloadRatio||1,d=o();function o(){var t=Array.prototype.slice.call(document.querySelectorAll("img[data-original]")),e=Array.prototype.slice.call(document.querySelectorAll("[bg-lazy]"));return t.concat(e)}function t(t){(a||t)&&(d=o());for(var e,i=0;i<d.length;i++)0<=(e=(e=d[i]).getBoundingClientRect()).bottom&&0<=e.left&&e.top<=(r.innerHeight*n||document.documentElement.clientHeight*n)&&function(){var t,e,a,n,o=d[i];e=function(){d=d.filter(function(t){return o!==t}),r.imageLazyLoadSetting.onImageLoaded&&r.imageLazyLoadSetting.onImageLoaded(o)},(t=o).dataset.loaded||(t.hasAttribute("bg-lazy")?(t.removeAttribute("bg-lazy"),e&&e()):(a=new Image,n=t.getAttribute("data-original"),a.onload=function(){t.src=n,t.removeAttribute("data-original"),t.setAttribute("data-loaded",!0),e&&e()},a.onerror=function(){t.removeAttribute("data-original"),t.setAttribute("data-loaded",!1),t.src=n},t.src!==n&&(a.src=n)))}()}function e(){clearTimeout(t.tId),t.tId=setTimeout(t,500)}t(),document.addEventListener("scroll",e),r.addEventListener("resize",e),r.addEventListener("orientationchange",e)}(this);</script></body></html>

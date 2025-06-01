@@ -6,7 +6,7 @@
   <link href="https://www.zepoch.cc/atom.xml" rel="self"/>
   
   <link href="https://www.zepoch.cc/"/>
-  <updated>2025-05-19T02:30:59.964Z</updated>
+  <updated>2025-06-01T05:20:44.212Z</updated>
   <id>https://www.zepoch.cc/</id>
   
   <author>
@@ -17,11 +17,36 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>大规模GPU集群训练LLMs</title>
+    <link href="https://www.zepoch.cc/2025/3226183054.html"/>
+    <id>https://www.zepoch.cc/2025/3226183054.html</id>
+    <published>2025-06-01T05:06:02.000Z</published>
+    <updated>2025-06-01T05:20:44.212Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1</summary>
+        
+      
+    
+    
+    
+    <category term="tech" scheme="https://www.zepoch.cc/categories/tech/"/>
+    
+    
+    <category term="LLMs" scheme="https://www.zepoch.cc/tags/LLMs/"/>
+    
+  </entry>
+  
+  <entry>
     <title>工作自由度与社会公益的双赢</title>
     <link href="https://www.zepoch.cc/2025/450013575.html"/>
     <id>https://www.zepoch.cc/2025/450013575.html</id>
     <published>2025-05-19T02:28:19.000Z</published>
-    <updated>2025-05-19T02:30:59.964Z</updated>
+    <updated>2025-05-19T02:31:15.160Z</updated>
     
     
       
@@ -521,36 +546,6 @@ annotation information of the spatial group is obtained. At this</summary>
         
     <summary type="html">&lt;p&gt;空间转录组通过手动划区注释之后，得到空间组的区域注释信息，这个时候我们便是想要得到其差异表达基因的功能注释信息，这里并没有能够通用的脚本，本人仅是提供一种思路，供大家参考。&lt;/p&gt;
 &lt;p&gt;由于我们的空间组的数据大都是 anndata 的</summary>
-        
-      
-    
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/categories/tech/"/>
-    
-    <category term="技术" scheme="https://www.zepoch.cc/categories/tech/%E6%8A%80%E6%9C%AF/"/>
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/tags/tech/"/>
-    
-    <category term="技术" scheme="https://www.zepoch.cc/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>各区域不同细胞类型的统计</title>
-    <link href="https://www.zepoch.cc/2024/4104152713.html"/>
-    <id>https://www.zepoch.cc/2024/4104152713.html</id>
-    <published>2024-01-02T12:23:57.000Z</published>
-    <updated>2024-01-02T13:16:41.420Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;在处理空间组的数据的时候，很多情况下，我们会根据解剖学知识给某些地方进行区域注释；这块区域的细胞类型则是通过单细胞映射空间组进行的，再进行了手动赋予区域信息以及迁移映射了细胞类型信息之后，则需要对这些进行进行一些可视化以及一些统计分析。&lt;/p&gt;
-&lt;p&gt;可视化的代码如下，为</summary>
         
       
     

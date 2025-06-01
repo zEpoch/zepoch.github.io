@@ -6,7 +6,7 @@
   <link href="https://www.zepoch.cc/atom.xml" rel="self"/>
   
   <link href="https://www.zepoch.cc/"/>
-  <updated>2025-06-01T05:20:44.212Z</updated>
+  <updated>2025-06-01T05:21:02.967Z</updated>
   <id>https://www.zepoch.cc/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://www.zepoch.cc/2025/3226183054.html"/>
     <id>https://www.zepoch.cc/2025/3226183054.html</id>
     <published>2025-06-01T05:06:02.000Z</published>
-    <updated>2025-06-01T05:20:44.212Z</updated>
+    <updated>2025-06-01T05:21:02.967Z</updated>
     
     
       
@@ -54,7 +54,7 @@
         
         
     <summary type="html">&lt;p&gt;几乎所有关于无条件基本收入的社会研究都指向了一个非常相似的结果：&lt;/p&gt;
-&lt;p&gt;在开始发放无条件基本收入的最初几个月，人们确实会倾向于减少工作多休息。这是因为在发放无条件基本收入之前，大多数人都在咬着牙超时做着自己并不满意的工作，当基本生活有保障之后，这些人会倾向于少工作</summary>
+&lt;p&gt;在开始发放无条件基本收入的最初几个月，人们确实会倾向于减少工作多休息。这是因为在发放无条件基本收入之前，大多数人都在咬着牙超时做着自己并不满意的工作，当基本生活有保障之后，这些人会倾向于少工作一</summary>
         
       
     
@@ -79,8 +79,7 @@
       
         
         
-    <summary type="html">&lt;p&gt;最近在安装 &lt;a href=&quot;https://docs.rapids.ai/install/&quot;&gt;Nvidia
-Rapids&lt;/a&gt; 用于更为高效的科学计算。&lt;/p&gt;
+    <summary type="html">&lt;p&gt;最近在安装 &lt;a href=&quot;https://docs.rapids.ai/install/&quot;&gt;Nvidia Rapids&lt;/a&gt; 用于更为高效的科学计算。&lt;/p&gt;
 &lt;p&gt;安装代码如下:&lt;/p&gt;
 &lt;figure class=&quot;highlight</summary>
         
@@ -109,7 +108,7 @@ Rapids&lt;/a&gt; 用于更为高效的科学计算。&lt;/p&gt;
         
     <summary type="html">&lt;p&gt;见义勇为是充满正义的行为，不为交换任何资源的行为。&lt;/p&gt;
 &lt;p&gt;柏拉图认为我们对“正义”这种理念（原相）的认识不可能是凭空出现的，这只能是我们“前世的残存记忆（内心OS：是本人灵魂残存还是肉体DNA残留呢？），是在一个理念世界中生存时，遗留下来的模糊记忆”。&lt;/p&gt;
-</summary>
+&lt;p</summary>
         
       
     
@@ -134,9 +133,7 @@ Rapids&lt;/a&gt; 用于更为高效的科学计算。&lt;/p&gt;
       
         
         
-    <summary type="html">&lt;p&gt;上回说到了 &lt;code&gt;self-attention&lt;/code&gt; 的四种写法，这次更新一下
-&lt;code&gt;multi-head attention&lt;/code&gt;
-的写法。&lt;code&gt;multi-head attention&lt;/code&gt; 与</summary>
+    <summary type="html">&lt;p&gt;上回说到了 &lt;code&gt;self-attention&lt;/code&gt; 的四种写法，这次更新一下 &lt;code&gt;multi-head attention&lt;/code&gt; 的写法。&lt;code&gt;multi-head attention&lt;/code&gt; 与</summary>
         
       
     
@@ -187,9 +184,8 @@ Rapids&lt;/a&gt; 用于更为高效的科学计算。&lt;/p&gt;
       
         
         
-    <summary type="html">&lt;p&gt;最近在下载文章数据的时候，发现了一个很让人感到头痛的数据，如下图所示：
-&lt;img
-src=&quot;https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/批量爬取bicnn文件/20250223221153.p</summary>
+    <summary type="html">&lt;p&gt;最近在下载文章数据的时候，发现了一个很让人感到头痛的数据，如下图所示：&lt;br&gt;
+&lt;img</summary>
         
       
     
@@ -215,7 +211,7 @@ src=&quot;https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/批量爬
         
         
     <summary type="html">&lt;p&gt;在所有生物中，唯有DNA可以通过遗传传递给后代继承某些特征。一旦DNA发生改变，它所有的后代都将继承改变后的DNA。转基因技术就是通过修改DNA来执行创造一个新的生物的指令，这些指令是以某种方式编程在DNA双螺旋结构里面的。&lt;/p&gt;
-&lt;p&gt;我有个程序员朋友，他喜欢从0开始</summary>
+&lt;p&gt;我有个程序员朋友，他喜欢从0开始写</summary>
         
       
     
@@ -240,10 +236,7 @@ src=&quot;https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/批量爬
       
         
         
-    <summary type="html">&lt;p&gt;前言：2024 年诺贝尔化学奖授予了 David Baker、Demis Hassabis 和 John
-Jumper。&lt;em&gt;一半授予 David Baker
-以表彰其在计算蛋白质设计方面的贡献&lt;/em&gt;，他成功构建了全新的蛋白质；另一半授予
-Demis</summary>
+    <summary type="html">&lt;p&gt;前言：2024 年诺贝尔化学奖授予了 David Baker、Demis Hassabis 和 John Jumper。&lt;em&gt;一半授予 David Baker 以表彰其在计算蛋白质设计方面的贡献&lt;/em&gt;，他成功构建了全新的蛋白质；另一半授予 Demis</summary>
         
       
     
@@ -264,7 +257,8 @@ Demis</summary>
       
         
         
-    <summary type="html">&lt;p&gt;看到 Obsidian 的 CEO Steph Ango 写过</summary>
+    <summary type="html">&lt;p&gt;看到 Obsidian 的 CEO Steph Ango 写过 80 个问题，是他用于每年、每十年自问的。感觉这些问题还有点意思，先分享出来，或许可以做些增删，调整出一份适合自己的，然后定期回顾，也蛮不错。&lt;/p&gt;
+&lt;h2</summary>
         
       
     
@@ -289,7 +283,7 @@ Demis</summary>
       
         
         
-    <summary type="html">&lt;h2 id=&quot;零负十字架的人&quot;&gt;零、负十字架的人&lt;/h2&gt;
+    <summary type="html">&lt;h2 id=&quot;零、负十字架的人&quot;&gt;零、负十字架的人&lt;/h2&gt;
 &lt;p&gt;1947</summary>
         
       
@@ -316,8 +310,7 @@ Demis</summary>
         
         
     <summary type="html">&lt;p&gt;最近在做各种各样的物种的单细胞数据清洗，在清洗到某个数据的时候，用sceasy转格式从h5ad到rds，发现了一个问题，基因名字消失了。&lt;/p&gt;
-&lt;p&gt;&lt;img
-src=&quot;https://raw.githubusercontent.com/zEpoch/imageHom</summary>
+&lt;p&gt;&lt;img</summary>
         
       
     
@@ -377,7 +370,7 @@ src=&quot;https://raw.githubusercontent.com/zEpoch/imageHom</summary>
         
         
     <summary type="html">&lt;p&gt;换了新的电脑，一直以来自己的博客撰写的地址都是在电脑上面，自己的博客是基于hexo搭建的，所以需要将博客的文件迁移到新的电脑上面，这里记录一下迁移的过程。&lt;/p&gt;
-&lt;p&gt;直接把</summary>
+&lt;p&gt;直接把 node_modules</summary>
         
       
     
@@ -403,8 +396,7 @@ src=&quot;https://raw.githubusercontent.com/zEpoch/imageHom</summary>
         
         
     <summary type="html">&lt;p&gt;还是大家熟悉的猴脑文章，可能是大家较为熟悉的一张UMAP图片，但是其呈现方式和其他的UMAP图片却是有所不同，它的UMAP图片如下所示，其名字为Voronoi图：&lt;/p&gt;
-&lt;p&gt;&lt;img
-src=&quot;https://raw.githubusercontent.com/zE</summary>
+&lt;p&gt;&lt;img</summary>
         
       
     
@@ -431,9 +423,8 @@ src=&quot;https://raw.githubusercontent.com/zE</summary>
       
         
         
-    <summary type="html">&lt;p&gt;大多数文章在进行空间转录组细胞可视化的时候，通常会使用 square bin
-或是 cellbin，但是究其展示本质，其实还是 square
-bin，比如下面的这种，每个细胞的呈现形式是一个</summary>
+    <summary type="html">&lt;p&gt;大多数文章在进行空间转录组细胞可视化的时候，通常会使用 square bin 或是 cellbin，但是究其展示本质，其实还是 square bin，比如下面的这种，每个细胞的呈现形式是一个 spot_size 固定为某个值的点。&lt;/p&gt;
+&lt;p&gt;&lt;img</summary>
         
       
     
@@ -460,9 +451,8 @@ bin，比如下面的这种，每个细胞的呈现形式是一个</summary>
       
         
         
-    <summary type="html">&lt;p&gt;昨天抽了些时间对博客进行了一些优化，主要是对 butterfly
-主题进行升级，由原先的 4.1.1 升级到了现在的 4.12.0。&lt;/p&gt;
-&lt;p&gt;之后对主题进行了一些个性化的修改，包括不限于：header</summary>
+    <summary type="html">&lt;p&gt;昨天抽了些时间对博客进行了一些优化，主要是对 butterfly 主题进行升级，由原先的 4.1.1 升级到了现在的 4.12.0。&lt;/p&gt;
+&lt;p&gt;之后对主题进行了一些个性化的修改，包括不限于：header bar 的样式、文章的样式、代码块的样式、字体的样式；cdn</summary>
         
       
     
@@ -487,9 +477,7 @@ bin，比如下面的这种，每个细胞的呈现形式是一个</summary>
       
         
         
-    <summary type="html">&lt;p&gt;上一篇帖子提到了猴脑文章中&lt;a
-href=&quot;https://www.zepoch.cc/2023/959813387.html&quot;&gt;某个区域中细胞复杂性的计算&lt;/a&gt;，后面又看到一张图，才是发现自己的计算少了一些东西，这里补充一下。&lt;/p&gt;
-&lt;p&gt;在原文的图四中还有一个图</summary>
+    <summary type="html">&lt;p&gt;上一篇帖子提到了猴脑文章中&lt;a</summary>
         
       
     
@@ -518,8 +506,7 @@ href=&quot;https://www.zepoch.cc/2023/959813387.html&quot;&gt;某个区域中细
       
         
         
-    <summary type="html">&lt;p&gt;After the spatial transcriptome is annotated manually, the regional
-annotation information of the spatial group is obtained. At this</summary>
+    <summary type="html">&lt;p&gt;After the spatial transcriptome is annotated manually, the regional annotation information of the spatial group is obtained. At this</summary>
         
       
     
@@ -545,7 +532,7 @@ annotation information of the spatial group is obtained. At this</summary>
         
         
     <summary type="html">&lt;p&gt;空间转录组通过手动划区注释之后，得到空间组的区域注释信息，这个时候我们便是想要得到其差异表达基因的功能注释信息，这里并没有能够通用的脚本，本人仅是提供一种思路，供大家参考。&lt;/p&gt;
-&lt;p&gt;由于我们的空间组的数据大都是 anndata 的</summary>
+&lt;p&gt;由于我们的空间组的数据大都是 anndata 的 h5ad</summary>
         
       
     

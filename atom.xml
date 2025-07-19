@@ -6,7 +6,7 @@
   <link href="https://www.zepoch.cc/atom.xml" rel="self"/>
   
   <link href="https://www.zepoch.cc/"/>
-  <updated>2025-06-13T16:07:49.480Z</updated>
+  <updated>2025-07-19T06:39:10.213Z</updated>
   <id>https://www.zepoch.cc/</id>
   
   <author>
@@ -21,15 +21,16 @@
     <link href="https://www.zepoch.cc/2025/2442625738.html"/>
     <id>https://www.zepoch.cc/2025/2442625738.html</id>
     <published>2025-06-13T16:05:29.000Z</published>
-    <updated>2025-06-13T16:07:49.480Z</updated>
+    <updated>2025-07-19T06:39:10.213Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;我感觉「随着年岁渐长，时间会过得越来越快」这个事儿吧，可能还是跟专注能力的消退有关。&lt;/p&gt;
-&lt;p&gt;之前有一年，我各方面状态都非常之差，提不精神做任何事情，对「当下」的生活没有任何的兴趣和气力，常常一躺就是大半天，看看小说、发发呆一天就过去了，那大半年真的是一眨眼就过去了</summary>
+    <summary type="html">&lt;p&gt;随着年岁渐长，时间会过得越来越快&lt;/p&gt;
+&lt;p&gt;我感觉「随着年岁渐长，时间会过得越来越快」这个事儿吧，可能还是跟专注能力的消退有关。&lt;/p&gt;
+&lt;p&gt;之前有一年，我各方面状态都非常之差，提不精神做任何事情，对「当下」的生活没有任何的兴趣和气力，常常一躺就是大半天，看看小说、发</summary>
         
       
     
@@ -47,14 +48,16 @@
     <link href="https://www.zepoch.cc/2025/3226183054.html"/>
     <id>https://www.zepoch.cc/2025/3226183054.html</id>
     <published>2025-06-01T05:06:02.000Z</published>
-    <updated>2025-06-01T05:21:02.967Z</updated>
+    <updated>2025-07-19T06:36:48.399Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h1</summary>
+    <summary type="html">&lt;h2 id=&quot;概览&quot;&gt;概览&lt;/h2&gt;
+&lt;p&gt;这本开源书籍旨在引领变革。从基础出发，我们将引导你掌握将大型语言模型训练从单
+GPU 扩展到数十、数百甚至数千</summary>
         
       
     
@@ -105,7 +108,8 @@
       
         
         
-    <summary type="html">&lt;p&gt;最近在安装 &lt;a href=&quot;https://docs.rapids.ai/install/&quot;&gt;Nvidia Rapids&lt;/a&gt; 用于更为高效的科学计算。&lt;/p&gt;
+    <summary type="html">&lt;p&gt;最近在安装 &lt;a href=&quot;https://docs.rapids.ai/install/&quot;&gt;Nvidia
+Rapids&lt;/a&gt; 用于更为高效的科学计算。&lt;/p&gt;
 &lt;p&gt;安装代码如下:&lt;/p&gt;
 &lt;figure class=&quot;highlight</summary>
         
@@ -159,7 +163,9 @@
       
         
         
-    <summary type="html">&lt;p&gt;上回说到了 &lt;code&gt;self-attention&lt;/code&gt; 的四种写法，这次更新一下 &lt;code&gt;multi-head attention&lt;/code&gt; 的写法。&lt;code&gt;multi-head attention&lt;/code&gt; 与</summary>
+    <summary type="html">&lt;p&gt;上回说到了 &lt;code&gt;self-attention&lt;/code&gt; 的四种写法，这次更新一下
+&lt;code&gt;multi-head attention&lt;/code&gt;
+的写法。&lt;code&gt;multi-head attention&lt;/code&gt; 与</summary>
         
       
     
@@ -210,8 +216,9 @@
       
         
         
-    <summary type="html">&lt;p&gt;最近在下载文章数据的时候，发现了一个很让人感到头痛的数据，如下图所示：&lt;br&gt;
-&lt;img</summary>
+    <summary type="html">&lt;p&gt;最近在下载文章数据的时候，发现了一个很让人感到头痛的数据，如下图所示：
+&lt;img
+src=&quot;https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/批量爬取bicnn文件/20250223221153.png</summary>
         
       
     
@@ -262,7 +269,10 @@
       
         
         
-    <summary type="html">&lt;p&gt;前言：2024 年诺贝尔化学奖授予了 David Baker、Demis Hassabis 和 John Jumper。&lt;em&gt;一半授予 David Baker 以表彰其在计算蛋白质设计方面的贡献&lt;/em&gt;，他成功构建了全新的蛋白质；另一半授予 Demis</summary>
+    <summary type="html">&lt;p&gt;前言：2024 年诺贝尔化学奖授予了 David Baker、Demis Hassabis 和 John
+Jumper。&lt;em&gt;一半授予 David Baker
+以表彰其在计算蛋白质设计方面的贡献&lt;/em&gt;，他成功构建了全新的蛋白质；另一半授予
+Demis</summary>
         
       
     
@@ -283,8 +293,7 @@
       
         
         
-    <summary type="html">&lt;p&gt;看到 Obsidian 的 CEO Steph Ango 写过 80 个问题，是他用于每年、每十年自问的。感觉这些问题还有点意思，先分享出来，或许可以做些增删，调整出一份适合自己的，然后定期回顾，也蛮不错。&lt;/p&gt;
-&lt;h2</summary>
+    <summary type="html">&lt;p&gt;看到 Obsidian 的 CEO Steph Ango 写过</summary>
         
       
     
@@ -309,7 +318,7 @@
       
         
         
-    <summary type="html">&lt;h2 id=&quot;零、负十字架的人&quot;&gt;零、负十字架的人&lt;/h2&gt;
+    <summary type="html">&lt;h2 id=&quot;零负十字架的人&quot;&gt;零、负十字架的人&lt;/h2&gt;
 &lt;p&gt;1947</summary>
         
       
@@ -336,7 +345,8 @@
         
         
     <summary type="html">&lt;p&gt;最近在做各种各样的物种的单细胞数据清洗，在清洗到某个数据的时候，用sceasy转格式从h5ad到rds，发现了一个问题，基因名字消失了。&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
+&lt;p&gt;&lt;img
+src=&quot;https://raw.githubusercontent.com/zEpoch/imageHome/</summary>
         
       
     
@@ -396,7 +406,7 @@
         
         
     <summary type="html">&lt;p&gt;换了新的电脑，一直以来自己的博客撰写的地址都是在电脑上面，自己的博客是基于hexo搭建的，所以需要将博客的文件迁移到新的电脑上面，这里记录一下迁移的过程。&lt;/p&gt;
-&lt;p&gt;直接把 node_modules</summary>
+&lt;p&gt;直接把</summary>
         
       
     
@@ -422,7 +432,8 @@
         
         
     <summary type="html">&lt;p&gt;还是大家熟悉的猴脑文章，可能是大家较为熟悉的一张UMAP图片，但是其呈现方式和其他的UMAP图片却是有所不同，它的UMAP图片如下所示，其名字为Voronoi图：&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
+&lt;p&gt;&lt;img
+src=&quot;https://raw.githubusercontent.com/zEpo</summary>
         
       
     
@@ -449,8 +460,9 @@
       
         
         
-    <summary type="html">&lt;p&gt;大多数文章在进行空间转录组细胞可视化的时候，通常会使用 square bin 或是 cellbin，但是究其展示本质，其实还是 square bin，比如下面的这种，每个细胞的呈现形式是一个 spot_size 固定为某个值的点。&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
+    <summary type="html">&lt;p&gt;大多数文章在进行空间转录组细胞可视化的时候，通常会使用 square bin
+或是 cellbin，但是究其展示本质，其实还是 square
+bin，比如下面的这种，每个细胞的呈现形式是一个</summary>
         
       
     
@@ -477,8 +489,10 @@
       
         
         
-    <summary type="html">&lt;p&gt;昨天抽了些时间对博客进行了一些优化，主要是对 butterfly 主题进行升级，由原先的 4.1.1 升级到了现在的 4.12.0。&lt;/p&gt;
-&lt;p&gt;之后对主题进行了一些个性化的修改，包括不限于：header bar 的样式、文章的样式、代码块的样式、字体的样式；cdn</summary>
+    <summary type="html">&lt;p&gt;昨天抽了些时间对博客进行了一些优化，主要是对 butterfly
+主题进行升级，由原先的 4.1.1 升级到了现在的 4.12.0。&lt;/p&gt;
+&lt;p&gt;之后对主题进行了一些个性化的修改，包括不限于：header bar
+的样式、文章的样式、代码块的样式、字体的样式；cdn</summary>
         
       
     
@@ -503,7 +517,9 @@
       
         
         
-    <summary type="html">&lt;p&gt;上一篇帖子提到了猴脑文章中&lt;a</summary>
+    <summary type="html">&lt;p&gt;上一篇帖子提到了猴脑文章中&lt;a
+href=&quot;https://www.zepoch.cc/2023/959813387.html&quot;&gt;某个区域中细胞复杂性的计算&lt;/a&gt;，后面又看到一张图，才是发现自己的计算少了一些东西，这里补充一下。&lt;/p&gt;
+&lt;p&gt;在原文的图四中还有一个图片，</summary>
         
       
     
@@ -532,7 +548,8 @@
       
         
         
-    <summary type="html">&lt;p&gt;After the spatial transcriptome is annotated manually, the regional annotation information of the spatial group is obtained. At this</summary>
+    <summary type="html">&lt;p&gt;After the spatial transcriptome is annotated manually, the regional
+annotation information of the spatial group is obtained. At this</summary>
         
       
     

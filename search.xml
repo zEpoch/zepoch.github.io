@@ -11703,4 +11703,115 @@ AI，意义是什么？</p>
         <tag>生活</tag>
       </tags>
   </entry>
+  <entry>
+    <title>单层VAE原理与置信下界</title>
+    <url>/2025/4231918369.html</url>
+    <content><![CDATA[<p>VAE的原理大概为，给定一个 <span
+class="math inline">\(x\)</span>，我们认为其是由一个隐变量 <span
+class="math inline">\(z\)</span> 生成的，这个隐变量 <span
+class="math inline">\(z\)</span> 则是通过一个后验网络 <span
+class="math inline">\(q_{\phi}(z|x)\)</span>
+预测出来的，而在推理的时候，则是通过 <span
+class="math inline">\(z\)</span> 去预测 <span
+class="math inline">\(x\)</span>.</p>
+<p><img
+src="https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/换一种空间组的圈细胞可视化方式/20250804154550.png"
+alt="20250804154550" /></p>
+<p>如果用公式描述<span
+class="math inline">\(p(x)\)</span>的生成过程，则大概可以分为以下几步</p>
+<p><span class="math display">\[
+p(x) = \int_z p_{\theta}(x|z)p(z) \tag{1}
+\]</span></p>
+<p>可以理解为在所有 <span class="math inline">\(z\)</span>
+上进行积分得到每一个 <span class="math inline">\(p(z)\)</span>
+发生的概率乘以每一个 <span class="math inline">\(p(z)\)</span>
+发生的时候 <span class="math inline">\(p(x)\)</span> 也发生的概率 <span
+class="math inline">\(p_\theta(x|z)\)</span>，此时我们同时乘以和除以一个
+<span class="math inline">\(q_\phi(z|x)\)</span>，则可以得到：</p>
+<p><span class="math display">\[
+p(x) = \int_z q_\phi(z|x) \frac{p_{\theta}(x|z)p(z)}{q_\phi(z|x)}
+\tag{2}
+\]</span></p>
+<p>我们可以把这个边缘计算进行期望表示</p>
+<p><span class="math display">\[
+logp(x)=logE_{z \sim q_\phi(z∣x)}
+[\frac{p_\theta(x∣z)p(z)}{q_\phi(z∣x)}] \tag{3}
+\]</span></p>
+<p>对于这个 <code>将边缘计算进行期望表示</code> 即公式(3) 的理解为：</p>
+<p>对于一个连续随机变量 <span class="math inline">\(Z\)</span>
+和一个函数 <span
+class="math inline">\(f(Z)\)</span>，其期望（均值）定义为： <span
+class="math display">\[
+\mathbb{E} = \int_{-\infty}^{\infty} f(z)p(z) dz \tag{4}
+\]</span> 其中：</p>
+<ul>
+<li><span class="math inline">\(f(Z)\)</span> 是随机变量 <span
+class="math inline">\(Z\)</span> 的某个函数</li>
+<li><span class="math inline">\(p(z)\)</span> <span
+class="math inline">\(Z\)</span> 的概率密度函数</li>
+</ul>
+<p>这个公式表明，期望是通过将函数 <span
+class="math inline">\(f(Z)\)</span>
+在整个样本空间上加权平均得到的，权重上随机变量的概率密度 <span
+class="math inline">\(p(z)\)</span>。</p>
+<p>假如有一个积分表达式： <span class="math display">\[
+I=\int f(z)g(z)dz \tag{5}
+\]</span> 如果我们将 <span class="math inline">\(g(z)\)</span>
+视为某个随机变量 <span class="math inline">\(Z\)</span> 的概率密度函数
+<span class="math inline">\(p(z)\)</span>，那么这个积分可以写成 <span
+class="math display">\[
+I=\int f(z)p(z) dz \tag{6}
+\]</span> 根据期望的定义，这正是随机变量 <span
+class="math inline">\(f{Z}\)</span>的期望：</p>
+<p><span class="math display">\[
+I=\mathbb{E}[f(Z)] \tag{7}
+\]</span></p>
+<p>则对于我们的<code>边缘计算进行期望表示</code>则可以理解为： <span
+class="math display">\[
+\int f(z)q_\phi(z|x)dz = \mathbb{E}_{z \sim q_\phi(z|x)}[f(z)] \tag{8}
+\]</span></p>
+<p>即在给定条件 <span class="math inline">\(x\)</span> 下，随机变量
+<span class="math inline">\(f(Z)\)</span> 的期望可以通过积分计算，<span
+class="math inline">\(z \sim q_\phi(z∣x)\)</span>
+是概率论和机器学习中常见的表示方法。它表示随机变量 <span
+class="math inline">\(z\)</span> 从条件概率分布 <span
+class="math inline">\(q_\phi(z∣x)\)</span> 中采样。</p>
+<p>根据公式(8)，我们可以将 <span
+class="math inline">\(\frac{p_{\theta}(x|z)p(z)}{q_\phi(z|x)}\)</span>
+看作是 <span class="math inline">\(f(z)\)</span>，则<span
+class="math inline">\(f(z)\)</span>可以被写为 <span
+class="math display">\[
+f(z)=\frac{p_{\theta}(x|z)p(z)}{q_\phi(z|x)} \tag{9}
+\]</span></p>
+<p>则公式(2)可以被写为：</p>
+<p><span class="math display">\[
+p(x) = \int_z q_\phi(z|x) f(z)  \tag{10}
+\]</span> 那么则有： <span class="math display">\[
+logp(x)=logE_{z \sim q_\phi(z∣x)} f(z) \tag{11}
+\]</span></p>
+<p>根据詹森不等式（Jensen's
+Inequality），将对数期望转换为一个下界。这个下界被称为证据下界（Evidence
+Lower Bound, ELBO），它是变分推断中优化的目标。
+詹森不等式的定义：对于一个凸函数<span
+class="math inline">\(f\)</span>和一个随机变量<span
+class="math inline">\(X\)</span>，詹森不等式表述为，如果<span
+class="math inline">\(f\)</span>是一个凸函数，那么对于任何随机变量<span
+class="math inline">\(X\)</span>，我们有： <span class="math display">\[
+f(\mathbb{E}[X]) \leq \mathbb{E(f(X))} \tag{12}
+\]</span> 当 <span
+class="math inline">\(f()==log()\)</span>时候，通过最大化
+ELBO，我们可以找到最佳的近似分布 <span
+class="math inline">\(q_\phi(z∣x)\)</span>，从而使其尽可能接近真实的后验分布
+<span class="math inline">\(p(z∣x)\)</span>。 <span
+class="math display">\[
+logp(x) = logE_{z \sim q_\phi(z∣x)} f(z) \\
+\geq  \mathbb{E}_{z \sim q_\phi(z∣x)} [\log f(z)] \tag{13}
+\]</span> 其中： <span class="math display">\[
+f(z) = \frac{p_{\theta}(x|z)p(z)}{q_\phi(z|x)} \tag{14}
+\]</span> 综上，则有： <span class="math display">\[
+log p(x) \geq \mathbb{E}_{z \sim q_\phi(z∣x)}
+[\frac{p_{\theta}(x|z)p(z)}{q_\phi(z|x)}] \tag{15}
+\]</span></p>
+]]></content>
+  </entry>
 </search>

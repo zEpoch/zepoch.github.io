@@ -6,7 +6,7 @@
   <link href="https://www.zepoch.cc/atom.xml" rel="self"/>
   
   <link href="https://www.zepoch.cc/"/>
-  <updated>2025-07-19T06:39:10.213Z</updated>
+  <updated>2025-08-04T09:36:06.225Z</updated>
   <id>https://www.zepoch.cc/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>单层VAE原理与置信下界</title>
+    <link href="https://www.zepoch.cc/2025/4231918369.html"/>
+    <id>https://www.zepoch.cc/2025/4231918369.html</id>
+    <published>2025-08-04T08:00:46.000Z</published>
+    <updated>2025-08-04T09:36:06.225Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;VAE的原理大概为，给定一个 &lt;span
+class=&quot;math inline&quot;&gt;&#92;(x&#92;)&lt;/span&gt;，我们认为其是由一个隐变量 &lt;span
+class=&quot;math inline&quot;&gt;&#92;(z&#92;)&lt;/span&gt; 生成的，这个隐变量 &lt;span
+class=&quot;math</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>时间真的越走越快吗</title>
@@ -533,32 +557,6 @@ href=&quot;https://www.zepoch.cc/2023/959813387.html&quot;&gt;某个区域中细
     <category term="tech" scheme="https://www.zepoch.cc/tags/tech/"/>
     
     <category term="技术" scheme="https://www.zepoch.cc/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>spatial Transcription region deg genemodule heatmap GO analysis</title>
-    <link href="https://www.zepoch.cc/2024/87416160.html"/>
-    <id>https://www.zepoch.cc/2024/87416160.html</id>
-    <published>2024-01-03T02:50:03.000Z</published>
-    <updated>2024-01-03T02:59:38.953Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;After the spatial transcriptome is annotated manually, the regional
-annotation information of the spatial group is obtained. At this</summary>
-        
-      
-    
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/categories/tech/"/>
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/tags/tech/"/>
     
   </entry>
   

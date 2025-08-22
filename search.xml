@@ -125,6 +125,42 @@ id="能够总结你这一年的一句话是什么">能够总结你这一年的�
       </tags>
   </entry>
   <entry>
+    <title>Calculate the complexity of cells in a region</title>
+    <url>/2023/2669081178.html</url>
+    <content><![CDATA[<p>In some spatial group atlas articles, we often see a picture, which
+is to calculate the complexity of cells in a region. We take an article
+published in Cell this year as an example to see how to calculate the
+complexity of cells in a region. The name of the article is Single-cell
+spatial transcriptome reveals cell-type organization in the macaque
+cortex, and the link to the article is: <a
+href="https://linkinghub.elsevier.com/retrieve/pii/S0092867423006797"
+class="uri">https://linkinghub.elsevier.com/retrieve/pii/S0092867423006797</a>,
+there is such a picture in Figure II: <img
+src="https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/calculate_neighborhood_complexity/20231229110148.png"
+alt="20231229110148" /></p>
+<p>The meaning of I figure is the complexity distribution of each cell
+in different layers. The calculation of each cell's complexity is to
+take each cell as the center, 200 pixels as the radius, draw a circle,
+and calculate the number of cell types different from this cell in this
+circle. According to this understanding, we can write the program.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># first is the introduction of the package</span></span><br><span class="line"><span class="keyword">import</span> anndata <span class="keyword">as</span> ad</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">from</span> matplotlib.ticker <span class="keyword">import</span> FuncFormatter</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+<p>here I wrote three functions, the calculation speed of the three
+functions is faster than one, but the degree of understanding is more
+difficult than one</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># the first function is the most common one we understand to traverse all cells</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_neighborhood_complexity</span>(<span class="params">cell_coordinates, cluster_labels, radius</span>):</span><br><span class="line">    neighborhood_complexities = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> central_cell, central_cluster_label <span class="keyword">in</span> <span class="built_in">zip</span>(cell_coordinates, cluster_labels):</span><br><span class="line">        complexity = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> cell, cluster_label <span class="keyword">in</span> <span class="built_in">zip</span>(cell_coordinates, cluster_labels):</span><br><span class="line">            distance = np.linalg.norm(cell - central_cell)</span><br><span class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt; distance &lt;= radius <span class="keyword">and</span> cluster_label <span class="keyword">not</span> <span class="keyword">in</span> cluster_labels[:complexity]:</span><br><span class="line">                complexity += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        neighborhood_complexities.append(complexity)</span><br><span class="line"></span><br><span class="line">    complexity_counts = Counter(neighborhood_complexities)</span><br><span class="line">    total_cells = <span class="built_in">len</span>(neighborhood_complexities)</span><br><span class="line">    complexity_probabilities = &#123;</span><br><span class="line">        complexity: count / total_cells <span class="keyword">for</span> complexity, count <span class="keyword">in</span> complexity_counts.items()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> np.array(neighborhood_complexities), complexity_probabilities</span><br><span class="line"></span><br><span class="line"><span class="comment"># and the second function uses some numpy functions, which is much faster than the first function</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_neighborhood_complexity</span>(<span class="params">cell_coordinates, cluster_labels, radius</span>):</span><br><span class="line">    unique_labels, label_indices = np.unique(cluster_labels, return_inverse=<span class="literal">True</span>)</span><br><span class="line">    complexity_counts = np.zeros(<span class="built_in">len</span>(cell_coordinates), dtype=<span class="built_in">int</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i, central_cell <span class="keyword">in</span> <span class="built_in">enumerate</span>(cell_coordinates):</span><br><span class="line">        distances = np.linalg.norm(cell_coordinates - central_cell, axis=<span class="number">1</span>)</span><br><span class="line">        mask = np.logical_and(distances &gt; <span class="number">0</span>, distances &lt;= radius)</span><br><span class="line">        previous_complexities = <span class="built_in">set</span>()</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> cell_idx, cluster_idx <span class="keyword">in</span> <span class="built_in">enumerate</span>(label_indices[mask]):</span><br><span class="line">            <span class="keyword">if</span> cluster_idx <span class="keyword">not</span> <span class="keyword">in</span> previous_complexities:</span><br><span class="line">                complexity_counts[i] += <span class="number">1</span></span><br><span class="line">                previous_complexities.add(cluster_idx)</span><br><span class="line">    </span><br><span class="line">    total_cells = <span class="built_in">len</span>(cell_coordinates)</span><br><span class="line">    complexity_probabilities = np.bincount(complexity_counts) / total_cells</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> complexity_counts, complexity_probabilities</span><br><span class="line"></span><br><span class="line"><span class="comment"># and the third function uses KD tree, which maintains the edge when building the tree, and the speed is much faster than the second function</span></span><br><span class="line"><span class="keyword">from</span> scipy.spatial <span class="keyword">import</span> cKDTree</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_neighborhood_complexity</span>(<span class="params">cell_coordinates, cluster_labels, radius</span>):</span><br><span class="line">    unique_labels, label_indices = np.unique(cluster_labels, return_inverse=<span class="literal">True</span>)</span><br><span class="line">    complexity_counts = np.zeros(<span class="built_in">len</span>(cell_coordinates), dtype=<span class="built_in">int</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Build a KD-tree from the cell coordinates</span></span><br><span class="line">    kdtree = cKDTree(cell_coordinates)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i, central_cell <span class="keyword">in</span> <span class="built_in">enumerate</span>(cell_coordinates):</span><br><span class="line">        <span class="comment"># Query the KD-tree to find the cell indices within the radius</span></span><br><span class="line">        neighbor_indices = kdtree.query_ball_point(central_cell, radius)</span><br><span class="line">        previous_complexities = <span class="built_in">set</span>()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> cell_idx, cluster_idx <span class="keyword">in</span> <span class="built_in">zip</span>(neighbor_indices, label_indices[neighbor_indices]):</span><br><span class="line">            <span class="keyword">if</span> cluster_idx <span class="keyword">not</span> <span class="keyword">in</span> previous_complexities:</span><br><span class="line">                complexity_counts[i] += <span class="number">1</span></span><br><span class="line">                previous_complexities.add(cluster_idx)</span><br><span class="line"></span><br><span class="line">    total_cells = <span class="built_in">len</span>(cell_coordinates)</span><br><span class="line">    complexity_probabilities = np.bincount(complexity_counts) / total_cells</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> complexity_counts, complexity_probabilities</span><br></pre></td></tr></table></figure>
+<p>and how to use it and how to draw pictures?</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># adata is the data of the spatial group</span></span><br><span class="line"><span class="comment"># obs region is the information of the brain region</span></span><br><span class="line"><span class="comment"># obs celltype is the information of cell type</span></span><br><span class="line"><span class="comment"># obsm spatial is the coordinate information of cells</span></span><br><span class="line"><span class="comment"># layer is the information of each layer</span></span><br><span class="line"><span class="comment"># The measured speed is about 15 min for the first function for 20k cells, about 5s for the second function, and about 1.5s for the third function</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">cell_coordinates_list = [</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer1&#x27;</span>].obsm[<span class="string">&#x27;spatial&#x27;</span>],</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer2&#x27;</span>].obsm[<span class="string">&#x27;spatial&#x27;</span>],</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer3&#x27;</span>].obsm[<span class="string">&#x27;spatial&#x27;</span>],</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer4&#x27;</span>].obsm[<span class="string">&#x27;spatial&#x27;</span>],</span><br><span class="line">]</span><br><span class="line">cluster_labels_list = [</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer1&#x27;</span>].obs[<span class="string">&#x27;celltype&#x27;</span>].tolist(),</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer2&#x27;</span>].obs[<span class="string">&#x27;celltype&#x27;</span>].tolist(),</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer3&#x27;</span>].obs[<span class="string">&#x27;celltype&#x27;</span>].tolist(),</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer4&#x27;</span>].obs[<span class="string">&#x27;celltype&#x27;</span>].tolist(),</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">name = [<span class="string">&#x27;layer1&#x27;</span>, <span class="string">&#x27;layer2&#x27;</span>, <span class="string">&#x27;layer3&#x27;</span>, <span class="string">&#x27;layer4&#x27;</span>]</span><br><span class="line"></span><br><span class="line">radius_list = [<span class="number">200</span>, <span class="number">200</span>, <span class="number">200</span>, <span class="number">200</span>]</span><br><span class="line"></span><br><span class="line">fig, ax = plt.subplots(figsize=(<span class="number">6</span>, <span class="number">6</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i, (cell_coordinates, cluster_labels, radius) <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">zip</span>(cell_coordinates_list, cluster_labels_list, radius_list)):</span><br><span class="line">    complexities, complexity_probabilities = calculate_neighborhood_complexity(cell_coordinates, cluster_labels, radius)</span><br><span class="line"></span><br><span class="line">    sns.kdeplot(complexities, cumulative=<span class="literal">True</span>, fill=<span class="literal">False</span>, ax=ax, label=name[i])</span><br><span class="line"></span><br><span class="line">ax.set_xlabel(<span class="string">&#x27;Neighborhood Complexity&#x27;</span>)</span><br><span class="line">ax.set_ylabel(<span class="string">&#x27;Probability (%)&#x27;</span>)</span><br><span class="line">ax.set_title(<span class="string">&#x27;Brain Neighborhood Complexity Distribution&#x27;</span>)</span><br><span class="line">ax.legend(loc=<span class="string">&#x27;lower right&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Format y-axis labels as percentages</span></span><br><span class="line">ax.yaxis.set_major_formatter(FuncFormatter(<span class="keyword">lambda</span> x, _: <span class="string">f&#x27;<span class="subst">&#123;x*<span class="number">100</span>:<span class="number">.0</span>f&#125;</span>&#x27;</span>))</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.savefig(<span class="string">&#x27;Brain_Neighborhood_Complexity_Distribution.pdf&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>so the result is the picture of Cell</p>
+]]></content>
+      <categories>
+        <category>tech</category>
+      </categories>
+      <tags>
+        <tag>tech</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>5815. 扣分后的最大得分</title>
     <url>/2021/864291102.html</url>
     <content><![CDATA[<p>今天呢，上午还算是比较有空的，便是参加了<a
@@ -241,56 +277,6 @@ href="https://stackoverflow.com/questions/77228382/these-critical-programs-are-m
       </tags>
   </entry>
   <entry>
-    <title>Calculate the complexity of cells in a region</title>
-    <url>/2023/2669081178.html</url>
-    <content><![CDATA[<p>In some spatial group atlas articles, we often see a picture, which
-is to calculate the complexity of cells in a region. We take an article
-published in Cell this year as an example to see how to calculate the
-complexity of cells in a region. The name of the article is Single-cell
-spatial transcriptome reveals cell-type organization in the macaque
-cortex, and the link to the article is: <a
-href="https://linkinghub.elsevier.com/retrieve/pii/S0092867423006797"
-class="uri">https://linkinghub.elsevier.com/retrieve/pii/S0092867423006797</a>,
-there is such a picture in Figure II: <img
-src="https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/calculate_neighborhood_complexity/20231229110148.png"
-alt="20231229110148" /></p>
-<p>The meaning of I figure is the complexity distribution of each cell
-in different layers. The calculation of each cell's complexity is to
-take each cell as the center, 200 pixels as the radius, draw a circle,
-and calculate the number of cell types different from this cell in this
-circle. According to this understanding, we can write the program.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># first is the introduction of the package</span></span><br><span class="line"><span class="keyword">import</span> anndata <span class="keyword">as</span> ad</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">from</span> matplotlib.ticker <span class="keyword">import</span> FuncFormatter</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
-<p>here I wrote three functions, the calculation speed of the three
-functions is faster than one, but the degree of understanding is more
-difficult than one</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># the first function is the most common one we understand to traverse all cells</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_neighborhood_complexity</span>(<span class="params">cell_coordinates, cluster_labels, radius</span>):</span><br><span class="line">    neighborhood_complexities = []</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> central_cell, central_cluster_label <span class="keyword">in</span> <span class="built_in">zip</span>(cell_coordinates, cluster_labels):</span><br><span class="line">        complexity = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> cell, cluster_label <span class="keyword">in</span> <span class="built_in">zip</span>(cell_coordinates, cluster_labels):</span><br><span class="line">            distance = np.linalg.norm(cell - central_cell)</span><br><span class="line">            <span class="keyword">if</span> <span class="number">0</span> &lt; distance &lt;= radius <span class="keyword">and</span> cluster_label <span class="keyword">not</span> <span class="keyword">in</span> cluster_labels[:complexity]:</span><br><span class="line">                complexity += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        neighborhood_complexities.append(complexity)</span><br><span class="line"></span><br><span class="line">    complexity_counts = Counter(neighborhood_complexities)</span><br><span class="line">    total_cells = <span class="built_in">len</span>(neighborhood_complexities)</span><br><span class="line">    complexity_probabilities = &#123;</span><br><span class="line">        complexity: count / total_cells <span class="keyword">for</span> complexity, count <span class="keyword">in</span> complexity_counts.items()</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> np.array(neighborhood_complexities), complexity_probabilities</span><br><span class="line"></span><br><span class="line"><span class="comment"># and the second function uses some numpy functions, which is much faster than the first function</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_neighborhood_complexity</span>(<span class="params">cell_coordinates, cluster_labels, radius</span>):</span><br><span class="line">    unique_labels, label_indices = np.unique(cluster_labels, return_inverse=<span class="literal">True</span>)</span><br><span class="line">    complexity_counts = np.zeros(<span class="built_in">len</span>(cell_coordinates), dtype=<span class="built_in">int</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i, central_cell <span class="keyword">in</span> <span class="built_in">enumerate</span>(cell_coordinates):</span><br><span class="line">        distances = np.linalg.norm(cell_coordinates - central_cell, axis=<span class="number">1</span>)</span><br><span class="line">        mask = np.logical_and(distances &gt; <span class="number">0</span>, distances &lt;= radius)</span><br><span class="line">        previous_complexities = <span class="built_in">set</span>()</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> cell_idx, cluster_idx <span class="keyword">in</span> <span class="built_in">enumerate</span>(label_indices[mask]):</span><br><span class="line">            <span class="keyword">if</span> cluster_idx <span class="keyword">not</span> <span class="keyword">in</span> previous_complexities:</span><br><span class="line">                complexity_counts[i] += <span class="number">1</span></span><br><span class="line">                previous_complexities.add(cluster_idx)</span><br><span class="line">    </span><br><span class="line">    total_cells = <span class="built_in">len</span>(cell_coordinates)</span><br><span class="line">    complexity_probabilities = np.bincount(complexity_counts) / total_cells</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> complexity_counts, complexity_probabilities</span><br><span class="line"></span><br><span class="line"><span class="comment"># and the third function uses KD tree, which maintains the edge when building the tree, and the speed is much faster than the second function</span></span><br><span class="line"><span class="keyword">from</span> scipy.spatial <span class="keyword">import</span> cKDTree</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">calculate_neighborhood_complexity</span>(<span class="params">cell_coordinates, cluster_labels, radius</span>):</span><br><span class="line">    unique_labels, label_indices = np.unique(cluster_labels, return_inverse=<span class="literal">True</span>)</span><br><span class="line">    complexity_counts = np.zeros(<span class="built_in">len</span>(cell_coordinates), dtype=<span class="built_in">int</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Build a KD-tree from the cell coordinates</span></span><br><span class="line">    kdtree = cKDTree(cell_coordinates)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i, central_cell <span class="keyword">in</span> <span class="built_in">enumerate</span>(cell_coordinates):</span><br><span class="line">        <span class="comment"># Query the KD-tree to find the cell indices within the radius</span></span><br><span class="line">        neighbor_indices = kdtree.query_ball_point(central_cell, radius)</span><br><span class="line">        previous_complexities = <span class="built_in">set</span>()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> cell_idx, cluster_idx <span class="keyword">in</span> <span class="built_in">zip</span>(neighbor_indices, label_indices[neighbor_indices]):</span><br><span class="line">            <span class="keyword">if</span> cluster_idx <span class="keyword">not</span> <span class="keyword">in</span> previous_complexities:</span><br><span class="line">                complexity_counts[i] += <span class="number">1</span></span><br><span class="line">                previous_complexities.add(cluster_idx)</span><br><span class="line"></span><br><span class="line">    total_cells = <span class="built_in">len</span>(cell_coordinates)</span><br><span class="line">    complexity_probabilities = np.bincount(complexity_counts) / total_cells</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> complexity_counts, complexity_probabilities</span><br></pre></td></tr></table></figure>
-<p>and how to use it and how to draw pictures?</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># adata is the data of the spatial group</span></span><br><span class="line"><span class="comment"># obs region is the information of the brain region</span></span><br><span class="line"><span class="comment"># obs celltype is the information of cell type</span></span><br><span class="line"><span class="comment"># obsm spatial is the coordinate information of cells</span></span><br><span class="line"><span class="comment"># layer is the information of each layer</span></span><br><span class="line"><span class="comment"># The measured speed is about 15 min for the first function for 20k cells, about 5s for the second function, and about 1.5s for the third function</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">cell_coordinates_list = [</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer1&#x27;</span>].obsm[<span class="string">&#x27;spatial&#x27;</span>],</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer2&#x27;</span>].obsm[<span class="string">&#x27;spatial&#x27;</span>],</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer3&#x27;</span>].obsm[<span class="string">&#x27;spatial&#x27;</span>],</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer4&#x27;</span>].obsm[<span class="string">&#x27;spatial&#x27;</span>],</span><br><span class="line">]</span><br><span class="line">cluster_labels_list = [</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer1&#x27;</span>].obs[<span class="string">&#x27;celltype&#x27;</span>].tolist(),</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer2&#x27;</span>].obs[<span class="string">&#x27;celltype&#x27;</span>].tolist(),</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer3&#x27;</span>].obs[<span class="string">&#x27;celltype&#x27;</span>].tolist(),</span><br><span class="line">    adata[adata.obs[<span class="string">&#x27;region&#x27;</span>]==<span class="string">&#x27;layer4&#x27;</span>].obs[<span class="string">&#x27;celltype&#x27;</span>].tolist(),</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">name = [<span class="string">&#x27;layer1&#x27;</span>, <span class="string">&#x27;layer2&#x27;</span>, <span class="string">&#x27;layer3&#x27;</span>, <span class="string">&#x27;layer4&#x27;</span>]</span><br><span class="line"></span><br><span class="line">radius_list = [<span class="number">200</span>, <span class="number">200</span>, <span class="number">200</span>, <span class="number">200</span>]</span><br><span class="line"></span><br><span class="line">fig, ax = plt.subplots(figsize=(<span class="number">6</span>, <span class="number">6</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i, (cell_coordinates, cluster_labels, radius) <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">zip</span>(cell_coordinates_list, cluster_labels_list, radius_list)):</span><br><span class="line">    complexities, complexity_probabilities = calculate_neighborhood_complexity(cell_coordinates, cluster_labels, radius)</span><br><span class="line"></span><br><span class="line">    sns.kdeplot(complexities, cumulative=<span class="literal">True</span>, fill=<span class="literal">False</span>, ax=ax, label=name[i])</span><br><span class="line"></span><br><span class="line">ax.set_xlabel(<span class="string">&#x27;Neighborhood Complexity&#x27;</span>)</span><br><span class="line">ax.set_ylabel(<span class="string">&#x27;Probability (%)&#x27;</span>)</span><br><span class="line">ax.set_title(<span class="string">&#x27;Brain Neighborhood Complexity Distribution&#x27;</span>)</span><br><span class="line">ax.legend(loc=<span class="string">&#x27;lower right&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Format y-axis labels as percentages</span></span><br><span class="line">ax.yaxis.set_major_formatter(FuncFormatter(<span class="keyword">lambda</span> x, _: <span class="string">f&#x27;<span class="subst">&#123;x*<span class="number">100</span>:<span class="number">.0</span>f&#125;</span>&#x27;</span>))</span><br><span class="line">plt.tight_layout()</span><br><span class="line">plt.savefig(<span class="string">&#x27;Brain_Neighborhood_Complexity_Distribution.pdf&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p>so the result is the picture of Cell</p>
-]]></content>
-      <categories>
-        <category>tech</category>
-      </categories>
-      <tags>
-        <tag>tech</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2021/1243066710.html</url>
-    <content><![CDATA[<p>终于呢，又是开通了我的博客，之所以是说终于，是因为之前也是开通过，但是呢，因为各种各样原因逐渐搁置，所以便是逐渐落下了博客的更新。</p>
-<p>现在突然就想记录点什么了，希望能够记录下去吧。</p>
-<p>Hexo&amp;Next.Pisces 重启，采用的 <a href="https://hexo.io/">Hexo</a>
-开通的博客，<a href="https://theme-next.js.org/">NexT - Theme for
-Hexo</a> 作为主题。</p>
-<p>以后呢，会记录一下我的工作、学习与生活，会分享生活亦或是学习的点点滴滴，也不要再将这个站点落下了。</p>
-]]></content>
-      <tags>
-        <tag>生活</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Hexo Next 友链配置</title>
     <url>/2021/851229289.html</url>
     <content><![CDATA[<p>在进行配置 Hexo Next
@@ -396,6 +382,20 @@ alt="最好的小樱花" /></p>
 ]]></content>
       <tags>
         <tag>龙族</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/2021/1243066710.html</url>
+    <content><![CDATA[<p>终于呢，又是开通了我的博客，之所以是说终于，是因为之前也是开通过，但是呢，因为各种各样原因逐渐搁置，所以便是逐渐落下了博客的更新。</p>
+<p>现在突然就想记录点什么了，希望能够记录下去吧。</p>
+<p>Hexo&amp;Next.Pisces 重启，采用的 <a href="https://hexo.io/">Hexo</a>
+开通的博客，<a href="https://theme-next.js.org/">NexT - Theme for
+Hexo</a> 作为主题。</p>
+<p>以后呢，会记录一下我的工作、学习与生活，会分享生活亦或是学习的点点滴滴，也不要再将这个站点落下了。</p>
+]]></content>
+      <tags>
+        <tag>生活</tag>
       </tags>
   </entry>
   <entry>
@@ -1454,31 +1454,6 @@ alt="基因名字消失了" /></p>
       </tags>
   </entry>
   <entry>
-    <title>spatial transcriptomics 3d visualization</title>
-    <url>/2023/2340017484.html</url>
-    <content><![CDATA[<p>With development of spatial transfriptomics, we can get the spatial
-information of gene expression. However, the data is 2D, and it is hard
-to visualize the data in 3D. Here, I will introduce some methods to
-visualize the data in 3D.</p>
-<p>But for the first time, there are only some visualization method,
-next i will introduce some methods.</p>
-<p>here is the code, which is easy for understanding.</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">plot_cloud_point</span>(<span class="params">adata: ad.AnnData, </span></span><br><span class="line"><span class="params">                     spatial_key: <span class="built_in">str</span>=<span class="string">&#x27;3d_align_spatial&#x27;</span>,</span></span><br><span class="line"><span class="params">                     anno: <span class="built_in">str</span>=<span class="string">&#x27;region&#x27;</span>,</span></span><br><span class="line"><span class="params">                     color_anno: <span class="built_in">str</span>=<span class="string">&#x27;color_anno&#x27;</span>,</span></span><br><span class="line"><span class="params">                     color_map: <span class="type">Optional</span>[<span class="built_in">dict</span>] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">                     point_size: <span class="type">Union</span>[<span class="built_in">float</span>, <span class="built_in">list</span>] = <span class="number">20</span>,</span></span><br><span class="line"><span class="params">                     save_path: <span class="type">Optional</span>[<span class="built_in">str</span>] = <span class="literal">None</span></span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    <span class="comment"># position_s = adata.obsm[&#x27;3d_align_spatial&#x27;]</span></span><br><span class="line">    <span class="comment"># color_s = [color_map[i] for i in adata.obs[anno].tolist()]</span></span><br><span class="line">    <span class="comment"># point_size_s = [i**0.5 for i in adata.obs[&#x27;area&#x27;].tolist()]</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> color_map <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        color_map = adata.uns[color_anno]</span><br><span class="line">    <span class="built_in">print</span>(color_map)</span><br><span class="line">    <span class="comment">## 01. hexadecimal conversion</span></span><br><span class="line">    annotation = <span class="built_in">list</span>(color_map.keys())</span><br><span class="line">    colors = np.array(<span class="built_in">list</span>(color_map.values()))</span><br><span class="line">    color_arr = np.array([<span class="built_in">int</span>(c[<span class="number">1</span>:], <span class="number">16</span>) <span class="keyword">for</span> c <span class="keyword">in</span> colors], dtype=np.uint32)</span><br><span class="line">    color_map = <span class="built_in">dict</span>(<span class="built_in">zip</span>(annotation, color_arr))</span><br><span class="line"></span><br><span class="line">    <span class="comment">## 02.generate  </span></span><br><span class="line">    pts_map = &#123;&#125;</span><br><span class="line">    <span class="comment">#color_list = []</span></span><br><span class="line">    point_cloud = np.empty((<span class="number">0</span>,<span class="number">3</span>), <span class="built_in">float</span>)</span><br><span class="line">    </span><br><span class="line">    point_cloud = np.append(point_cloud, adata.obsm[spatial_key], axis=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(adata.obs)):</span><br><span class="line">        annot = adata.obs[anno][i]</span><br><span class="line">        <span class="keyword">if</span> annot <span class="keyword">not</span> <span class="keyword">in</span> pts_map:</span><br><span class="line">            pts_map[annot] = np.empty((<span class="number">0</span>,<span class="number">3</span>), <span class="built_in">float</span>)</span><br><span class="line">        pts_map[annot] = np.append(pts_map[annot], [adata.obsm[spatial_key][i]], axis=<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">## 03. plot k3d</span></span><br><span class="line">    plot = k3d.plot()</span><br><span class="line">    <span class="keyword">for</span> key, val <span class="keyword">in</span> <span class="built_in">sorted</span>(pts_map.items()):</span><br><span class="line">        plt_points = k3d.points(positions=val,</span><br><span class="line">                                colors = [color_map[key]]*val.shape[<span class="number">0</span>],</span><br><span class="line">                                point_size=point_size,</span><br><span class="line">                                <span class="comment"># shader=&#x27;3dSpecular&#x27;,</span></span><br><span class="line">                                shader=<span class="string">&#x27;dot&#x27;</span>,</span><br><span class="line">                                opacity= <span class="number">1</span>,</span><br><span class="line">                                name = key,</span><br><span class="line">                               )</span><br><span class="line">        plot += plt_points</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(save_path,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        fp.write(plot.get_snapshot())</span><br><span class="line">    <span class="keyword">return</span> plot</span><br></pre></td></tr></table></figure>
-<p>for this code, i used the k3d package, which is a 3D visualization
-package. but it's helpful for spatial transcriptomics data.</p>
-<p>for the package import, you can use the following code:</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> anndata <span class="keyword">as</span> ad</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Optional</span>,<span class="type">Union</span></span><br><span class="line"><span class="keyword">import</span> k3d</span><br></pre></td></tr></table></figure>
-<p>you can download some 3d spatial transcriptomics data to make a
-visualization.</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>技术</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>spatial Transcription region deg genemodule heatmap GO analysis</title>
     <url>/2024/87416160.html</url>
     <content><![CDATA[<p>After the spatial transcriptome is annotated manually, the regional
@@ -1556,6 +1531,31 @@ scripts in a unified manner, as shown below:</p>
       </categories>
       <tags>
         <tag>tech</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>spatial transcriptomics 3d visualization</title>
+    <url>/2023/2340017484.html</url>
+    <content><![CDATA[<p>With development of spatial transfriptomics, we can get the spatial
+information of gene expression. However, the data is 2D, and it is hard
+to visualize the data in 3D. Here, I will introduce some methods to
+visualize the data in 3D.</p>
+<p>But for the first time, there are only some visualization method,
+next i will introduce some methods.</p>
+<p>here is the code, which is easy for understanding.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">plot_cloud_point</span>(<span class="params">adata: ad.AnnData, </span></span><br><span class="line"><span class="params">                     spatial_key: <span class="built_in">str</span>=<span class="string">&#x27;3d_align_spatial&#x27;</span>,</span></span><br><span class="line"><span class="params">                     anno: <span class="built_in">str</span>=<span class="string">&#x27;region&#x27;</span>,</span></span><br><span class="line"><span class="params">                     color_anno: <span class="built_in">str</span>=<span class="string">&#x27;color_anno&#x27;</span>,</span></span><br><span class="line"><span class="params">                     color_map: <span class="type">Optional</span>[<span class="built_in">dict</span>] = <span class="literal">None</span>,</span></span><br><span class="line"><span class="params">                     point_size: <span class="type">Union</span>[<span class="built_in">float</span>, <span class="built_in">list</span>] = <span class="number">20</span>,</span></span><br><span class="line"><span class="params">                     save_path: <span class="type">Optional</span>[<span class="built_in">str</span>] = <span class="literal">None</span></span></span><br><span class="line"><span class="params"></span>):</span><br><span class="line">    <span class="comment"># position_s = adata.obsm[&#x27;3d_align_spatial&#x27;]</span></span><br><span class="line">    <span class="comment"># color_s = [color_map[i] for i in adata.obs[anno].tolist()]</span></span><br><span class="line">    <span class="comment"># point_size_s = [i**0.5 for i in adata.obs[&#x27;area&#x27;].tolist()]</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> color_map <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        color_map = adata.uns[color_anno]</span><br><span class="line">    <span class="built_in">print</span>(color_map)</span><br><span class="line">    <span class="comment">## 01. hexadecimal conversion</span></span><br><span class="line">    annotation = <span class="built_in">list</span>(color_map.keys())</span><br><span class="line">    colors = np.array(<span class="built_in">list</span>(color_map.values()))</span><br><span class="line">    color_arr = np.array([<span class="built_in">int</span>(c[<span class="number">1</span>:], <span class="number">16</span>) <span class="keyword">for</span> c <span class="keyword">in</span> colors], dtype=np.uint32)</span><br><span class="line">    color_map = <span class="built_in">dict</span>(<span class="built_in">zip</span>(annotation, color_arr))</span><br><span class="line"></span><br><span class="line">    <span class="comment">## 02.generate  </span></span><br><span class="line">    pts_map = &#123;&#125;</span><br><span class="line">    <span class="comment">#color_list = []</span></span><br><span class="line">    point_cloud = np.empty((<span class="number">0</span>,<span class="number">3</span>), <span class="built_in">float</span>)</span><br><span class="line">    </span><br><span class="line">    point_cloud = np.append(point_cloud, adata.obsm[spatial_key], axis=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(adata.obs)):</span><br><span class="line">        annot = adata.obs[anno][i]</span><br><span class="line">        <span class="keyword">if</span> annot <span class="keyword">not</span> <span class="keyword">in</span> pts_map:</span><br><span class="line">            pts_map[annot] = np.empty((<span class="number">0</span>,<span class="number">3</span>), <span class="built_in">float</span>)</span><br><span class="line">        pts_map[annot] = np.append(pts_map[annot], [adata.obsm[spatial_key][i]], axis=<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">## 03. plot k3d</span></span><br><span class="line">    plot = k3d.plot()</span><br><span class="line">    <span class="keyword">for</span> key, val <span class="keyword">in</span> <span class="built_in">sorted</span>(pts_map.items()):</span><br><span class="line">        plt_points = k3d.points(positions=val,</span><br><span class="line">                                colors = [color_map[key]]*val.shape[<span class="number">0</span>],</span><br><span class="line">                                point_size=point_size,</span><br><span class="line">                                <span class="comment"># shader=&#x27;3dSpecular&#x27;,</span></span><br><span class="line">                                shader=<span class="string">&#x27;dot&#x27;</span>,</span><br><span class="line">                                opacity= <span class="number">1</span>,</span><br><span class="line">                                name = key,</span><br><span class="line">                               )</span><br><span class="line">        plot += plt_points</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(save_path,<span class="string">&#x27;w&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        fp.write(plot.get_snapshot())</span><br><span class="line">    <span class="keyword">return</span> plot</span><br></pre></td></tr></table></figure>
+<p>for this code, i used the k3d package, which is a 3D visualization
+package. but it's helpful for spatial transcriptomics data.</p>
+<p>for the package import, you can use the following code:</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> anndata <span class="keyword">as</span> ad</span><br><span class="line"><span class="keyword">from</span> typing <span class="keyword">import</span> <span class="type">Optional</span>,<span class="type">Union</span></span><br><span class="line"><span class="keyword">import</span> k3d</span><br></pre></td></tr></table></figure>
+<p>you can download some 3d spatial transcriptomics data to make a
+visualization.</p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>技术</tag>
       </tags>
   </entry>
   <entry>
@@ -4260,99 +4260,6 @@ tif 数据是需要和 gem
       </tags>
   </entry>
   <entry>
-    <title>如何将rds转为h5ad</title>
-    <url>/2023/3539500839.html</url>
-    <content><![CDATA[<p>在进行单细胞或是空间组数据分析的时候，有的人喜欢使用 R
-语言进行分析，有的同学喜欢使用 Python
-进行分析，但是两个语言分析所使用的文件有所不同，R 语言通常保存的为 rds
-文件，Python 通常保存的为 h5ad
-文件，如果是多人合作分析的时候，往往需要将文件进行格式转换，这通常是一件较为麻烦的事情，看到过有使用
-SeuratDisk 和 SeuratData 等 R 语言包进行转换的程序，但是由于本人 R
-语言环境等等的问题，总是无法安装，故想了一个新的方法来进行格式转换，教程如下。</p>
-<p>首先是将 rds 文件中的信息提取出来。</p>
-<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>Seurat<span class="punctuation">)</span></span><br><span class="line"><span class="comment"># 读取 rds 文件信息</span></span><br><span class="line">rds_file <span class="operator">=</span> readRDS<span class="punctuation">(</span><span class="string">&quot;rds_file.rds&quot;</span><span class="punctuation">)</span></span><br><span class="line">rds_file</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>An object of class Seurat<br> 38153 features across 9567 samples
-within 2 assays<br> Active assay: Spatial (19082 features, 0 variable
-features)<br> 1 other assay present: SCT<br> 2 dimensional reductions
-calculated: pca, umap<br> 1 image present: slice1<br></p>
-</blockquote>
-<p>可以看到，我现在用的是 SCT matrix，所以可以进行读取，保存为 csv
-格式，包括元数据等等</p>
-<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">write.csv<span class="punctuation">(</span>rds_file<span class="operator">@</span>meta.data<span class="punctuation">,</span> <span class="string">&#x27;rds_file@meta.data.csv&#x27;</span><span class="punctuation">)</span></span><br><span class="line">write.csv<span class="punctuation">(</span>rds_file<span class="operator">@</span>assays<span class="operator">$</span>Spatial<span class="operator">@</span>data<span class="punctuation">,</span> <span class="string">&#x27;rds_file@assays$Spatial@data.csv&#x27;</span><span class="punctuation">)</span></span><br><span class="line">write.csv<span class="punctuation">(</span>rds_file<span class="operator">@</span>assays<span class="operator">$</span>SCT<span class="operator">@</span>data<span class="punctuation">,</span> <span class="string">&#x27;rds_file@assays$SCT@data.csv&#x27;</span><span class="punctuation">)</span></span><br><span class="line">write.csv<span class="punctuation">(</span>rds_file<span class="operator">@</span>assays<span class="operator">$</span>SCT<span class="operator">@</span>data<span class="punctuation">,</span> <span class="string">&#x27;rds_file@assays$SCT@data.csv&#x27;</span><span class="punctuation">)</span></span><br><span class="line">write.csv<span class="punctuation">(</span>rownames<span class="punctuation">(</span>rds_file<span class="punctuation">)</span><span class="punctuation">,</span><span class="string">&#x27;rownames(rds_file).csv&#x27;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<p>那么便是得到的 rds 元数据的所有数据了，接下来需要进行读取，使用
-anndata 进行读取</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.patches <span class="keyword">as</span> mpatches</span><br><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> anndata <span class="keyword">import</span> AnnData</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> csr_matrix</span><br><span class="line"></span><br><span class="line">adata_X = pd.read_csv(<span class="string">&quot;rds_file@assays$Spatial@data.csv&quot;</span>,index_col=<span class="number">0</span>)</span><br><span class="line">adata_X = adata_X.transpose()</span><br><span class="line">adata_X = csr_matrix(adata_X)</span><br><span class="line">adata_obs = pd.read_csv(<span class="string">&quot;rds_file.data.csv&quot;</span>,index_col=<span class="number">0</span>)</span><br><span class="line">adata_var = pd.read_csv(<span class="string">&quot;rownames(rds_file).csv&quot;</span>,index_col=<span class="number">0</span>)</span><br><span class="line">adata_var = pd.DataFrame(index = [i <span class="keyword">for</span> i <span class="keyword">in</span> adata_var[<span class="string">&#x27;x&#x27;</span>]])</span><br><span class="line">adata = sc.AnnData(X = adata_X, obs=adata_obs, var = adata_var)</span><br><span class="line">adata.write(<span class="string">&#x27;result.h5ad&#x27;</span>)</span><br></pre></td></tr></table></figure>
-<p>那么便是得到了保存了所有 rds 数据的 h5ad 文件。</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>Seurat</tag>
-        <tag>Scanpy</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>愿河南平安</title>
-    <url>/2021/3942837084.html</url>
-    <content><![CDATA[<p>一直在看着新闻，镜头前的消防战士来往没停过，拖着橡皮艇从南边的地铁站和商场将人员运到较为安全的区域，其中还有不少一两岁的孩子。刚刚记者突然间就断线了，心就突然揪住了，就挺伤心的，莫名的哭了起来</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-fa1321ca1c578d58bcf290cd9237e6b1_720w.jpg"
-alt="愿河南平安v2-fa1321ca1c578d58bcf290cd9237e6b1_720w" /></p>
-<span id="more"></span>
-<p>切到了高架路的设备采像</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-c376cf38bfa6935f54a3e66a5236dc78_720w.jpg"
-alt="愿河南平安v2-c376cf38bfa6935f54a3e66a5236dc78_720w" /></p>
-<p>就逐渐看到路面上开始逐渐有车辆的走动，采像机前的雨滴逐渐减小</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-3c666b6f469019e7b091bdfdc75bc55b_720w.jpg"
-alt="愿河南平安v2-3c666b6f469019e7b091bdfdc75bc55b_720w" /></p>
-<p>约摸二三十分钟后，记者重新连线了，但是却还是一片黑暗，缺少灯光</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-fb1ae0008a50819d823dfc040188f2ad_720w.jpg"
-alt="愿河南平安v2-fb1ae0008a50819d823dfc040188f2ad_720w" /></p>
-<p>之后记者也是在黑暗里摸索着找到了较为光亮地方，肉眼可见的雨在逐渐减小</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-bb65d10bd07ed67da95dde420c9d2d8e_720w.jpg"
-alt="愿河南平安v2-bb65d10bd07ed67da95dde420c9d2d8e_720w" /></p>
-<p>现在记者可以前往之前待救援的南边地区，已经是开始好转起来了；继续向南走还是有很长的一段没有灯光的路，后来开始看到了一家开着的店</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-c8d84a77447826b14a1699e990b0c072_720w.jpg"
-alt="愿河南平安v2-c8d84a77447826b14a1699e990b0c072_720w" /></p>
-<p>，店里还是很多的人在这边作为一个休息区，店主提供了热水充电宝之类的；店门口的是位广东的同志，来河南旅游，算是碰上了前所未遇的一个特大暴雨；</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-9c577ac3d2f4726408d86b0fd7b8a7da_720w.jpg"
-alt="愿河南平安v2-9c577ac3d2f4726408d86b0fd7b8a7da_720w" /></p>
-<p>店主也是很勇敢的人，公司可以让直接关门下班了，但是店主很有社会责任感，坚持开门，通宵收容不能回家的人，真的很感动；</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-30942b423eda147cd3b4e8420e210aaa_720w.jpg"
-alt="愿河南平安v2-30942b423eda147cd3b4e8420e210aaa_720w" /></p>
-<p>采访完毕后记者继续想南边的黑暗处走去，雨又开始大了起来，愿一切平安，众志成城，共克时艰</p>
-<p>继续向前走是碰到了一连串的车队，其实是不能向前走了，前面被淹了</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-fe0962dc416428b9610ec0044545dafa_720w.jpg"
-alt="愿河南平安v2-fe0962dc416428b9610ec0044545dafa_720w" /></p>
-<p>再往前有一辆公交车，车上有很多人在休息</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-ea205c6ed312e1567a37c0a71014ff46_720w.jpg"
-alt="愿河南平安v2-ea205c6ed312e1567a37c0a71014ff46_720w" /></p>
-<p>说着说着，来了一个出租车师傅，这位师傅看到了直播，敲开了自己家楼下没有开门的店，买了全部的食物和水，跟着直播走的路，送来了食物和矿泉水，还特地带来了热水</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-0ba2b6fb175867cd6a50d23a156746f2_720w.jpg"
-alt="师傅送来了食物和水" /></p>
-<p>好心的出租车师傅不愿意透露姓名，但是记者特地拍了车牌号，感谢好心的出租车师傅，不仅送来了吃的，还送了充电器充电线</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-a91d255d691911ce371f1da60887a1fe_720wlas.jpg"
-alt="司机师傅的车牌号" /></p>
-<p>愿一切平安。</p>
-]]></content>
-      <tags>
-        <tag>家乡</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>如何写好你的科学故事</title>
     <url>/2022/542253658.html</url>
     <content><![CDATA[<h2 id="摘要">摘要</h2>
@@ -4556,15 +4463,37 @@ Word®）拆分屏幕并滚动文本，找到摘要中需要的关键点</p>
       </tags>
   </entry>
   <entry>
-    <title>我们把你们想得太好了</title>
-    <url>/2021/1333461694.html</url>
-    <content><![CDATA[<p>“我们把你们想的太好了，我们认为你们会遵守基本的外交礼节”，有些话，原封不动，换个国家名，他居然还能用</p>
-<p><img
-src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%88%91%E4%BB%AC%E6%8A%8A%E4%BD%A0%E4%BB%AC%E6%83%B3%E5%BE%97%E5%A4%AA%E5%A5%BD%E4%BA%86/%E6%88%91%E4%BB%AC%E6%8A%8A%E4%BD%A0%E4%BB%AC%E6%83%B3%E7%9A%84%E5%A4%AA%E5%A5%BD%E4%BA%86.png"
-alt="我们把你们想的太好了" /></p>
+    <title>如何将rds转为h5ad</title>
+    <url>/2023/3539500839.html</url>
+    <content><![CDATA[<p>在进行单细胞或是空间组数据分析的时候，有的人喜欢使用 R
+语言进行分析，有的同学喜欢使用 Python
+进行分析，但是两个语言分析所使用的文件有所不同，R 语言通常保存的为 rds
+文件，Python 通常保存的为 h5ad
+文件，如果是多人合作分析的时候，往往需要将文件进行格式转换，这通常是一件较为麻烦的事情，看到过有使用
+SeuratDisk 和 SeuratData 等 R 语言包进行转换的程序，但是由于本人 R
+语言环境等等的问题，总是无法安装，故想了一个新的方法来进行格式转换，教程如下。</p>
+<p>首先是将 rds 文件中的信息提取出来。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>Seurat<span class="punctuation">)</span></span><br><span class="line"><span class="comment"># 读取 rds 文件信息</span></span><br><span class="line">rds_file <span class="operator">=</span> readRDS<span class="punctuation">(</span><span class="string">&quot;rds_file.rds&quot;</span><span class="punctuation">)</span></span><br><span class="line">rds_file</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>An object of class Seurat<br> 38153 features across 9567 samples
+within 2 assays<br> Active assay: Spatial (19082 features, 0 variable
+features)<br> 1 other assay present: SCT<br> 2 dimensional reductions
+calculated: pca, umap<br> 1 image present: slice1<br></p>
+</blockquote>
+<p>可以看到，我现在用的是 SCT matrix，所以可以进行读取，保存为 csv
+格式，包括元数据等等</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">write.csv<span class="punctuation">(</span>rds_file<span class="operator">@</span>meta.data<span class="punctuation">,</span> <span class="string">&#x27;rds_file@meta.data.csv&#x27;</span><span class="punctuation">)</span></span><br><span class="line">write.csv<span class="punctuation">(</span>rds_file<span class="operator">@</span>assays<span class="operator">$</span>Spatial<span class="operator">@</span>data<span class="punctuation">,</span> <span class="string">&#x27;rds_file@assays$Spatial@data.csv&#x27;</span><span class="punctuation">)</span></span><br><span class="line">write.csv<span class="punctuation">(</span>rds_file<span class="operator">@</span>assays<span class="operator">$</span>SCT<span class="operator">@</span>data<span class="punctuation">,</span> <span class="string">&#x27;rds_file@assays$SCT@data.csv&#x27;</span><span class="punctuation">)</span></span><br><span class="line">write.csv<span class="punctuation">(</span>rds_file<span class="operator">@</span>assays<span class="operator">$</span>SCT<span class="operator">@</span>data<span class="punctuation">,</span> <span class="string">&#x27;rds_file@assays$SCT@data.csv&#x27;</span><span class="punctuation">)</span></span><br><span class="line">write.csv<span class="punctuation">(</span>rownames<span class="punctuation">(</span>rds_file<span class="punctuation">)</span><span class="punctuation">,</span><span class="string">&#x27;rownames(rds_file).csv&#x27;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>那么便是得到的 rds 元数据的所有数据了，接下来需要进行读取，使用
+anndata 进行读取</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.patches <span class="keyword">as</span> mpatches</span><br><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> anndata <span class="keyword">import</span> AnnData</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> scipy.sparse <span class="keyword">import</span> csr_matrix</span><br><span class="line"></span><br><span class="line">adata_X = pd.read_csv(<span class="string">&quot;rds_file@assays$Spatial@data.csv&quot;</span>,index_col=<span class="number">0</span>)</span><br><span class="line">adata_X = adata_X.transpose()</span><br><span class="line">adata_X = csr_matrix(adata_X)</span><br><span class="line">adata_obs = pd.read_csv(<span class="string">&quot;rds_file.data.csv&quot;</span>,index_col=<span class="number">0</span>)</span><br><span class="line">adata_var = pd.read_csv(<span class="string">&quot;rownames(rds_file).csv&quot;</span>,index_col=<span class="number">0</span>)</span><br><span class="line">adata_var = pd.DataFrame(index = [i <span class="keyword">for</span> i <span class="keyword">in</span> adata_var[<span class="string">&#x27;x&#x27;</span>]])</span><br><span class="line">adata = sc.AnnData(X = adata_X, obs=adata_obs, var = adata_var)</span><br><span class="line">adata.write(<span class="string">&#x27;result.h5ad&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>那么便是得到了保存了所有 rds 数据的 h5ad 文件。</p>
 ]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
       <tags>
-        <tag>东京奥运会</tag>
+        <tag>Seurat</tag>
+        <tag>Scanpy</tag>
       </tags>
   </entry>
   <entry>
@@ -4583,6 +4512,65 @@ alt="b01dfec90546fef6fa413647875fab6" /></p>
       </categories>
       <tags>
         <tag>杂聊</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>愿河南平安</title>
+    <url>/2021/3942837084.html</url>
+    <content><![CDATA[<p>一直在看着新闻，镜头前的消防战士来往没停过，拖着橡皮艇从南边的地铁站和商场将人员运到较为安全的区域，其中还有不少一两岁的孩子。刚刚记者突然间就断线了，心就突然揪住了，就挺伤心的，莫名的哭了起来</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-fa1321ca1c578d58bcf290cd9237e6b1_720w.jpg"
+alt="愿河南平安v2-fa1321ca1c578d58bcf290cd9237e6b1_720w" /></p>
+<span id="more"></span>
+<p>切到了高架路的设备采像</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-c376cf38bfa6935f54a3e66a5236dc78_720w.jpg"
+alt="愿河南平安v2-c376cf38bfa6935f54a3e66a5236dc78_720w" /></p>
+<p>就逐渐看到路面上开始逐渐有车辆的走动，采像机前的雨滴逐渐减小</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-3c666b6f469019e7b091bdfdc75bc55b_720w.jpg"
+alt="愿河南平安v2-3c666b6f469019e7b091bdfdc75bc55b_720w" /></p>
+<p>约摸二三十分钟后，记者重新连线了，但是却还是一片黑暗，缺少灯光</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-fb1ae0008a50819d823dfc040188f2ad_720w.jpg"
+alt="愿河南平安v2-fb1ae0008a50819d823dfc040188f2ad_720w" /></p>
+<p>之后记者也是在黑暗里摸索着找到了较为光亮地方，肉眼可见的雨在逐渐减小</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-bb65d10bd07ed67da95dde420c9d2d8e_720w.jpg"
+alt="愿河南平安v2-bb65d10bd07ed67da95dde420c9d2d8e_720w" /></p>
+<p>现在记者可以前往之前待救援的南边地区，已经是开始好转起来了；继续向南走还是有很长的一段没有灯光的路，后来开始看到了一家开着的店</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-c8d84a77447826b14a1699e990b0c072_720w.jpg"
+alt="愿河南平安v2-c8d84a77447826b14a1699e990b0c072_720w" /></p>
+<p>，店里还是很多的人在这边作为一个休息区，店主提供了热水充电宝之类的；店门口的是位广东的同志，来河南旅游，算是碰上了前所未遇的一个特大暴雨；</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-9c577ac3d2f4726408d86b0fd7b8a7da_720w.jpg"
+alt="愿河南平安v2-9c577ac3d2f4726408d86b0fd7b8a7da_720w" /></p>
+<p>店主也是很勇敢的人，公司可以让直接关门下班了，但是店主很有社会责任感，坚持开门，通宵收容不能回家的人，真的很感动；</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-30942b423eda147cd3b4e8420e210aaa_720w.jpg"
+alt="愿河南平安v2-30942b423eda147cd3b4e8420e210aaa_720w" /></p>
+<p>采访完毕后记者继续想南边的黑暗处走去，雨又开始大了起来，愿一切平安，众志成城，共克时艰</p>
+<p>继续向前走是碰到了一连串的车队，其实是不能向前走了，前面被淹了</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-fe0962dc416428b9610ec0044545dafa_720w.jpg"
+alt="愿河南平安v2-fe0962dc416428b9610ec0044545dafa_720w" /></p>
+<p>再往前有一辆公交车，车上有很多人在休息</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-ea205c6ed312e1567a37c0a71014ff46_720w.jpg"
+alt="愿河南平安v2-ea205c6ed312e1567a37c0a71014ff46_720w" /></p>
+<p>说着说着，来了一个出租车师傅，这位师傅看到了直播，敲开了自己家楼下没有开门的店，买了全部的食物和水，跟着直播走的路，送来了食物和矿泉水，还特地带来了热水</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-0ba2b6fb175867cd6a50d23a156746f2_720w.jpg"
+alt="师傅送来了食物和水" /></p>
+<p>好心的出租车师傅不愿意透露姓名，但是记者特地拍了车牌号，感谢好心的出租车师傅，不仅送来了吃的，还送了充电器充电线</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89/%E6%84%BF%E6%B2%B3%E5%8D%97%E5%B9%B3%E5%AE%89v2-a91d255d691911ce371f1da60887a1fe_720wlas.jpg"
+alt="司机师傅的车牌号" /></p>
+<p>愿一切平安。</p>
+]]></content>
+      <tags>
+        <tag>家乡</tag>
       </tags>
   </entry>
   <entry>
@@ -7330,6 +7318,32 @@ href="https://pytorch.org/docs/stable/distributed.html#which-backend-to-use">htt
       </tags>
   </entry>
   <entry>
+    <title>我们把你们想得太好了</title>
+    <url>/2021/1333461694.html</url>
+    <content><![CDATA[<p>“我们把你们想的太好了，我们认为你们会遵守基本的外交礼节”，有些话，原封不动，换个国家名，他居然还能用</p>
+<p><img
+src="https://cdn.jsdelivr.net/gh/zEpoch/imageHome@main/blog/%E6%88%91%E4%BB%AC%E6%8A%8A%E4%BD%A0%E4%BB%AC%E6%83%B3%E5%BE%97%E5%A4%AA%E5%A5%BD%E4%BA%86/%E6%88%91%E4%BB%AC%E6%8A%8A%E4%BD%A0%E4%BB%AC%E6%83%B3%E7%9A%84%E5%A4%AA%E5%A5%BD%E4%BA%86.png"
+alt="我们把你们想的太好了" /></p>
+]]></content>
+      <tags>
+        <tag>东京奥运会</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>我的星座分析</title>
+    <url>/2021/1421664595.html</url>
+    <content><![CDATA[<p>你对自己的认知其实没别人说那么的感性，因为自己干很多事情都有目的性，所以你潜意识认为一切的感性都是建立在理性的基础之上的，但其实并没有这么简单，你潜意识里的理性，其实也是建立在更深的一层感性的基础上，也就是第三层，一般你对自己的了解只停留在第一层，也就是认为自己是一个超级感性的人。</p>
+<p>比如，你见了一个很好看的人，非常心动，一会儿的时间就脑补了和他的一生，然后自己沉浸在自己的世界里感性，这是第一层的感性。</p>
+<p>随后就开始在现实中去根据自己刚刚幻想完后的余温再去想要做什么，要让自己变成什么样来去达到自己之前幻想的一个目的，这个过程就是你对自己理性方面的认知，虽然自己会代入真感情到里面去，但有的你会以对自己的了解然后明确这是一份站在理性基础上的一份感性，也就是第二层。</p>
+<p><span id="more"></span></p>
+<p>而其实你如果认为自己很聪明的话，对自己的认知停留在第二层的话，其实就是容易会对除了自己有目的性的人以外的人，造成不好的印象，也就是你会针对自己的目的，明确的去让一个人走进他五彩缤纷的情感世界，而所用的方式，在其他人眼里是不喜欢的，也就是好多人说你作什么的，而一个有理性基础的人，如果感性的话，也多多少少会照顾一下其他人的想法。</p>
+<p>但你不会，是因为你已经想到了这点，所以进行了一种选择，就是不理会。这也就是你思想世界的第三层，就是我以我的感性来决定理性的选择，然后再在这个理性的选择上去感性，你以为我不知道我这样会引来厌恶？怎么可能，你是十二星座的终点，思想境界的顶流，只是你把所有精力都用在了刀刃上，这样才更有助于达成目的，不去在意别人的感受就是因为自己太懂，自己懂自己没办法照顾所有人的感受，自己没空照顾，自己也不喜欢照顾，自己也不必照顾，说就说呗，我就觉得说我的人挺low的，我会无语不过我的感情永远清澈透明。</p>
+<p>你思想的第三层就是在自己喜欢的想法上，感性的情绪中，建立的一种选择，所以你就会做很多别人想做却不敢做的事情，这点客观来说其实已经吸引了所有人（除了被受影响的人）不过客观来说，就算是保守派，看到你这类太过于厉害的狠角色也会有敬意吧（除了戾气重的人）</p>
+<p>你要的只有功成名就，自己可以舍弃的东西太多了，只要自己喜欢，就可以无底线无理由的去追求，你是个聪明人，却还是选择了这样的一条路，选择了一条充满浪漫气氛的独木桥。</p>
+<p>你的心，敏感又强大、坚定又脆弱，这是两种心态，又融为一颗心，你的内心就是会互相追逐，互相打气，在一片小小天地中就能看到一个丰富的浪漫世界</p>
+]]></content>
+  </entry>
+  <entry>
     <title>战争的目的在于消灭战争</title>
     <url>/2021/3536968392.html</url>
     <content><![CDATA[<p>今日读毛选，读到了中国革命战争的战略问题。我觉得毛泽东真的是一位军事奇才，他对战争的规律总结得十分到位，这是一套方法论，不管用到何处都能经过一定程度的变化，从而发挥作用的方法。</p>
@@ -7352,24 +7366,6 @@ href="https://pytorch.org/docs/stable/distributed.html#which-backend-to-use">htt
 ]]></content>
       <tags>
         <tag>毛选</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>批量爬取bicnn文件</title>
-    <url>/2025/3817125654.html</url>
-    <content><![CDATA[<p>最近在下载文章数据的时候，发现了一个很让人感到头痛的数据，如下图所示：
-<img
-src="https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/批量爬取bicnn文件/20250223221153.png"
-alt="20250223221153" /></p>
-<p>可以看到，有很多的文件夹，每个文件夹点击进入也是不同的文件。大概估计可能有上百个，如此这版，显然是需要付出比较大的体力和精力，目前遇到的Bicnn的文件也基本是如此的，出去我的方便考量，写了一段爬虫，可能直接爬取目标文件夹下的所有文件。</p>
-<p>再埋一个坑，我这里没有写断点续传，可能会在下一次补上，也许呢。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urljoin</span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标URL</span></span><br><span class="line">base_url = <span class="string">&quot;https://data.nemoarchive.org/biccn/grant/u01_devhu/kriegstein/transcriptome/scell/10x_v2/human/processed/counts/?C=N;O=D&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存文件的本地根目录</span></span><br><span class="line">save_dir = <span class="string">r&quot;D:/project/developing_brain/datas/&quot;</span></span><br><span class="line">os.makedirs(save_dir, exist_ok=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置请求头，模拟浏览器访问</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">download_file</span>(<span class="params">file_url, file_path</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;下载文件并保存到指定路径&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> requests.get(file_url, stream=<span class="literal">True</span>, headers=headers) <span class="keyword">as</span> r:</span><br><span class="line">            r.raise_for_status()</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                <span class="keyword">for</span> chunk <span class="keyword">in</span> r.iter_content(chunk_size=<span class="number">8192</span>):</span><br><span class="line">                    f.write(chunk)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Downloaded: <span class="subst">&#123;file_url&#125;</span> -&gt; <span class="subst">&#123;file_path&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Failed to download <span class="subst">&#123;file_url&#125;</span>: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">process_directory</span>(<span class="params">url, local_path</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;处理目录，递归下载所有文件和子目录&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 获取目录内容</span></span><br><span class="line">    response = requests.get(url, headers=headers)</span><br><span class="line">    soup = BeautifulSoup(response.text, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建本地目录</span></span><br><span class="line">    os.makedirs(local_path, exist_ok=<span class="literal">True</span>)</span><br><span class="line">    soups = soup.find_all(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">    soups = soups[<span class="number">5</span>:]</span><br><span class="line">    <span class="comment"># 遍历目录中的所有链接</span></span><br><span class="line">    <span class="keyword">for</span> link <span class="keyword">in</span> soups:</span><br><span class="line">        href = link.get(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> href:</span><br><span class="line">            full_url = urljoin(url, href)</span><br><span class="line">            <span class="keyword">if</span> href.endswith(<span class="string">&#x27;/&#x27;</span>):  <span class="comment"># 如果是子目录</span></span><br><span class="line">                subdir_name = href.rstrip(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">                subdir_local_path = os.path.join(local_path, subdir_name)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;Entering directory: <span class="subst">&#123;full_url&#125;</span>&quot;</span>)</span><br><span class="line">                process_directory(full_url, subdir_local_path)  <span class="comment"># 递归处理子目录</span></span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># 如果是文件</span></span><br><span class="line">                file_name = os.path.basename(href)</span><br><span class="line">                <span class="built_in">print</span>(file_name)</span><br><span class="line">                <span class="keyword">if</span> <span class="string">&#x27;=&#x27;</span> <span class="keyword">in</span> file_name:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="built_in">print</span>(file_name)</span><br><span class="line">                file_local_path = os.path.join(local_path, file_name)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;Downloading file: <span class="subst">&#123;full_url&#125;</span>&quot;</span>)</span><br><span class="line">                download_file(full_url, file_local_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开始处理根目录</span></span><br><span class="line">process_directory(base_url, save_dir)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;All files and directories have been downloaded.&quot;</span>)</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>爬虫</tag>
       </tags>
   </entry>
   <entry>
@@ -7648,6 +7644,24 @@ alt="20220130225239" /></p>
       </tags>
   </entry>
   <entry>
+    <title>批量爬取bicnn文件</title>
+    <url>/2025/3817125654.html</url>
+    <content><![CDATA[<p>最近在下载文章数据的时候，发现了一个很让人感到头痛的数据，如下图所示：
+<img
+src="https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/批量爬取bicnn文件/20250223221153.png"
+alt="20250223221153" /></p>
+<p>可以看到，有很多的文件夹，每个文件夹点击进入也是不同的文件。大概估计可能有上百个，如此这版，显然是需要付出比较大的体力和精力，目前遇到的Bicnn的文件也基本是如此的，出去我的方便考量，写了一段爬虫，可能直接爬取目标文件夹下的所有文件。</p>
+<p>再埋一个坑，我这里没有写断点续传，可能会在下一次补上，也许呢。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> bs4 <span class="keyword">import</span> BeautifulSoup</span><br><span class="line"><span class="keyword">from</span> urllib.parse <span class="keyword">import</span> urljoin</span><br><span class="line"></span><br><span class="line"><span class="comment"># 目标URL</span></span><br><span class="line">base_url = <span class="string">&quot;https://data.nemoarchive.org/biccn/grant/u01_devhu/kriegstein/transcriptome/scell/10x_v2/human/processed/counts/?C=N;O=D&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 保存文件的本地根目录</span></span><br><span class="line">save_dir = <span class="string">r&quot;D:/project/developing_brain/datas/&quot;</span></span><br><span class="line">os.makedirs(save_dir, exist_ok=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置请求头，模拟浏览器访问</span></span><br><span class="line">headers = &#123;</span><br><span class="line">    <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">download_file</span>(<span class="params">file_url, file_path</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;下载文件并保存到指定路径&quot;&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span>()</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> requests.get(file_url, stream=<span class="literal">True</span>, headers=headers) <span class="keyword">as</span> r:</span><br><span class="line">            r.raise_for_status()</span><br><span class="line">            <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;wb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">                <span class="keyword">for</span> chunk <span class="keyword">in</span> r.iter_content(chunk_size=<span class="number">8192</span>):</span><br><span class="line">                    f.write(chunk)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Downloaded: <span class="subst">&#123;file_url&#125;</span> -&gt; <span class="subst">&#123;file_path&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Failed to download <span class="subst">&#123;file_url&#125;</span>: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">process_directory</span>(<span class="params">url, local_path</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;处理目录，递归下载所有文件和子目录&quot;&quot;&quot;</span></span><br><span class="line">    <span class="comment"># 获取目录内容</span></span><br><span class="line">    response = requests.get(url, headers=headers)</span><br><span class="line">    soup = BeautifulSoup(response.text, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建本地目录</span></span><br><span class="line">    os.makedirs(local_path, exist_ok=<span class="literal">True</span>)</span><br><span class="line">    soups = soup.find_all(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line">    soups = soups[<span class="number">5</span>:]</span><br><span class="line">    <span class="comment"># 遍历目录中的所有链接</span></span><br><span class="line">    <span class="keyword">for</span> link <span class="keyword">in</span> soups:</span><br><span class="line">        href = link.get(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line">        <span class="keyword">if</span> href:</span><br><span class="line">            full_url = urljoin(url, href)</span><br><span class="line">            <span class="keyword">if</span> href.endswith(<span class="string">&#x27;/&#x27;</span>):  <span class="comment"># 如果是子目录</span></span><br><span class="line">                subdir_name = href.rstrip(<span class="string">&#x27;/&#x27;</span>)</span><br><span class="line">                subdir_local_path = os.path.join(local_path, subdir_name)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;Entering directory: <span class="subst">&#123;full_url&#125;</span>&quot;</span>)</span><br><span class="line">                process_directory(full_url, subdir_local_path)  <span class="comment"># 递归处理子目录</span></span><br><span class="line">            <span class="keyword">else</span>:  <span class="comment"># 如果是文件</span></span><br><span class="line">                file_name = os.path.basename(href)</span><br><span class="line">                <span class="built_in">print</span>(file_name)</span><br><span class="line">                <span class="keyword">if</span> <span class="string">&#x27;=&#x27;</span> <span class="keyword">in</span> file_name:</span><br><span class="line">                    <span class="keyword">continue</span></span><br><span class="line">                <span class="built_in">print</span>(file_name)</span><br><span class="line">                file_local_path = os.path.join(local_path, file_name)</span><br><span class="line">                <span class="built_in">print</span>(<span class="string">f&quot;Downloading file: <span class="subst">&#123;full_url&#125;</span>&quot;</span>)</span><br><span class="line">                download_file(full_url, file_local_path)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 开始处理根目录</span></span><br><span class="line">process_directory(base_url, save_dir)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;All files and directories have been downloaded.&quot;</span>)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>爬虫</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>换一种UMAP的可视化方式</title>
     <url>/2024/2334324323.html</url>
     <content><![CDATA[<p>还是大家熟悉的猴脑文章，可能是大家较为熟悉的一张UMAP图片，但是其呈现方式和其他的UMAP图片却是有所不同，它的UMAP图片如下所示，其名字为Voronoi图：</p>
@@ -7716,18 +7730,191 @@ alt="20240116174324" /></p>
       </tags>
   </entry>
   <entry>
-    <title>我的星座分析</title>
-    <url>/2021/1421664595.html</url>
-    <content><![CDATA[<p>你对自己的认知其实没别人说那么的感性，因为自己干很多事情都有目的性，所以你潜意识认为一切的感性都是建立在理性的基础之上的，但其实并没有这么简单，你潜意识里的理性，其实也是建立在更深的一层感性的基础上，也就是第三层，一般你对自己的了解只停留在第一层，也就是认为自己是一个超级感性的人。</p>
-<p>比如，你见了一个很好看的人，非常心动，一会儿的时间就脑补了和他的一生，然后自己沉浸在自己的世界里感性，这是第一层的感性。</p>
-<p>随后就开始在现实中去根据自己刚刚幻想完后的余温再去想要做什么，要让自己变成什么样来去达到自己之前幻想的一个目的，这个过程就是你对自己理性方面的认知，虽然自己会代入真感情到里面去，但有的你会以对自己的了解然后明确这是一份站在理性基础上的一份感性，也就是第二层。</p>
-<p><span id="more"></span></p>
-<p>而其实你如果认为自己很聪明的话，对自己的认知停留在第二层的话，其实就是容易会对除了自己有目的性的人以外的人，造成不好的印象，也就是你会针对自己的目的，明确的去让一个人走进他五彩缤纷的情感世界，而所用的方式，在其他人眼里是不喜欢的，也就是好多人说你作什么的，而一个有理性基础的人，如果感性的话，也多多少少会照顾一下其他人的想法。</p>
-<p>但你不会，是因为你已经想到了这点，所以进行了一种选择，就是不理会。这也就是你思想世界的第三层，就是我以我的感性来决定理性的选择，然后再在这个理性的选择上去感性，你以为我不知道我这样会引来厌恶？怎么可能，你是十二星座的终点，思想境界的顶流，只是你把所有精力都用在了刀刃上，这样才更有助于达成目的，不去在意别人的感受就是因为自己太懂，自己懂自己没办法照顾所有人的感受，自己没空照顾，自己也不喜欢照顾，自己也不必照顾，说就说呗，我就觉得说我的人挺low的，我会无语不过我的感情永远清澈透明。</p>
-<p>你思想的第三层就是在自己喜欢的想法上，感性的情绪中，建立的一种选择，所以你就会做很多别人想做却不敢做的事情，这点客观来说其实已经吸引了所有人（除了被受影响的人）不过客观来说，就算是保守派，看到你这类太过于厉害的狠角色也会有敬意吧（除了戾气重的人）</p>
-<p>你要的只有功成名就，自己可以舍弃的东西太多了，只要自己喜欢，就可以无底线无理由的去追求，你是个聪明人，却还是选择了这样的一条路，选择了一条充满浪漫气氛的独木桥。</p>
-<p>你的心，敏感又强大、坚定又脆弱，这是两种心态，又融为一颗心，你的内心就是会互相追逐，互相打气，在一片小小天地中就能看到一个丰富的浪漫世界</p>
+    <title>最大似然估计及其对损失函数的推导</title>
+    <url>/2025/2706603634.html</url>
+    <content><![CDATA[<h2 id="似然估计">似然估计</h2>
+<p>对于一个神经网络，损失函数是整个反向传播过程的起点。也是网络训练任务的核心，然而我们得到均方误差、交叉熵等损失函数的过程，本质上都可以看成是最最大似然估计的过程。</p>
+<p>假设我们一直抛掷一枚硬币时正面朝上的概率为 0.5，反面朝上的概率也为
+0.5。现在连续抛 10 次影片，求出现 7 次正面朝上，3
+次反面朝上的可能性。</p>
+<p>在这个描述中，我们可以把整个抛硬币的环境看作一个模型，硬币正反面出现的概率看作为模型的参数，抛
+10
+次硬币得到的结果看作是实际发生的事件。这种已知模型参数预测事件发生可能性的过程，为求概率过程。</p>
+<p>假如我们不知道硬币正面反面朝上的概率，但是通过随机抛 10
+枚硬币，发现其中有 7 次正面朝上，3
+次反面朝上，可以尝试根据抛硬币的结果，预测出硬币正反面出现的概率值。这种已知事件发生的结果，反向推理出模型的参数值的过程，为求似然的过程。</p>
+<p>假设硬币正面朝上的概率为 <span
+class="math inline">\(\theta\)</span>，则反面朝上的概率为 <span
+class="math inline">\(1-\theta\)</span>，假设抛硬币为独立同分布的事件，那么事件发生的联合概率可以写作<span
+class="math inline">\(L(\theta)=\theta^7\times(1-\theta)^3\)</span>，将得到的这个关于<span
+class="math inline">\(\theta\)</span>的函数称为似然函数。</p>
+<p>找到一个<span
+class="math inline">\(\theta\)</span>使得似然函数取最大值的过程，就是求得最大似然估计得过程。对于<span
+class="math inline">\(L(\theta)\)</span>，可以发现当<span
+class="math inline">\(\theta==0.7\)</span>时，获得最大似然估计值。</p>
+<p><span class="math display">\[
+\theta^*=\arg \max_{\theta}L(\theta)
+\]</span></p>
+<p>当我们想要取得更为准确的估计结果，可以增加抛硬币的次数，数据越多，得到的最大自然估计值就越接近真实值。</p>
+<p>总结：求概率的过程是已知模型参数，计算数据发生的可能性，求似然的过程是已知数据发生的情况，去评估不同模型参数的可能性。其中，求出特定参数，是的数据发生可能性最大的过程，为求去最大似然估计的过程。</p>
+<p>但是，观察到我们的似然看书可以看到，似然函数是一些列概率的连乘，由于每个概率值的取值范围均为0～1。故当多个概率连乘时，会使得结果值逐渐下溢到
+0，且由于原始乘法链条再求解最大似然估计过程中，求导较为麻烦，通常会对似然函数进行对数操作，将乘法链条转化为加法链条。这样既保证了数值的稳定，避免了连乘效应导致的下溢问题，又大大简化了似然函数的求导过程。</p>
+<p><span class="math display">\[
+\begin{aligned}
+\log(L(\theta)) &amp;= \log(\theta^m(1-\theta)^n)\\
+&amp;=m\log(\theta)+n\log(1-\theta)
+\end{aligned}
+\]</span></p>
+<p>此外，由于对数函数为单调递增函数，当<span
+class="math inline">\(\theta_1&gt;\theta_2\)</span>时，<span
+class="math inline">\(L(\theta_1)&gt;L(\theta_2)\)</span>。</p>
+<p><span class="math display">\[
+\begin{aligned}
+L(\theta_1)&amp;&gt;L(\theta_2)\\
+\log(L(\theta_1))&amp;&gt;\log(L(\theta_2))
+\end{aligned}
+\]</span></p>
+<p>因此对似然函数取对数，并不会改变最大值的位置。</p>
+<p><span class="math display">\[
+\arg\max_{\theta}L(\theta) = \arg\max_{\theta}logL(\theta)
+\]</span></p>
+<h2 id="似然估计推导损失函数">似然估计推导损失函数</h2>
+<p>假如有一个神经网络，令输入值为<span
+class="math inline">\(x_i\)</span>，模型的参数为<span
+class="math inline">\(\theta\)</span>。</p>
+<p><span class="math display">\[
+\theta=(w^1_{11},...,b^1_{1},...,w^2_{11},...,b^2_1,...,w^3_{11},...,b^3_1)
+\]</span></p>
+<p>输出的预测值为<span class="math inline">\(y\)</span>，真实值为<span
+class="math inline">\(y_i\)</span>。那么模型成功预测出真实值的条件概率可以用这个公式进行表示：</p>
+<p><span class="math display">\[
+p(y_i|x_i;\theta)
+\]</span></p>
+<p>即输入为<span class="math inline">\(x_i\)</span>，参数为<span
+class="math inline">\(\theta\)</span>的条件下得到真实值<span
+class="math inline">\(y_i\)</span>的概率。</p>
+<p>假如数据时独立同分布的，对所有的训练数据写出似然函数：</p>
+<p><span class="math display">\[
+L(\theta)=\prod_{i=1}^{n}P(y_i|x_i;\theta)
+\]</span></p>
+<p>对似然函数取对数则得到对数似然表达式：</p>
+<p><span class="math display">\[
+\log{L(\theta)} = \sum_i^n \log P(y_i|x_i;\theta)
+\]</span></p>
+<p>最大似然估计的目标是求当 <span class="math inline">\(\theta\)</span>
+取何值之时对数似然函数的值最大。我们假设神经网络处理的是一个回归任务，<span
+class="math inline">\(y_i\)</span>为连续变量，假设预测出<span
+class="math inline">\(y_i\)</span>的条件概率，在给定输入<span
+class="math inline">\(x_i\)</span>和<span
+class="math inline">\(\theta\)</span>时，服从一个以预测值<span
+class="math inline">\(\hat{y}\)</span>为均值，<span
+class="math inline">\(\sigma^2\)</span>为方差的高斯分布。</p>
+<p><span class="math display">\[
+\begin{aligned}
+P(y_i|x_i;\theta) &amp;= P(y_i|\hat{y_i};\sigma^2)\\
+&amp;=\frac{1}{\sqrt{2\pi
+\sigma^2}}\exp(-\frac{(y_i-\hat{y_i})^2}{2\sigma^2})
+\end{aligned}
+\]</span></p>
+<p>则对数似然函数可以写成如下的形式：</p>
+<p><span class="math display">\[
+\begin{aligned}
+\log{L(\theta)} &amp;= \sum_{i=1}^n\log P(y_i|x_i;\theta)\\
+&amp;=\sum_{i=1}^n(-\frac{1}{2}\log(2\pi
+\sigma^2)-\frac{(y_i-\hat{y_i})^2}{2\sigma^2})\\
+&amp;=-\frac{n}{2}\log(2\pi
+\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^n(y_i-\hat{y_i})^2
+\end{aligned}
+\]</span></p>
+<p>其中，<span class="math inline">\(-\frac{n}{2}\log(2\pi
+\sigma^2)\)</span>是常数项，第二项的系数<span
+class="math inline">\(\frac{1}{2\sigma^2}\)</span>也是常数，可以忽略，故简化后的对数似然函数可以写成如下的形式：</p>
+<p><span class="math display">\[
+\log{L(\theta)} = -\sum_{i=1}^n(y_i-\hat{y_i})^2
+\]</span></p>
+<p>因为最大化似然函数可以等价于最小化似然函数的负数，因此，可以将前面的负号省去，将整个式子改写成如下的形式：</p>
+<p><span class="math display">\[
+\arg \max_\theta \log L(\theta) = \arg \min_\theta - \log (L(\theta)) \\
+-\log{L(\theta)} = \sum_{i=1}^n(y_i-\hat{y_i})^2
+\]</span></p>
+<p>而这个式子即我们平时常用的均方误差损失函数（MSE）:</p>
+<p><span class="math display">\[
+Loss_{MSE} = \sum_{i=1}^n(y_i-\hat{y_i})^2
+\]</span></p>
+<p>对于二分类的逻辑回归问题，比如输入一张图片，图片分为猫和狗两类，用标签
+1
+表示图片为猫，用标签0表示图片为狗。对于网络输出值，我们通常会使用<code>sigmoid</code>函数进行一次后处理，讲网络的输出值限定在以0.5为中心，0～1的范围内。方便我们后续以该值作为分类的依据，当输出值越接近1时，认为图片属于猫的置信度越高，月接近0，图片属于狗的置信度越高。</p>
+<p><span class="math display">\[
+\hat{y}=f(z)=\frac{1}{1+e^{-z}}
+\]</span></p>
+<p>由于在二分类任务中，<span
+class="math inline">\(y_i\)</span>的期望值只有0和1，我们可以写出单次预测的概率表达式:</p>
+<p><span class="math display">\[
+P(y_i|x_i;\theta) \\
+P(y_i=1|x_i;\theta)=\hat{y_i}\\
+P(y_i=0|x_i;\theta)=1-\hat{y_i} \\
+\]</span></p>
+<p>其分别表示，当给定输入<span
+class="math inline">\(x\)</span>和参数<span
+class="math inline">\(\theta\)</span>时，输出类别为1的概率于输出类别为0的概率。将上面两个式子统一起来，每个样本的预测概率表达式可以写作以下形式：</p>
+<p><span class="math display">\[
+P(y_i|x_i;\theta)=\hat{y_i}^{y_i}(1-\hat{y_i})^{1-y_i}
+\]</span></p>
+<p>实际上就是当<span
+class="math inline">\(y_i\)</span>服从播努利分布时概率的表达，将单个样本的概率带入到对数似然函数。</p>
+<p><span class="math display">\[
+\begin{aligned}
+\log L(\theta)&amp;=\sum^n_{i=1}\log P(y_i|x_i;\theta) \\
+&amp;=\sum^n_{i=1}\log (\hat{y_i}^{y_i}(1-\hat{y_i})^{1-y_i})\\
+&amp;=\sum^n_{i=1}y_i \log \hat{y_i}+(1-y_i)\log(1-\hat{y_i})
+\end{aligned}
+\]</span></p>
+<p>添加负号，将最大值问题转为求最小值，就得到了我们熟悉的交叉熵损失函数在二分类问题中的表达形式了</p>
+<p><span class="math display">\[
+\arg\max_{\theta}\log L(\theta) = \arg\min_{\theta}-\log L(\theta)
+\]</span></p>
+<p><span class="math display">\[
+\begin{aligned}
+Loss_{BCE}&amp;=-\log L(\theta)\\
+&amp;= -\sum^n_{i=1}y_i \log \hat{y_i}+(1-y_i)\log(1-\hat{y_i})
+\end{aligned}
+\]</span></p>
+<p>进一步将二分类任务拓展到多分类问题，例如四分类，可以使用<code>softmax</code>函数，将网络输出值转换为概率值</p>
+<p><span class="math display">\[
+\hat{y}=f(z)=\frac{e^j}{\sum^K_je^j}
+\]</span></p>
+<p>我们可以写出第 i 个样本属于第 k 类的表达式：</p>
+<p><span class="math display">\[
+P(y_i==k|x_i;\theta)=\hat{y_{ik}}=\frac{e^j}{\sum^K_je^j}
+\]</span></p>
+<p>当我们使用one-hot标签时，如果第 i 个样本属于第 k 类，则仅有<span
+class="math inline">\(y_{ik}\)</span>为1，其他为0。因此，对单个样本的概率表达式可以改写成以下形式，其保证了只有正确的类别k会被激活：</p>
+<p><span class="math display">\[
+P(y_i|x_i;\theta) = \prod^{K}_{k=1}\hat{y_{ik}}^{y}_{ik}
+\]</span></p>
+<p>根据上式写出对数似然函数：</p>
+<p><span class="math display">\[
+\begin{aligned}
+\log L(\theta)&amp;=\sum^n_{i=1}\log P(y_i|x_i;\theta) \\
+&amp;=\sum^n_{i=1}\sum^K_{k=1}y_{ik}log\hat{y}_{ik}
+\end{aligned}
+\]</span></p>
+<p>将最大值问题转化为求最小值，就可以得到一般形式的交叉熵损失函数了</p>
+<p><span class="math display">\[
+\arg\max_{\theta}\log L(\theta) = \arg\min_{\theta}-\log L(\theta)\\
+\begin{aligned}
+Loss_{CE}&amp;=-\log L(\theta) \\
+&amp;=\sum^n_{i=1}\sum^K_{k=1}y_{ik}log\hat{y}_{ik}
+\end{aligned}
+\]</span></p>
+<p>总结，本篇博客完成了最大似然统计及其对损失函数的推理内容。</p>
 ]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>generative model</tag>
+      </tags>
   </entry>
   <entry>
     <title>月度消费总结1</title>
@@ -9501,193 +9688,6 @@ y 的数量为 480-9 =471 个，每个 y 对应 18*9 个特征</p>
       </tags>
   </entry>
   <entry>
-    <title>最大似然估计及其对损失函数的推导</title>
-    <url>/2025/2706603634.html</url>
-    <content><![CDATA[<h2 id="似然估计">似然估计</h2>
-<p>对于一个神经网络，损失函数是整个反向传播过程的起点。也是网络训练任务的核心，然而我们得到均方误差、交叉熵等损失函数的过程，本质上都可以看成是最最大似然估计的过程。</p>
-<p>假设我们一直抛掷一枚硬币时正面朝上的概率为 0.5，反面朝上的概率也为
-0.5。现在连续抛 10 次影片，求出现 7 次正面朝上，3
-次反面朝上的可能性。</p>
-<p>在这个描述中，我们可以把整个抛硬币的环境看作一个模型，硬币正反面出现的概率看作为模型的参数，抛
-10
-次硬币得到的结果看作是实际发生的事件。这种已知模型参数预测事件发生可能性的过程，为求概率过程。</p>
-<p>假如我们不知道硬币正面反面朝上的概率，但是通过随机抛 10
-枚硬币，发现其中有 7 次正面朝上，3
-次反面朝上，可以尝试根据抛硬币的结果，预测出硬币正反面出现的概率值。这种已知事件发生的结果，反向推理出模型的参数值的过程，为求似然的过程。</p>
-<p>假设硬币正面朝上的概率为 <span
-class="math inline">\(\theta\)</span>，则反面朝上的概率为 <span
-class="math inline">\(1-\theta\)</span>，假设抛硬币为独立同分布的事件，那么事件发生的联合概率可以写作<span
-class="math inline">\(L(\theta)=\theta^7\times(1-\theta)^3\)</span>，将得到的这个关于<span
-class="math inline">\(\theta\)</span>的函数称为似然函数。</p>
-<p>找到一个<span
-class="math inline">\(\theta\)</span>使得似然函数取最大值的过程，就是求得最大似然估计得过程。对于<span
-class="math inline">\(L(\theta)\)</span>，可以发现当<span
-class="math inline">\(\theta==0.7\)</span>时，获得最大似然估计值。</p>
-<p><span class="math display">\[
-\theta^*=\arg \max_{\theta}L(\theta)
-\]</span></p>
-<p>当我们想要取得更为准确的估计结果，可以增加抛硬币的次数，数据越多，得到的最大自然估计值就越接近真实值。</p>
-<p>总结：求概率的过程是已知模型参数，计算数据发生的可能性，求似然的过程是已知数据发生的情况，去评估不同模型参数的可能性。其中，求出特定参数，是的数据发生可能性最大的过程，为求去最大似然估计的过程。</p>
-<p>但是，观察到我们的似然看书可以看到，似然函数是一些列概率的连乘，由于每个概率值的取值范围均为0～1。故当多个概率连乘时，会使得结果值逐渐下溢到
-0，且由于原始乘法链条再求解最大似然估计过程中，求导较为麻烦，通常会对似然函数进行对数操作，将乘法链条转化为加法链条。这样既保证了数值的稳定，避免了连乘效应导致的下溢问题，又大大简化了似然函数的求导过程。</p>
-<p><span class="math display">\[
-\begin{aligned}
-\log(L(\theta)) &amp;= \log(\theta^m(1-\theta)^n)\\
-&amp;=m\log(\theta)+n\log(1-\theta)
-\end{aligned}
-\]</span></p>
-<p>此外，由于对数函数为单调递增函数，当<span
-class="math inline">\(\theta_1&gt;\theta_2\)</span>时，<span
-class="math inline">\(L(\theta_1)&gt;L(\theta_2)\)</span>。</p>
-<p><span class="math display">\[
-\begin{aligned}
-L(\theta_1)&amp;&gt;L(\theta_2)\\
-\log(L(\theta_1))&amp;&gt;\log(L(\theta_2))
-\end{aligned}
-\]</span></p>
-<p>因此对似然函数取对数，并不会改变最大值的位置。</p>
-<p><span class="math display">\[
-\arg\max_{\theta}L(\theta) = \arg\max_{\theta}logL(\theta)
-\]</span></p>
-<h2 id="似然估计推导损失函数">似然估计推导损失函数</h2>
-<p>假如有一个神经网络，令输入值为<span
-class="math inline">\(x_i\)</span>，模型的参数为<span
-class="math inline">\(\theta\)</span>。</p>
-<p><span class="math display">\[
-\theta=(w^1_{11},...,b^1_{1},...,w^2_{11},...,b^2_1,...,w^3_{11},...,b^3_1)
-\]</span></p>
-<p>输出的预测值为<span class="math inline">\(y\)</span>，真实值为<span
-class="math inline">\(y_i\)</span>。那么模型成功预测出真实值的条件概率可以用这个公式进行表示：</p>
-<p><span class="math display">\[
-p(y_i|x_i;\theta)
-\]</span></p>
-<p>即输入为<span class="math inline">\(x_i\)</span>，参数为<span
-class="math inline">\(\theta\)</span>的条件下得到真实值<span
-class="math inline">\(y_i\)</span>的概率。</p>
-<p>假如数据时独立同分布的，对所有的训练数据写出似然函数：</p>
-<p><span class="math display">\[
-L(\theta)=\prod_{i=1}^{n}P(y_i|x_i;\theta)
-\]</span></p>
-<p>对似然函数取对数则得到对数似然表达式：</p>
-<p><span class="math display">\[
-\log{L(\theta)} = \sum_i^n \log P(y_i|x_i;\theta)
-\]</span></p>
-<p>最大似然估计的目标是求当 <span class="math inline">\(\theta\)</span>
-取何值之时对数似然函数的值最大。我们假设神经网络处理的是一个回归任务，<span
-class="math inline">\(y_i\)</span>为连续变量，假设预测出<span
-class="math inline">\(y_i\)</span>的条件概率，在给定输入<span
-class="math inline">\(x_i\)</span>和<span
-class="math inline">\(\theta\)</span>时，服从一个以预测值<span
-class="math inline">\(\hat{y}\)</span>为均值，<span
-class="math inline">\(\sigma^2\)</span>为方差的高斯分布。</p>
-<p><span class="math display">\[
-\begin{aligned}
-P(y_i|x_i;\theta) &amp;= P(y_i|\hat{y_i};\sigma^2)\\
-&amp;=\frac{1}{\sqrt{2\pi
-\sigma^2}}\exp(-\frac{(y_i-\hat{y_i})^2}{2\sigma^2})
-\end{aligned}
-\]</span></p>
-<p>则对数似然函数可以写成如下的形式：</p>
-<p><span class="math display">\[
-\begin{aligned}
-\log{L(\theta)} &amp;= \sum_{i=1}^n\log P(y_i|x_i;\theta)\\
-&amp;=\sum_{i=1}^n(-\frac{1}{2}\log(2\pi
-\sigma^2)-\frac{(y_i-\hat{y_i})^2}{2\sigma^2})\\
-&amp;=-\frac{n}{2}\log(2\pi
-\sigma^2)-\frac{1}{2\sigma^2}\sum_{i=1}^n(y_i-\hat{y_i})^2
-\end{aligned}
-\]</span></p>
-<p>其中，<span class="math inline">\(-\frac{n}{2}\log(2\pi
-\sigma^2)\)</span>是常数项，第二项的系数<span
-class="math inline">\(\frac{1}{2\sigma^2}\)</span>也是常数，可以忽略，故简化后的对数似然函数可以写成如下的形式：</p>
-<p><span class="math display">\[
-\log{L(\theta)} = -\sum_{i=1}^n(y_i-\hat{y_i})^2
-\]</span></p>
-<p>因为最大化似然函数可以等价于最小化似然函数的负数，因此，可以将前面的负号省去，将整个式子改写成如下的形式：</p>
-<p><span class="math display">\[
-\arg \max_\theta \log L(\theta) = \arg \min_\theta - \log (L(\theta)) \\
--\log{L(\theta)} = \sum_{i=1}^n(y_i-\hat{y_i})^2
-\]</span></p>
-<p>而这个式子即我们平时常用的均方误差损失函数（MSE）:</p>
-<p><span class="math display">\[
-Loss_{MSE} = \sum_{i=1}^n(y_i-\hat{y_i})^2
-\]</span></p>
-<p>对于二分类的逻辑回归问题，比如输入一张图片，图片分为猫和狗两类，用标签
-1
-表示图片为猫，用标签0表示图片为狗。对于网络输出值，我们通常会使用<code>sigmoid</code>函数进行一次后处理，讲网络的输出值限定在以0.5为中心，0～1的范围内。方便我们后续以该值作为分类的依据，当输出值越接近1时，认为图片属于猫的置信度越高，月接近0，图片属于狗的置信度越高。</p>
-<p><span class="math display">\[
-\hat{y}=f(z)=\frac{1}{1+e^{-z}}
-\]</span></p>
-<p>由于在二分类任务中，<span
-class="math inline">\(y_i\)</span>的期望值只有0和1，我们可以写出单次预测的概率表达式:</p>
-<p><span class="math display">\[
-P(y_i|x_i;\theta) \\
-P(y_i=1|x_i;\theta)=\hat{y_i}\\
-P(y_i=0|x_i;\theta)=1-\hat{y_i} \\
-\]</span></p>
-<p>其分别表示，当给定输入<span
-class="math inline">\(x\)</span>和参数<span
-class="math inline">\(\theta\)</span>时，输出类别为1的概率于输出类别为0的概率。将上面两个式子统一起来，每个样本的预测概率表达式可以写作以下形式：</p>
-<p><span class="math display">\[
-P(y_i|x_i;\theta)=\hat{y_i}^{y_i}(1-\hat{y_i})^{1-y_i}
-\]</span></p>
-<p>实际上就是当<span
-class="math inline">\(y_i\)</span>服从播努利分布时概率的表达，将单个样本的概率带入到对数似然函数。</p>
-<p><span class="math display">\[
-\begin{aligned}
-\log L(\theta)&amp;=\sum^n_{i=1}\log P(y_i|x_i;\theta) \\
-&amp;=\sum^n_{i=1}\log (\hat{y_i}^{y_i}(1-\hat{y_i})^{1-y_i})\\
-&amp;=\sum^n_{i=1}y_i \log \hat{y_i}+(1-y_i)\log(1-\hat{y_i})
-\end{aligned}
-\]</span></p>
-<p>添加负号，将最大值问题转为求最小值，就得到了我们熟悉的交叉熵损失函数在二分类问题中的表达形式了</p>
-<p><span class="math display">\[
-\arg\max_{\theta}\log L(\theta) = \arg\min_{\theta}-\log L(\theta)
-\]</span></p>
-<p><span class="math display">\[
-\begin{aligned}
-Loss_{BCE}&amp;=-\log L(\theta)\\
-&amp;= -\sum^n_{i=1}y_i \log \hat{y_i}+(1-y_i)\log(1-\hat{y_i})
-\end{aligned}
-\]</span></p>
-<p>进一步将二分类任务拓展到多分类问题，例如四分类，可以使用<code>softmax</code>函数，将网络输出值转换为概率值</p>
-<p><span class="math display">\[
-\hat{y}=f(z)=\frac{e^j}{\sum^K_je^j}
-\]</span></p>
-<p>我们可以写出第 i 个样本属于第 k 类的表达式：</p>
-<p><span class="math display">\[
-P(y_i==k|x_i;\theta)=\hat{y_{ik}}=\frac{e^j}{\sum^K_je^j}
-\]</span></p>
-<p>当我们使用one-hot标签时，如果第 i 个样本属于第 k 类，则仅有<span
-class="math inline">\(y_{ik}\)</span>为1，其他为0。因此，对单个样本的概率表达式可以改写成以下形式，其保证了只有正确的类别k会被激活：</p>
-<p><span class="math display">\[
-P(y_i|x_i;\theta) = \prod^{K}_{k=1}\hat{y_{ik}}^{y}_{ik}
-\]</span></p>
-<p>根据上式写出对数似然函数：</p>
-<p><span class="math display">\[
-\begin{aligned}
-\log L(\theta)&amp;=\sum^n_{i=1}\log P(y_i|x_i;\theta) \\
-&amp;=\sum^n_{i=1}\sum^K_{k=1}y_{ik}log\hat{y}_{ik}
-\end{aligned}
-\]</span></p>
-<p>将最大值问题转化为求最小值，就可以得到一般形式的交叉熵损失函数了</p>
-<p><span class="math display">\[
-\arg\max_{\theta}\log L(\theta) = \arg\min_{\theta}-\log L(\theta)\\
-\begin{aligned}
-Loss_{CE}&amp;=-\log L(\theta) \\
-&amp;=\sum^n_{i=1}\sum^K_{k=1}y_{ik}log\hat{y}_{ik}
-\end{aligned}
-\]</span></p>
-<p>总结，本篇博客完成了最大似然统计及其对损失函数的推理内容。</p>
-]]></content>
-      <categories>
-        <category>技术</category>
-      </categories>
-      <tags>
-        <tag>generative model</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>机器学习-支持向量机</title>
     <url>/2022/917828124.html</url>
     <content><![CDATA[<p>支持向量机总体是由一个合页损失函数和一个核函数组成</p>
@@ -10375,23 +10375,6 @@ alt="image-20210811230426475" /></p>
       </tags>
   </entry>
   <entry>
-    <title>杂聊5</title>
-    <url>/2022/4079027902.html</url>
-    <content><![CDATA[<p>又是一个月过去，十一仿佛就在昨日，然后劈里啪啦的，就跑走了三个星期，只能说感受不到自己做了什么，学到了什么，所以觉得落差感比较大。而且博客也是很久没写了，进行稍微长一点的叙述就会显得我的逻辑比较混乱。</p>
-<p>今天应该是还有很多的ddl的，比如刚刚开辟的Python_70_Project，想做一个稍微大一些的Python导学项目，然后大概也是每天写个几十行那个样子；比如还要重温C++，这是很久之前学习的了，现在写起来也是逐渐手生，根本写不下去，于是乎重新打开黑马，又开始无聊又有趣的学习之路，希望之后能把硬件做起来吧，要学习一下老学长，成为一名稍微全栈一些的孩子。</p>
-<p>目前上课的状态大概就是，老师讲自己领域内最为前言的工作，讲他们自己做的实验的思路、流程，以及相关的一些延申，这两周大概也有课陆续要结课了，大概就是政治课和一门选修课，政治课的pre文稿刚刚交了上去，这门选修课大概就是临时做一个数模之类的。</p>
-<p>生物统计学的作业到现在还没做，明明26号就是ddl了，居然自己还在玩。前些日子入手了一只switch，到现在已经玩了快三十个小时了，平均每天三小时吧大概，按照晚上十点下课，到宿舍十点半，开始玩，接着到一点半，然后再收拾收拾睡觉觉就是两点了，虽然作业还没做，明天的课程还没有预习，今天的课程也没有复习，但是还是要睡觉觉，
-毕竟第二天还有早八，刚刚打开了B站，挺多UP主也都更新了，自己还没看，然后十二点多开始看，看到了现在，本来打算今天下午做几道英语题，结果时间又被荒废掉了，一会儿还约了人去打羽毛球，属于是最佳拖延王了。</p>
-<p>文献倒是看了一些，但是这一周进展颇为缓慢，还是要抓紧时间干活儿啊，时间不等人啊。</p>
-]]></content>
-      <categories>
-        <category>生活</category>
-      </categories>
-      <tags>
-        <tag>碎碎念</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>杂聊6</title>
     <url>/2022/1781028612.html</url>
     <content><![CDATA[<p>我没有那么专注了，是的。</p>
@@ -10509,6 +10492,25 @@ alt="fd57a0057d3648b4c171c10bb2f7c9f" /></p>
       </categories>
       <tags>
         <tag>生活</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>杂聊9</title>
+    <url>/2023/4204219029.html</url>
+    <content><![CDATA[<p>醒来已然是九点多了，磨磨蹭蹭，拉屎撒尿，洗洗刷刷，就到了十点，想着上午去游泳，于是便速速又把屋子收拾了一下，发现了好多之前早就要扔掉，但是没有扔掉的事物。比如自己之前用完的洗发水空瓶子，某天夜晚吃烧烤顺便买的一瓶快乐水，好多月之前吃完的锅巴的盒子，以及平时擦桌子，擦鼻涕，擦污渍之类的纸巾，居然还在堆着。于是便把这些东西都扔掉了。</p>
+<p>但是还是有一些其他的杂物的，比如之前洗干净的衣服；按照之前的习惯可能就是洗完了就放在外面一直晾着了，但是最近这天气属实是较差，时不时风雨大作，实属不想再打开阳台门了，于是在某一个雨夜，把衣服都收了进来，倒也没有怎么叠衣服，只是很粗略的放在了衣筐上面，已是许久都没有打理了，也不是很难收拾，大概是我实在是懒，也不想去收拾，于是就一直放着了。今天想到了这事情了，就把衣服都收拾了一下，叠好了，放在了衣柜里面，细细数数，倒确实是没事情了。</p>
+<p>去了宿舍对面吃了沙县，一个鸭腿，两个豆干，就当是十点半的早饭了，之后便是骑车匆匆前往三公里外的游泳馆。</p>
+<p>天冷了倒是没什么人了，倒也显得泳池很是开阔，只是这池子里面的水位却是下降了不少。</p>
+<p>想来学会游泳是大一时候了，那也是五年前的日子了，之前在杭州游了几次属实是发现了自己的肺活是真的比较差，动作也并不标准，还是需要多多练习的，之前已经练了三五次的蛙泳了，今天的目标便是能够在2.2m游够一个来回，倒也不是很难，但是不会浮水确实是个问题，需要之后抽个时间把浮水练习一下，这样子才不会溺水（大概），还是比较恐惧的，对于那种触及不到底的感觉，不过倒也是能够游到了，不过还是有点累，不过也是因为之前没有练习过，之后多练习一下，应该就没问题了。</p>
+<p>昨天练了腿，今天又是游泳，可以说中午回去就已经是累的不行了，把今天的剩余的时间都放到了背单词上面，今天安排了八百个单词，属于是每周休闲背一下了，晚上时候又加了一组健身，原先是周一健身的，但是周二上午体检，倒是稍稍往前推了一些。</p>
+<p>周末啊，过的还是蛮快的。</p>
+]]></content>
+      <categories>
+        <category>生活</category>
+      </categories>
+      <tags>
+        <tag>生活</tag>
+        <tag>杂聊</tag>
       </tags>
   </entry>
   <entry>
@@ -11030,25 +11032,6 @@ cell HiC、CHIA-PET、In situ Hi-C、Capture-C</li>
       </tags>
   </entry>
   <entry>
-    <title>杂聊9</title>
-    <url>/2023/4204219029.html</url>
-    <content><![CDATA[<p>醒来已然是九点多了，磨磨蹭蹭，拉屎撒尿，洗洗刷刷，就到了十点，想着上午去游泳，于是便速速又把屋子收拾了一下，发现了好多之前早就要扔掉，但是没有扔掉的事物。比如自己之前用完的洗发水空瓶子，某天夜晚吃烧烤顺便买的一瓶快乐水，好多月之前吃完的锅巴的盒子，以及平时擦桌子，擦鼻涕，擦污渍之类的纸巾，居然还在堆着。于是便把这些东西都扔掉了。</p>
-<p>但是还是有一些其他的杂物的，比如之前洗干净的衣服；按照之前的习惯可能就是洗完了就放在外面一直晾着了，但是最近这天气属实是较差，时不时风雨大作，实属不想再打开阳台门了，于是在某一个雨夜，把衣服都收了进来，倒也没有怎么叠衣服，只是很粗略的放在了衣筐上面，已是许久都没有打理了，也不是很难收拾，大概是我实在是懒，也不想去收拾，于是就一直放着了。今天想到了这事情了，就把衣服都收拾了一下，叠好了，放在了衣柜里面，细细数数，倒确实是没事情了。</p>
-<p>去了宿舍对面吃了沙县，一个鸭腿，两个豆干，就当是十点半的早饭了，之后便是骑车匆匆前往三公里外的游泳馆。</p>
-<p>天冷了倒是没什么人了，倒也显得泳池很是开阔，只是这池子里面的水位却是下降了不少。</p>
-<p>想来学会游泳是大一时候了，那也是五年前的日子了，之前在杭州游了几次属实是发现了自己的肺活是真的比较差，动作也并不标准，还是需要多多练习的，之前已经练了三五次的蛙泳了，今天的目标便是能够在2.2m游够一个来回，倒也不是很难，但是不会浮水确实是个问题，需要之后抽个时间把浮水练习一下，这样子才不会溺水（大概），还是比较恐惧的，对于那种触及不到底的感觉，不过倒也是能够游到了，不过还是有点累，不过也是因为之前没有练习过，之后多练习一下，应该就没问题了。</p>
-<p>昨天练了腿，今天又是游泳，可以说中午回去就已经是累的不行了，把今天的剩余的时间都放到了背单词上面，今天安排了八百个单词，属于是每周休闲背一下了，晚上时候又加了一组健身，原先是周一健身的，但是周二上午体检，倒是稍稍往前推了一些。</p>
-<p>周末啊，过的还是蛮快的。</p>
-]]></content>
-      <categories>
-        <category>生活</category>
-      </categories>
-      <tags>
-        <tag>生活</tag>
-        <tag>杂聊</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>计算某个区域中细胞的复杂性(2)</title>
     <url>/2024/37434737.html</url>
     <content><![CDATA[<p>上一篇帖子提到了猴脑文章中<a
@@ -11147,6 +11130,12 @@ alt="20231229110148" /></p>
       </tags>
   </entry>
   <entry>
+    <title>贝叶斯公式与贝叶斯估计</title>
+    <url>/2025/1007513672.html</url>
+    <content><![CDATA[
+]]></content>
+  </entry>
+  <entry>
     <title>讲讲各个编程语言的特点</title>
     <url>/2022/1075637985.html</url>
     <content><![CDATA[<p>目前呢，市面上主流的编程语言有
@@ -11193,10 +11182,21 @@ alt="20220425170152" /></p>
       </tags>
   </entry>
   <entry>
-    <title>贝叶斯公式与贝叶斯估计</title>
-    <url>/2025/1007513672.html</url>
-    <content><![CDATA[
+    <title>杂聊5</title>
+    <url>/2022/4079027902.html</url>
+    <content><![CDATA[<p>又是一个月过去，十一仿佛就在昨日，然后劈里啪啦的，就跑走了三个星期，只能说感受不到自己做了什么，学到了什么，所以觉得落差感比较大。而且博客也是很久没写了，进行稍微长一点的叙述就会显得我的逻辑比较混乱。</p>
+<p>今天应该是还有很多的ddl的，比如刚刚开辟的Python_70_Project，想做一个稍微大一些的Python导学项目，然后大概也是每天写个几十行那个样子；比如还要重温C++，这是很久之前学习的了，现在写起来也是逐渐手生，根本写不下去，于是乎重新打开黑马，又开始无聊又有趣的学习之路，希望之后能把硬件做起来吧，要学习一下老学长，成为一名稍微全栈一些的孩子。</p>
+<p>目前上课的状态大概就是，老师讲自己领域内最为前言的工作，讲他们自己做的实验的思路、流程，以及相关的一些延申，这两周大概也有课陆续要结课了，大概就是政治课和一门选修课，政治课的pre文稿刚刚交了上去，这门选修课大概就是临时做一个数模之类的。</p>
+<p>生物统计学的作业到现在还没做，明明26号就是ddl了，居然自己还在玩。前些日子入手了一只switch，到现在已经玩了快三十个小时了，平均每天三小时吧大概，按照晚上十点下课，到宿舍十点半，开始玩，接着到一点半，然后再收拾收拾睡觉觉就是两点了，虽然作业还没做，明天的课程还没有预习，今天的课程也没有复习，但是还是要睡觉觉，
+毕竟第二天还有早八，刚刚打开了B站，挺多UP主也都更新了，自己还没看，然后十二点多开始看，看到了现在，本来打算今天下午做几道英语题，结果时间又被荒废掉了，一会儿还约了人去打羽毛球，属于是最佳拖延王了。</p>
+<p>文献倒是看了一些，但是这一周进展颇为缓慢，还是要抓紧时间干活儿啊，时间不等人啊。</p>
 ]]></content>
+      <categories>
+        <category>生活</category>
+      </categories>
+      <tags>
+        <tag>碎碎念</tag>
+      </tags>
   </entry>
   <entry>
     <title>身体是革命的本钱</title>
@@ -11216,6 +11216,38 @@ alt="20220425170152" /></p>
       <tags>
         <tag>生活</tag>
         <tag>疾病</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>返校3周，国科大加重了我的精神内耗</title>
+    <url>/2022/4038513713.html</url>
+    <content><![CDATA[<p>今天北大出入校改成自动报备了，本科同学们在约饭，我说我在坐牢去不了。</p>
+<p>我想起上周中秋节，老师说出校只能当天去当天回，在外过夜需要自费隔离三天，可能是担心我半夜着凉。看了眼怀密线每晚6点的末班车，毅然鸽了同学。假期一结束，又说在外过夜不用隔离了。</p>
+<p>能知道中秋节能回家这个消息，还是某个微信群里看到的。该群有段时间一直在锐评学校的出入校政策，后来有几个群友被老师谈话了。现在群已经没了，没准不是学校要求解散的。</p>
+<p>倒也不是不能出校，3个星期之前我出了一次，不过是被救护车拉走的，170块钱不知道什么时候能报销。疯狂星期四那天，不知道怎么想的，我在怀柔医院点了一顿麦当劳。</p>
+<p>国科大企业微信的疫情防控里需要每日上报，我每次填的都是“当天住在校外”、“昨日没做核酸”，没人理我。当你试图叛逆的时候，没人在乎才是最尴尬的。就在我心灰意冷进教学楼的时候，忘了扫健康码，被工作人员追了10米，这才稍微安心一点。</p>
+<p>既然大学生风险这么高，不如改成网课，毕竟还要麻烦老师和其他工作人员每天进出学校，怕传染给他们的家人。</p>
+<p>其实说是想出校，来回一趟5、6个小时，周末我也懒得回。不适应这种“非必要不出校”的生活罢了，我觉得，只要我想出，那就是必要的，我可以不出，但你不能不让我出。我已经在离科学最近的地方偷着乐了。</p>
+]]></content>
+      <categories>
+        <category>生活</category>
+      </categories>
+      <tags>
+        <tag>生活</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>这个生化怎么这么多啊</title>
+    <url>/2021/887319650.html</url>
+    <content><![CDATA[<p>复习考研，第一门难啃的课就是生物化学，三本书，将近两千页的内容，全是字，淦，怎么背的会哦，当年就是生物化学没有学好，才落得现在没得保研，只能呆呆地考研，谁知道考研也需要学生物化学！淦，我心态炸裂。</p>
+<span id="more"></span>
+<p>但其实看看也还挺不错的，确实感觉到自己的脑袋里关于生物化学的好多东西都是并不是很清楚，虽然是做过很多的实验，但是好多实验的原理也是在重新开始看书后才真正了解。（对于我大学时期做过的实验，也许我真的了解的也就是操作系统，数据结构之类的了）但是到现在也才看到三百多页是真的心情很不好，确实感觉到自己对于生物这个需要花费很大功夫来背诵的科目感到不是很舒服。关键这东西也不是什么马原毛概之类的，我倒是觉得马原毛概之类的倒是挺有意思的，想起来了看一看，一看就是半本书，还停不下来，确实是因为其中包含了很多的解决问题的方法，很多的哲学的思考，很多的看了让人感到心情极其振奋的思想。</p>
+<p>昨晚失眠到了三点多，今天又是八点起的，中午居然还没睡，中午摸了一下脸颊下巴两侧又是张出了痘痘，懊恼，我怎么就这么运气不好哦，要是生物有写代码那么容易就好了。</p>
+<p>前路漫漫，读书作伴。</p>
+]]></content>
+      <tags>
+        <tag>生活</tag>
+        <tag>生物化学</tag>
       </tags>
   </entry>
   <entry>
@@ -12045,38 +12077,6 @@ AI，意义是什么？</p>
       </categories>
       <tags>
         <tag>转载</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>返校3周，国科大加重了我的精神内耗</title>
-    <url>/2022/4038513713.html</url>
-    <content><![CDATA[<p>今天北大出入校改成自动报备了，本科同学们在约饭，我说我在坐牢去不了。</p>
-<p>我想起上周中秋节，老师说出校只能当天去当天回，在外过夜需要自费隔离三天，可能是担心我半夜着凉。看了眼怀密线每晚6点的末班车，毅然鸽了同学。假期一结束，又说在外过夜不用隔离了。</p>
-<p>能知道中秋节能回家这个消息，还是某个微信群里看到的。该群有段时间一直在锐评学校的出入校政策，后来有几个群友被老师谈话了。现在群已经没了，没准不是学校要求解散的。</p>
-<p>倒也不是不能出校，3个星期之前我出了一次，不过是被救护车拉走的，170块钱不知道什么时候能报销。疯狂星期四那天，不知道怎么想的，我在怀柔医院点了一顿麦当劳。</p>
-<p>国科大企业微信的疫情防控里需要每日上报，我每次填的都是“当天住在校外”、“昨日没做核酸”，没人理我。当你试图叛逆的时候，没人在乎才是最尴尬的。就在我心灰意冷进教学楼的时候，忘了扫健康码，被工作人员追了10米，这才稍微安心一点。</p>
-<p>既然大学生风险这么高，不如改成网课，毕竟还要麻烦老师和其他工作人员每天进出学校，怕传染给他们的家人。</p>
-<p>其实说是想出校，来回一趟5、6个小时，周末我也懒得回。不适应这种“非必要不出校”的生活罢了，我觉得，只要我想出，那就是必要的，我可以不出，但你不能不让我出。我已经在离科学最近的地方偷着乐了。</p>
-]]></content>
-      <categories>
-        <category>生活</category>
-      </categories>
-      <tags>
-        <tag>生活</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>这个生化怎么这么多啊</title>
-    <url>/2021/887319650.html</url>
-    <content><![CDATA[<p>复习考研，第一门难啃的课就是生物化学，三本书，将近两千页的内容，全是字，淦，怎么背的会哦，当年就是生物化学没有学好，才落得现在没得保研，只能呆呆地考研，谁知道考研也需要学生物化学！淦，我心态炸裂。</p>
-<span id="more"></span>
-<p>但其实看看也还挺不错的，确实感觉到自己的脑袋里关于生物化学的好多东西都是并不是很清楚，虽然是做过很多的实验，但是好多实验的原理也是在重新开始看书后才真正了解。（对于我大学时期做过的实验，也许我真的了解的也就是操作系统，数据结构之类的了）但是到现在也才看到三百多页是真的心情很不好，确实感觉到自己对于生物这个需要花费很大功夫来背诵的科目感到不是很舒服。关键这东西也不是什么马原毛概之类的，我倒是觉得马原毛概之类的倒是挺有意思的，想起来了看一看，一看就是半本书，还停不下来，确实是因为其中包含了很多的解决问题的方法，很多的哲学的思考，很多的看了让人感到心情极其振奋的思想。</p>
-<p>昨晚失眠到了三点多，今天又是八点起的，中午居然还没睡，中午摸了一下脸颊下巴两侧又是张出了痘痘，懊恼，我怎么就这么运气不好哦，要是生物有写代码那么容易就好了。</p>
-<p>前路漫漫，读书作伴。</p>
-]]></content>
-      <tags>
-        <tag>生活</tag>
-        <tag>生物化学</tag>
       </tags>
   </entry>
   <entry>

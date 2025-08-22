@@ -6,7 +6,7 @@
   <link href="https://www.zepoch.cc/atom.xml" rel="self"/>
   
   <link href="https://www.zepoch.cc/"/>
-  <updated>2025-08-22T03:52:31.827Z</updated>
+  <updated>2025-08-22T04:10:27.821Z</updated>
   <id>https://www.zepoch.cc/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>贝叶斯公式与贝叶斯估计</title>
+    <link href="https://www.zepoch.cc/2025/1007513672.html"/>
+    <id>https://www.zepoch.cc/2025/1007513672.html</id>
+    <published>2025-08-22T04:08:41.000Z</published>
+    <updated>2025-08-22T04:10:27.821Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">
+</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>信息量-信息熵-交叉熵—KL散度</title>
@@ -80,7 +102,10 @@
       
         
         
-    <summary type="html">&lt;p&gt;VAE的原理大概为，给定一个 &lt;span class=&quot;katex&quot;&gt;&lt;span class=&quot;katex-mathml&quot;&gt;&lt;math</summary>
+    <summary type="html">&lt;p&gt;VAE的原理大概为，给定一个 &lt;span
+class=&quot;math inline&quot;&gt;&#92;(x&#92;)&lt;/span&gt;，我们认为其是由一个隐变量 &lt;span
+class=&quot;math inline&quot;&gt;&#92;(z&#92;)&lt;/span&gt; 生成的，这个隐变量 &lt;span
+class=&quot;math</summary>
         
       
     
@@ -133,7 +158,8 @@
         
         
     <summary type="html">&lt;h2 id=&quot;概览&quot;&gt;概览&lt;/h2&gt;
-&lt;p&gt;这本开源书籍旨在引领变革。从基础出发，我们将引导你掌握将大型语言模型训练从单 GPU 扩展到数十、数百甚至数千 GPU</summary>
+&lt;p&gt;这本开源书籍旨在引领变革。从基础出发，我们将引导你掌握将大型语言模型训练从单
+GPU 扩展到数十、数百甚至数千</summary>
         
       
     
@@ -184,7 +210,8 @@
       
         
         
-    <summary type="html">&lt;p&gt;最近在安装 &lt;a href=&quot;https://docs.rapids.ai/install/&quot;&gt;Nvidia Rapids&lt;/a&gt; 用于更为高效的科学计算。&lt;/p&gt;
+    <summary type="html">&lt;p&gt;最近在安装 &lt;a href=&quot;https://docs.rapids.ai/install/&quot;&gt;Nvidia
+Rapids&lt;/a&gt; 用于更为高效的科学计算。&lt;/p&gt;
 &lt;p&gt;安装代码如下:&lt;/p&gt;
 &lt;figure class=&quot;highlight</summary>
         
@@ -238,7 +265,9 @@
       
         
         
-    <summary type="html">&lt;p&gt;上回说到了 &lt;code&gt;self-attention&lt;/code&gt; 的四种写法，这次更新一下 &lt;code&gt;multi-head attention&lt;/code&gt; 的写法。&lt;code&gt;multi-head attention&lt;/code&gt; 与</summary>
+    <summary type="html">&lt;p&gt;上回说到了 &lt;code&gt;self-attention&lt;/code&gt; 的四种写法，这次更新一下
+&lt;code&gt;multi-head attention&lt;/code&gt;
+的写法。&lt;code&gt;multi-head attention&lt;/code&gt; 与</summary>
         
       
     
@@ -289,8 +318,9 @@
       
         
         
-    <summary type="html">&lt;p&gt;最近在下载文章数据的时候，发现了一个很让人感到头痛的数据，如下图所示：&lt;br&gt;
-&lt;img</summary>
+    <summary type="html">&lt;p&gt;最近在下载文章数据的时候，发现了一个很让人感到头痛的数据，如下图所示：
+&lt;img
+src=&quot;https://raw.githubusercontent.com/zEpoch/imageHome/main/blog/批量爬取bicnn文件/20250223221153.png</summary>
         
       
     
@@ -341,7 +371,10 @@
       
         
         
-    <summary type="html">&lt;p&gt;前言：2024 年诺贝尔化学奖授予了 David Baker、Demis Hassabis 和 John Jumper。&lt;em&gt;一半授予 David Baker 以表彰其在计算蛋白质设计方面的贡献&lt;/em&gt;，他成功构建了全新的蛋白质；另一半授予 Demis</summary>
+    <summary type="html">&lt;p&gt;前言：2024 年诺贝尔化学奖授予了 David Baker、Demis Hassabis 和 John
+Jumper。&lt;em&gt;一半授予 David Baker
+以表彰其在计算蛋白质设计方面的贡献&lt;/em&gt;，他成功构建了全新的蛋白质；另一半授予
+Demis</summary>
         
       
     
@@ -362,8 +395,7 @@
       
         
         
-    <summary type="html">&lt;p&gt;看到 Obsidian 的 CEO Steph Ango 写过 80 个问题，是他用于每年、每十年自问的。感觉这些问题还有点意思，先分享出来，或许可以做些增删，调整出一份适合自己的，然后定期回顾，也蛮不错。&lt;/p&gt;
-&lt;h2</summary>
+    <summary type="html">&lt;p&gt;看到 Obsidian 的 CEO Steph Ango 写过</summary>
         
       
     
@@ -388,7 +420,7 @@
       
         
         
-    <summary type="html">&lt;h2 id=&quot;零-负十字架的人&quot;&gt;零、负十字架的人&lt;/h2&gt;
+    <summary type="html">&lt;h2 id=&quot;零负十字架的人&quot;&gt;零、负十字架的人&lt;/h2&gt;
 &lt;p&gt;1947</summary>
         
       
@@ -415,7 +447,8 @@
         
         
     <summary type="html">&lt;p&gt;最近在做各种各样的物种的单细胞数据清洗，在清洗到某个数据的时候，用sceasy转格式从h5ad到rds，发现了一个问题，基因名字消失了。&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
+&lt;p&gt;&lt;img
+src=&quot;https://raw.githubusercontent.com/zEpoch/imageHome/</summary>
         
       
     
@@ -475,7 +508,7 @@
         
         
     <summary type="html">&lt;p&gt;换了新的电脑，一直以来自己的博客撰写的地址都是在电脑上面，自己的博客是基于hexo搭建的，所以需要将博客的文件迁移到新的电脑上面，这里记录一下迁移的过程。&lt;/p&gt;
-&lt;p&gt;直接把 node_modules</summary>
+&lt;p&gt;直接把</summary>
         
       
     
@@ -501,35 +534,8 @@
         
         
     <summary type="html">&lt;p&gt;还是大家熟悉的猴脑文章，可能是大家较为熟悉的一张UMAP图片，但是其呈现方式和其他的UMAP图片却是有所不同，它的UMAP图片如下所示，其名字为Voronoi图：&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
-        
-      
-    
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/categories/tech/"/>
-    
-    <category term="技术" scheme="https://www.zepoch.cc/categories/tech/%E6%8A%80%E6%9C%AF/"/>
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/tags/tech/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>换一种空间组的圈细胞可视化方式</title>
-    <link href="https://www.zepoch.cc/2024/1334308350.html"/>
-    <id>https://www.zepoch.cc/2024/1334308350.html</id>
-    <published>2024-01-16T08:13:23.000Z</published>
-    <updated>2024-01-16T09:58:56.558Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;大多数文章在进行空间转录组细胞可视化的时候，通常会使用 square bin 或是 cellbin，但是究其展示本质，其实还是 square bin，比如下面的这种，每个细胞的呈现形式是一个 spot_size 固定为某个值的点。&lt;/p&gt;
-&lt;p&gt;&lt;img</summary>
+&lt;p&gt;&lt;img
+src=&quot;https://raw.githubusercontent.com/zEpo</summary>
         
       
     

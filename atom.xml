@@ -6,7 +6,7 @@
   <link href="https://www.zepoch.cc/atom.xml" rel="self"/>
   
   <link href="https://www.zepoch.cc/"/>
-  <updated>2025-08-22T04:10:27.821Z</updated>
+  <updated>2025-10-12T06:43:48.703Z</updated>
   <id>https://www.zepoch.cc/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>流模型与条件概率路径</title>
+    <link href="https://www.zepoch.cc/2025/2346020372.html"/>
+    <id>https://www.zepoch.cc/2025/2346020372.html</id>
+    <published>2025-10-12T06:42:38.000Z</published>
+    <updated>2025-10-12T06:43:48.703Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;1-流模型和条件概率路径&quot;&gt;1. 流模型和条件概率路径&lt;/h2&gt;
+&lt;p&gt;流模型是一种生成模型，它通过一系列连续的变换将一个简单分布（如高斯分布）转换为一个复杂分布（如数据分布）。这些变换是可逆的，并且可以用常微分方程（ODE）来描述。&lt;/p&gt;
+&lt;p&gt;条件概率路径</summary>
+        
+      
+    
+    
+    
+    <category term="tech" scheme="https://www.zepoch.cc/categories/tech/"/>
+    
+    
+    <category term="diffusion" scheme="https://www.zepoch.cc/tags/diffusion/"/>
+    
+    <category term="flow" scheme="https://www.zepoch.cc/tags/flow/"/>
+    
+  </entry>
   
   <entry>
     <title>贝叶斯公式与贝叶斯估计</title>
@@ -518,35 +547,6 @@ src=&quot;https://raw.githubusercontent.com/zEpoch/imageHome/</summary>
     
     
     <category term="技术" scheme="https://www.zepoch.cc/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>换一种UMAP的可视化方式</title>
-    <link href="https://www.zepoch.cc/2024/2334324323.html"/>
-    <id>https://www.zepoch.cc/2024/2334324323.html</id>
-    <published>2024-01-18T07:55:04.000Z</published>
-    <updated>2024-01-18T08:11:57.898Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;还是大家熟悉的猴脑文章，可能是大家较为熟悉的一张UMAP图片，但是其呈现方式和其他的UMAP图片却是有所不同，它的UMAP图片如下所示，其名字为Voronoi图：&lt;/p&gt;
-&lt;p&gt;&lt;img
-src=&quot;https://raw.githubusercontent.com/zEpo</summary>
-        
-      
-    
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/categories/tech/"/>
-    
-    <category term="技术" scheme="https://www.zepoch.cc/categories/tech/%E6%8A%80%E6%9C%AF/"/>
-    
-    
-    <category term="tech" scheme="https://www.zepoch.cc/tags/tech/"/>
     
   </entry>
   

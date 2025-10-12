@@ -12137,4 +12137,83 @@ alt="image-20210717151100839" /></p>
         <tag>生活</tag>
       </tags>
   </entry>
+  <entry>
+    <title>流模型与条件概率路径</title>
+    <url>/2025/2346020372.html</url>
+    <content><![CDATA[<h2 id="1-流模型和条件概率路径">1. 流模型和条件概率路径</h2>
+<p>流模型是一种生成模型，它通过一系列连续的变换将一个简单分布（如高斯分布）转换为一个复杂分布（如数据分布）。这些变换是可逆的，并且可以用常微分方程（ODE）来描述。</p>
+<p>条件概率路径 $p_t(\cdot|z)$ 是一个在时间 $t$ 时给定数据点 $z$ 的概率分布。这个路径从初始分布 $p_{\text{init}}$ 开始，逐渐演变到数据分布 $p_{\text{data}}$。</p>
+<h2 id="2-条件向量场">2. 条件向量场</h2>
+<p>条件向量场 $u_t^{\text{target}}(x|z)$ 是一个向量场，它定义了在给定 $z$ 的条件下，随机变量 $X_t$ 如何随时间 ( t ) 演化。这个向量场满足以下ODE：<br>
+$$<br>
+\frac{d}{dt}X_t = u_t^{\text{target}}(X_t|z)<br>
+$$</p>
+<h2 id="3-高斯概率路径">3. 高斯概率路径</h2>
+<p>对于高斯概率路径，我们有：<br>
+$$<br>
+p_t(\cdot|z) = \mathcal{N}(\alpha_t z, \beta_t^2 I_d)<br>
+$$<br>
+其中 $\alpha_t$ 和 $\beta_t$ 是时间 $t$ 的函数，满足 $\alpha_0 = \beta_1 = 0$ 和 $\alpha_1 = \beta_0 = 1$。</p>
+<h2 id="4-推导条件向量场">4. 推导条件向量场</h2>
+<p>我们定义一个条件流模型 $\psi_t^{\text{target}}(x|z)$：<br>
+$$<br>
+\psi_t^{\text{target}}(x|z) = \alpha_t z + \beta_t x<br>
+$$</p>
+<p>这个流模型的ODE轨迹 $X_t$ 满足：<br>
+$$<br>
+\begin{aligned}<br>
+X_t &amp;= \psi_t^{\text{target}}(X_0|z)\<br>
+&amp;=\alpha_t z + \beta_t X_0 \sim \mathcal{N}(\alpha_t z, \beta_t^2 I_d) \<br>
+&amp;= p_t(\cdot|z)<br>
+\end{aligned}<br>
+$$</p>
+<h2 id="5-计算导数">5. 计算导数</h2>
+<p>计算 $\psi_t^{\text{target}}(x|z)$ 的时间导数：<br>
+$$<br>
+\begin{aligned}<br>
+\frac{d}{dt} \psi_t^{\text{target}}(x|z) &amp;= \frac{d}{dt} (\alpha_t z + \beta_t x) \<br>
+&amp;= \dot{\alpha}_t z + \dot{\beta}_t x<br>
+\end{aligned}<br>
+$$</p>
+<h2 id="6-等式两边相等">6. 等式两边相等</h2>
+<p>将导数结果与向量场相等：<br>
+$$<br>
+\dot{\alpha}_t z + \dot{\beta}_t x = u_t^{\text{target}}(\alpha_t z + \beta_t x|z)<br>
+$$</p>
+<h2 id="7-重新参数化">7. 重新参数化</h2>
+<p>为了得到 $u_t^{\text{target}}(x|z)$，我们需要重新参数化 $x$：<br>
+$$<br>
+x = \frac{y - \alpha_t z}{\beta_t}<br>
+$$<br>
+其中 $y = \alpha_t z + \beta_t x$。</p>
+<p>将 $y$ 代入上式：<br>
+$$<br>
+\dot{\alpha}_t z + \dot{\beta}_t \left( \frac{y - \alpha_t z}{\beta_t} \right) = u_t^{\text{target}}(y|z)<br>
+$$</p>
+<p>简化得到：<br>
+$$<br>
+\dot{\alpha}_t z + \frac{\dot{\beta}_t}{\beta_t} y - \frac{\dot{\beta}_t}{\beta_t} \alpha_t z = u_t^{\text{target}}(y|z)<br>
+$$</p>
+<p>$$<br>
+\left( \dot{\alpha}_t - \frac{\dot{\beta}_t}{\beta_t} \alpha_t \right) z + \frac{\dot{\beta}_t}{\beta_t} y = u_t^{\text{target}}(y|z)<br>
+$$</p>
+<h2 id="8-替换-y-为-x">8. 替换 $y$ 为 $x$</h2>
+<p>将 $y$ 替换为 $x$：<br>
+$$<br>
+u_t^{\text{target}}(x|z) = \left( \dot{\alpha}_t - \frac{\dot{\beta}_t}{\beta_t} \alpha_t \right) z + \frac{\dot{\beta}_t}{\beta_t} x<br>
+$$</p>
+<p>这就是我们推导出的条件向量场公式：<br>
+$$<br>
+u_t^{\text{target}}(x|z) = \left( \dot{\alpha}_t - \frac{\dot{\beta}_t}{\beta_t} \alpha_t \right) z + \frac{\dot{\beta}_t}{\beta_t} x<br>
+$$</p>
+<p>这个公式描述了如何从条件向量场生成高斯概率路径，从而实现从噪声分布到数据分布的转换。通过这种方式，我们可以在流模型中使用高斯概率路径来生成从噪声到数据的平滑过渡。</p>
+]]></content>
+      <categories>
+        <category>tech</category>
+      </categories>
+      <tags>
+        <tag>diffusion</tag>
+        <tag>flow</tag>
+      </tags>
+  </entry>
 </search>

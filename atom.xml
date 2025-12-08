@@ -6,7 +6,7 @@
   <link href="https://www.zepoch.cc/atom.xml" rel="self"/>
   
   <link href="https://www.zepoch.cc/"/>
-  <updated>2025-12-04T02:54:32.324Z</updated>
+  <updated>2025-12-08T05:21:32.800Z</updated>
   <id>https://www.zepoch.cc/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>医院数据是金矿吗</title>
+    <link href="https://www.zepoch.cc/2025/2617946411.html"/>
+    <id>https://www.zepoch.cc/2025/2617946411.html</id>
+    <published>2025-12-08T04:51:55.000Z</published>
+    <updated>2025-12-08T05:21:32.800Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;p&gt;说实话，大部分人根本不知道“医院数据”是什么。&lt;/p&gt;
+&lt;p&gt;大多数人在喊“医院数据”的时候，根本不知道医院数据是什么、长什么样、有多脏、能干嘛。&lt;/p&gt;
+&lt;h2</summary>
+        
+      
+    
+    
+    
+    <category term="医疗AI" scheme="https://www.zepoch.cc/categories/%E5%8C%BB%E7%96%97AI/"/>
+    
+    
+    <category term="医疗数据" scheme="https://www.zepoch.cc/tags/%E5%8C%BB%E7%96%97%E6%95%B0%E6%8D%AE/"/>
+    
+  </entry>
   
   <entry>
     <title>中国互联网大厂大模型求职指南</title>
@@ -520,36 +547,6 @@ src=&quot;https://raw.githubusercontent.com/zEpoch/imageHome/</summary>
     <category term="组学" scheme="https://www.zepoch.cc/tags/%E7%BB%84%E5%AD%A6/"/>
     
     <category term="sceasy" scheme="https://www.zepoch.cc/tags/sceasy/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Transformer架构</title>
-    <link href="https://www.zepoch.cc/2024/956785006.html"/>
-    <id>https://www.zepoch.cc/2024/956785006.html</id>
-    <published>2024-05-06T09:55:25.000Z</published>
-    <updated>2025-02-23T14:39:01.998Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;本片博客主要讲述Transformer模型的整体架构&lt;/p&gt;
-&lt;h2</summary>
-        
-      
-    
-    
-    
-    <category term="技术" scheme="https://www.zepoch.cc/categories/%E6%8A%80%E6%9C%AF/"/>
-    
-    
-    <category term="技术" scheme="https://www.zepoch.cc/tags/%E6%8A%80%E6%9C%AF/"/>
-    
-    <category term="Transformer" scheme="https://www.zepoch.cc/tags/Transformer/"/>
-    
-    <category term="NLP" scheme="https://www.zepoch.cc/tags/NLP/"/>
     
   </entry>
   
